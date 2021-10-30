@@ -1,12 +1,7 @@
 #!/bin/bash
 
 #更换源库
-rm -rf /etc/yum.repos.d/*
-cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
-wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
-yum clean all
-yum repolist
-yum update -y && yum upgrade -y
+#参考003一键部署centos源
 
 #安装wget和curl
 yum list installed | grep wget curl clash &> /dev/null
