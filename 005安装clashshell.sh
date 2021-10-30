@@ -1,0 +1,29 @@
+#!/bin/bash
+
+#更换源库
+rm -rf /etc/yum.repos.d/*
+cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.bak
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+yum clean all
+yum repolist
+yum update -y && yum upgrade -y
+
+#安装wget和curl
+yum list installed | grep wget curl clash &> /dev/null
+[ $? == 0 ] && exit 
+
+yum install wget curl -y
+
+echo '安装完记着 设置——网络——VPN——networkproxy——手动'
+
+#安装clashshell
+export url='https://cdn.jsdelivr.net/gh/juewuy/ShellClash@master' && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh  && sh /tmp/install.sh && source /etc/profile &> /dev/null
+
+#导入配置
+#https://global.gateway.subscribe.flyint.top/api/v1/client/subscribe?token=5576e36a45a6086179bdad543f7adeb9&flag=clash
+
+#设置——网络——VPN——networkproxy——手动
+#http		172.0.0.1	7890
+#https		172.0.0.1	7890
+#socks主机 	172.0.0.1	7890
+#忽略主机	localhost, 127.0.0.0/8, ::1
