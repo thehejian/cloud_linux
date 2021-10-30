@@ -1,6 +1,8 @@
 #!/bin/bash
 
-case $1 in
+read -p "aa A bb * " input
+
+case $input in
 	aa|A)
 		echo "aaaa";;
 	bb)
