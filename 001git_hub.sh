@@ -54,8 +54,12 @@ git push -u origin main
 #/nas/001-脚本 目录下有更新时
 rm -rf ~/cloud_linux
 #先删除家目录仓库下内容
-cp /nas/001-脚本/* ~/cloud_linux/
+/bin/cp -rf /nas/001-脚本/* ~/cloud_linux/
 #脚本复制到仓库
+#alias cp = cp -i
+#-rf 强制，目录
+git add --all
+#暂存所有内容
 git commit -m "202110301327"
 #提交变更到本地
 git push origin main
@@ -66,5 +70,5 @@ git pull origin main
 #从github仓库的主分支获取全部变更
 rm -rf /nas/001-脚本/* 
 #删除 001-脚本 所有内容
-cp ~/cloud_linux/* /nas/001-脚本/
+/bin/cp -rf ~/cloud_linux/* /nas/001-脚本/
 #复制 本地仓库 内容 到 云盘 001-脚本 下
