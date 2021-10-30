@@ -33,3 +33,20 @@ git push -u origin main
 
 
 
+rm -rf ~/sh_github/*
+cp /nas/001-脚本/* ~/sh_github/
+git commit -m "202110301327"
+git push origin main
+
+
+
+
+
+
+
+
+
+
+
+
+
