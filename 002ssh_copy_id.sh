@@ -3,8 +3,8 @@
 read -p "input IP; like 1.116.26.230 " IP
 
 ssh-keygen -f /root/.ssh/id_rsa -N '' -y
-#-f zhiding wenjian lujing
-#-N '' zhiding mima weikong
-#-y moren fugai zhiqian de mima
+#-f 指定文件路径
+#-N '' 指定密码为空
+#-y 默认覆盖指定位置
 ssh-copy-id $IP
-#client mima chuan gei server
+#客户端密码传到服务器
