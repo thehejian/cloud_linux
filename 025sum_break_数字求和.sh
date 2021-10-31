@@ -4,7 +4,7 @@ x=0
 while :
 do
 	read -p "请输入数字，输入0就结束 " num
-	# -z bianliang de zhi shifou wei 0 huo wei kong
+	# -z 数字为空
 	[ -z $num ] || [ $num -eq 0 ] && break
 	let x+=num
 done
