@@ -1,5 +1,5 @@
 #!/bin/bash
-#查看本机的：CPU负载、内存容量、存储空间、网卡流入量、网卡流出量、安装软件包数量、用户数、当前登录人数、当前进程数
+#查看本机的：当前时间、CPU负载、内存容量、存储空间、网卡流入量、网卡流出量、安装软件包数量、用户数、当前登录人数、当前进程数
 #每20s执行一次
 
 wangka=eth0
@@ -7,7 +7,9 @@ wangka=eth0
 
 while :
 do
-date
+date+'%Y-%m-%d %H:%M:%S'
+当前时间
+
 uptime | awk -F[,] '{print "CPU负载是 " $4,$5,$6}'
 # 平均负载量：最近1分钟、5分钟、15分钟系统
 
@@ -16,10 +18,10 @@ free -h | awk '/^内存/{print "内存剩余 " $4}'
 
 df -h | awk '/\/$/{print "根存储空间可用 " $4}'
 
-ifconfig $wangka | awk '/RX packets/{print "网卡 "$wangka" 流入量 " $5/10^6 "MB"}'
+ifconfig $wangka | awk -F[(|)] '/RX packets/{print "网卡流入量为 $2}'
 #网卡流入量
 
-ifconfig $wangka | awk '/TX packets/{print "网卡 "$wangka" 流出量 " $5/10^6 "MB"}'
+ifconfig $wangka | awk -F[(|)] '/TX packets/{print "网卡流出量为 $2"}'
 #网卡流出量
 
 #echo "安装包共 $(dpkg -l | wc -l) 个"
