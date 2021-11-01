@@ -7,8 +7,8 @@ wangka=eth0
 
 while :
 do
-date+'%Y-%m-%d %H:%M:%S'
-当前时间
+mydate=date +'%Y-%m-%d %H:%M:%S'
+echo "当$mydate"
 
 uptime | awk -F[,] '{print "CPU负载是 " $4,$5,$6}'
 # 平均负载量：最近1分钟、5分钟、15分钟系统
@@ -18,10 +18,10 @@ free -h | awk '/^内存/{print "内存剩余 " $4}'
 
 df -h | awk '/\/$/{print "根存储空间可用 " $4}'
 
-ifconfig $wangka | awk -F[(|)] '/RX packets/{print "网卡流入量为 $2}'
+ifconfig $wangka | awk '/RX packets/{print "flowin" $5/10^6 "MB"}'
 #网卡流入量
 
-ifconfig $wangka | awk -F[(|)] '/TX packets/{print "网卡流出量为 $2"}'
+ifconfig $wangka | awk '/RX packets/{print "flowout" $5/10^6 "MB"}'
 #网卡流出量
 
 #echo "安装包共 $(dpkg -l | wc -l) 个"
