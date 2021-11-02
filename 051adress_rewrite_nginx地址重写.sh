@@ -1,5 +1,8 @@
 #!/bin/bash
 
+#本脚本实现 安卓设备和其他设备访问相同URL时，可以跳转到不同页面
+#解决中文乱码
+
 #nginx重写
 #/abc 跳转 到 /nas
 sed -i '30a \
@@ -16,7 +19,8 @@ sed -i '30a \
         rewrite ^/(.*) https://1.116.26.230/$1;' /usr/local/nginx/conf/nginx.conf
 sed -i '31d' /usr/local/nginx/conf/nginx.conf
 #上面这些都是练习，用完已经用sed 删除了
-
+#################################################################################################上面的都是练习，不用实际配置
+#######################################日志格式配置
 #日志格式
 sed -i '7a \
     log_format  main  $remote_addr - $remote_user [$time_local] "$request"  \
@@ -33,11 +37,13 @@ sed -i '7a \
     #                  '$status $body_bytes_sent "$http_referer" '
     #                  '"$http_user_agent" "$http_x_forwarded_for"';
 
+#######################################Android的跳转的html页面
 #创建Android的html文件
 mkdir -p /usr/local/nginx/html/android/
 touch /usr/local/nginx/html/android/android.html
 echo "this is android index" /usr/local/nginx/html/android/android.html
 
+#######################################Android的nginx配置，重定向
 #安卓设备的内容重写
 sed -i '33a \
         if ($http_user_agent ~* Android){ \
@@ -51,10 +57,10 @@ sed -i '33a \
 #	redirect 临时重定向
 #	permament 永久重定向
 
-
 #安卓重写的交互形式，用sed删除
 sed -i '34,36d' /usr/local/nginx/conf/nginx.conf
 
+#######################################中文乱码解决
 #之前操作有误，导致中文乱码，重新加charset utf-8
 sed -i '34a \
         charset utf-8;' /usr/local/nginx/conf/nginx.conf
