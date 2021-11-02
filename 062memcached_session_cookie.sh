@@ -1,6 +1,11 @@
 #!/bin/bash
 
-#memcached shujuku cun shuju shi cunzai neicun
+#安装memcached服务器，用来存储用户访问后在web服务器产生的session，并同步到所有的web服务器；
+
+#Session是在服务端保存的一个数据结构，用来跟踪用户的状态，这个数据可以保存在集群、数据库、文件中；
+#Cookie是客户端保存用户信息的一种机制，用来记录用户的一些信息，也是实现Session的一种方式。
+
+#memcached 数据操作内存
 #server 1.116.26.230
 yum install -y memcached
 
@@ -8,17 +13,18 @@ yum install -y memcached
 yum install -y telnet
 
 yum install -y php-pecl-memcache
+#php中memcache的插件
 
 systemctl start memcached telnet
 systemctl enable memcached telnet
 systemctl status memcached telnet
 
-#installed on 1.116.26.230
-#configuration path
+#安装在 1.116.26.230
+#memcached的配置文件
 #/usr/lib/systemd/system/memcached.service 
 #/etc/sysconfig/memcached
 
-#memcache --> kv Database (key=value)
+#memcache 是 kv Database (key=value)
 
 telnet localhost 11211
 #Trying ::1...
