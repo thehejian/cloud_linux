@@ -10,7 +10,7 @@ sed -i '139a \
       <Host name="localhost_b"  appBase="b" \
             unpackWARs="true" autoDeploy="true"> \
       </Host>' /usr/local/tomcat/apache-tomcat-8.0.30/conf/server.xml
-#default path /usr/local/tomcat/apache-tomcat-8.0.30/webapps/ROOT/
+#默认路径 /usr/local/tomcat/apache-tomcat-8.0.30/webapps/ROOT/
 
 #mkdir -p /usr/local/tomcat/apache-tomcat-8.0.30/{a,b}/ROOT
 mkdir -p /usr/local/tomcat/apache-tomcat-8.0.30/a/ROOT
