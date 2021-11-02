@@ -1,6 +1,6 @@
 #!/bin/bash
 
-read -p "input vision like:1.12.2 " vision
+read -p "输入nginx的版本 like:1.12.2 " vision
 if [ -e $vision ] ; then
         echo "not get; bye "
         exit
@@ -21,6 +21,8 @@ wget -O /usr/local/nginx/nginx-$vision.tar.gz http://nginx.org/download/nginx-$v
 #官网下载tar.gz包
 
 tar -xf nginx-$vision.tar.gz
+#-x解压extract
+#-f文件file
 
 cd /usr/local/nginx/nginx-$vision
 
@@ -34,7 +36,7 @@ cd /usr/local/nginx/nginx-$vision
 #配置 名称、用户名、用户组和加密模块
 #with-http_ssl_module http加密功能
 #with-stream 开启4层反向代理功能
-#with-http_stub_status_module Status monitoring
+#with-http_stub_status_module 状态监控
 
 make && make install
 #make并make安装
