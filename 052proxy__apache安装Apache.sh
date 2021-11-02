@@ -1,4 +1,6 @@
 #!/bin/bash
+#安装Apache
+#代理服务器的配置流程之一
 
 yum install -y httpd
 
