@@ -1,12 +1,14 @@
 #!/bin/bash
 
+##################################################################################################——————》安装java的安装环境
 yum -y install java-1.8.0-openjdk java-1.8.0-openjdk-headless
 #insatll on web1(1.116.26.230); web also install php-pecl-memcache
 #java-1.8.0-openjdk-headless --> no GUI
 #yum list | grep jdk
 #java -version
+#vision=8.0.30
 
-vision=8.0.30
+##################################################################################################——————》源码安装（下载解压即可） Tomcat
 mkdir -p /usr/local/tomcat/
 
 #wget -O /usr/local/tomcat/tomcat-$vision.tar.gz https://dlcdn.apache.org/tomacat/tomcat-8/v$vision/bin/apache-tomcat-$vision.tar.gz
@@ -18,24 +20,31 @@ tar -xf tomcat-$vision.tar.gz
 
 cd /usr/local/tomcat/apache-tomcat-$vision
 
+##################################################################################################——————》启动前，转变random
 mv /dev/random /dev/random.bak
 # cp /dev/urandom /dev/random
-ln -s /dev/urandom /dev/random ruan lianjie ye keyi
+#启动时需要random文件中有内容
+
+ln -s /dev/urandom /dev/random ruan 
+#链接也可以
 #strings /dev/random tomcat start need many random
 #strings /dev/urandom 
 
+##################################################################################################——————》启动Tomcat
 /usr/local/tomcat/apache-tomcat-8.0.30/bin/startup.sh
 #start up apache-tomcat
-
+############——————》查看启动情况
 ps -ef | grep java
 netstat -lnptu | grep java
 #ss -lnptu | grep java
 #ss quick than netstat
 
-#8009 & 8080 mean success;8009 wusuowei
-#cat /dev/random tomcat start need many random
+#8009 & 8080 结果有8080就成功了;
+#8009 无所谓
+#cat /dev/random
+#tomcat 启动需要 random
 
-#java
+##################################################################################################——————》java环境的web服务器使用情况
 #IBM 	 	websphere + java	付费
 #Oracle 		weblogic + java		付费
 #Apache 		tomcat + java 		免费 			用的人最多
