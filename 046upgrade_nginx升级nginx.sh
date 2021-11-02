@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#只升级内核/usr/local/nginx/sbin，其他的如html、logs被覆盖
+
 vision=1.12.2
 #设置需要升级的版本
 
@@ -20,6 +22,7 @@ cd nginx-$vision
 
 make
 #Don't  makeinstall
+#相当于只解压不安装
 
 mv /usr/local/nginx/sbin/nginx /usr/local/nginx/sbin/nginx.bak
 #sbin下备份之前nginx的操作脚本
