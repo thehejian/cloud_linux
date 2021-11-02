@@ -1,13 +1,16 @@
 #!/bin/bash
 
+#memcached的配置，需要安装在web服务器
+
 #yum list | grep memcache
 yum install -y php-pecl-memcache
 #php-memcache installed in webserver, not proxy server;
 
+#修改php-fpm的配置文件
 sed -i 's#= files#= memcache#g' /etc/php-fpm.d/www.conf
 sed -i 's#/var/lib/php/session#"tcp://1.116.26.230:11211"#g' /etc/php-fpm.d/www.conf
 
-#read PHP script
+#写php脚本
 touch /usr/local/nginx/html/mem.php
 echo "<?php" > /usr/local/nginx/html/mem.php
 
