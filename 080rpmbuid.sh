@@ -80,6 +80,13 @@ sed -i '/\%setup/s/\%setup/setup/g' ~/rpmbuild/SPECS/080nginx.spec
 #jieya bing cd jinru mulu
 
 sed -i '/%configure/s#%configure#\.\/configure#g' ~/rpmbuild/SPECS/080nginx.spec
+sed -i '/configure/a \
+--prefix=/usr/local/nginx \
+--user=nginx \
+--group=nginx \
+--with-http_ssl_module \
+--with-stream \
+--with-http_stub_status_module' ~/rpmbuild/SPECS/080nginx.spec
 #xiugai geizhi
 
 sed -i '/\%doc/a \
@@ -124,4 +131,5 @@ rpm -ivh nginx-1.12.2-1.e17.centos.x86_64.rpm
 #fuzhi dao github cangku
 #qiangzhi feijiaohu fuzhi
 
-
+yum info nginx
+#chakan rpm bao de neirong
