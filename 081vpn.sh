@@ -100,7 +100,7 @@ firewall-cmd --set-default-zone=trusted
 #windows wangka jia qiaojie
 mkdir -p /usr/local/pptpd
 cd /usr/local/pptpd
-wget -O https://fossies.org/linux/misc/pptpd-1.4.0.tar.gz
+wget -O /usr/local/pptpd/pptpd-1.4.0.tar.gz https://fossies.org/linux/misc/pptpd-1.4.0.tar.gz
 tar -xf pptpd-1.4.0.tar.gz
 cd pptpd-1.4.0
 
