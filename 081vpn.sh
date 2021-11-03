@@ -38,5 +38,15 @@ lsmod | grep ip_gre
 modinfo ip_gre
 #chakan ip_gre xinxi
 
+find /lib/modules/3.10.0-1160.45.1.el7.x86_64/kernel/ -name "*.ko.*" | wc -l
+#2503 ge mokuai
+
+
+
+
+
+
+
+
 
 
