@@ -104,6 +104,7 @@ wget -O /usr/local/pptpd/pptpd-1.4.0.tar.gz https://fossies.org/linux/misc/pptpd
 tar -xf pptpd-1.4.0.tar.gz
 cd pptpd-1.4.0
 
+yum install -y ppp
 ./configure
 make
 make install
