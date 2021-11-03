@@ -19,7 +19,7 @@ ss -lnptu | grep java
 
 curl -k https://localhost_b:8443
 #localhost_b 是之前的虚拟主机设置
-#-k shi fangwen bu anquan de https
-#8443shi https de duankou; buneng moren shenglue
+#-k 访问不安全的https
+#8443是https的端口; 此处不能默认省略，因为nginx也启了一个443端口；
 
 
