@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#mudi: ba anzhuang hao de wenjian dabao cheng rpm bao
+#目的：把安装好的文件打包成RPM包
 
 yum -y install rpm-build
 
