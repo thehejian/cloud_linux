@@ -98,6 +98,15 @@ firewall-cmd --set-default-zone=trusted
 ###########################################################################################################################---->PPTP
 #zhichi windows
 #windows wangka jia qiaojie
+mkdir -p /usr/local/pptpd
+cd /usr/local/pptpd
+wget -O https://fossies.org/linux/misc/pptpd-1.4.0.tar.gz
+tar -xf pptpd-1.4.0.tar.gz
+cd pptpd-1.4.0
+
+./configure
+make
+make install
 
 
 
