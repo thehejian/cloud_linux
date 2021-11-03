@@ -100,9 +100,11 @@ firewall-cmd --set-default-zone=trusted
 #windows wangka jia qiaojie
 mkdir -p /usr/local/pptpd
 cd /usr/local/pptpd
-wget -O /usr/local/pptpd/pptpd-1.4.0.tar.gz https://fossies.org/linux/misc/pptpd-1.4.0.tar.gz
-tar -xf pptpd-1.4.0.tar.gz
-cd pptpd-1.4.0
+#wget -O /usr/local/pptpd/pptpd-1.4.0.tar.gz https://fossies.org/linux/misc/pptpd-1.4.0.tar.gz
+wget https://sourceforge.net/projects/poptop/files/pptpd/pptpd-1.3.4/pptpd-1.3.4.tar.gz/download
+
+tar -xf pptpd-1.3.4.tar.gz
+cd pptpd-1.3.4
 
 yum install -y ppp
 ./configure
