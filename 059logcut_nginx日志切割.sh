@@ -18,7 +18,7 @@ kill -USR1 $(cat $logpath/nginx.pid)
 #03 03 * * 5 $logpath/059logcut_nginx.sh
 #交互式定时任务
 
-(crontab -l;echo "03 03 * * 5 $logpath/059logcut_nginx日志切割.sh > /dev/null 2>&1 ") | crontab
+#(crontab -l;echo "03 03 * * 5 $logpath/059logcut_nginx日志切割.sh > /dev/null 2>&1 ") | crontab
 #非交互式任务
 #每周五的03:03执行
 

@@ -25,3 +25,7 @@ yum update -y && yum upgrade -y
 #非交互式任务
 #每周五的03:03执行
 
+#sed -i '2,4d' /var/spool/cron/root
+#shanchu buxuyao de jiaoben
+
+#crontab -l
