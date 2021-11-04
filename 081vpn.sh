@@ -88,31 +88,80 @@ ip addr add 10.10.10.5/24 peer 10.10.10.10/24 \
 dev tun0
 ip a s tun0
 
-##################---->guanbi fanghuoqiang
+##################---->开启转发。关闭防火墙
 echo "1" > /proc/sys/net/ipv4/ip_forward
-#kaiqi luyou zhuanfa
-#linux fuwuqi biancheng luyouqi
-#ruan luyou
+#开启路由转发
+#linux 变成路由器
+#软路由
+
 firewall-cmd --set-default-zone=trusted
+关闭防火墙
 
 ###########################################################################################################################---->PPTP
+##############################################################################################---->PPTP之服务器端配置
 #zhichi windows
 #windows wangka jia qiaojie
-mkdir -p /usr/local/pptpd
-cd /usr/local/pptpd
+#mkdir -p /usr/local/pptpd
+#cd /usr/local/pptpd
 #wget -O /usr/local/pptpd/pptpd-1.4.0.tar.gz https://fossies.org/linux/misc/pptpd-1.4.0.tar.gz
-wget https://sourceforge.net/projects/poptop/files/pptpd/pptpd-1.3.4/pptpd-1.3.4.tar.gz/download
+#wget https://sourceforge.net/projects/poptop/files/pptpd/pptpd-1.3.4/pptpd-1.3.4.tar.gz/download
 
-tar -xf pptpd-1.3.4.tar.gz
-cd pptpd-1.3.4
+#tar -xf pptpd-1.3.4.tar.gz
+#cd pptpd-1.3.4
 
-yum install -y ppp
-./configure
-make
-make install
+#./configure
+#make
+#make install
 
+yum install -y ppp pptpd
 
+###################################---->PPTP 配置文件1
+sed -i '2a \
+localip 1.116.26.230 \
+remoteip 192.168.29.154 ' /etc/pptpd.conf
+#localip 1.116.26.230 服务器端，本地
+#remoteip 192.168.29.154 远端，给客户端的ip
 
+###################################---->PPTP 配置文件2
+sed -i '2a \
+#require-mppe-128 \
+ms-dns 8.8.8.8' /etc/ppp/option.pptpd
+#作用，给客户端配dns域名解析服务器
+#require-mppe-128 默认已打开，默认128位加密
+#ms-dns 8.8.8.8 需要打开，默认被注释
+
+#sed -i 's/name pptpd/name hejian_pptpd/g' /etc/ppp/option.pptpd
+#改pptpt的名称
+#可以不改
+
+###################################---->PPTP 配置文件3
+#配置用户名密码
+sed -i ' \
+hejian    *    123456    *' /etc/ppp/chap-secrets
+#hejian(用户名)    *（服务器标识，所有）（pptpt的名称，上一个配置 hejian_pptpd）    123456（密码）    *（客户端，所有）
+#支持创建多个账户
+
+###################################---->开启转发。关闭防火墙
+echo "1" > /proc/sys/net/ipv4/ip_forward
+#开启路由转发
+#linux 变成路由器
+#软路由
+
+firewall-cmd --set-default-zone=trusted
+关闭防火墙
+
+###################################---->翻墙设置，非必选
+iptables -t nat -A POSTROUTING -s 192.168.29.0/24 \
+-j ANAT --to-source 1.116.26.230
+#nat配置
+
+###################################---->启动服务
+systemctl start pptpd
+systemctl enable pptpd
+systemctl status pptpd
+
+##############################################################################################---->PPTP之客户器端配置
+#windows桥接
 
 
 
