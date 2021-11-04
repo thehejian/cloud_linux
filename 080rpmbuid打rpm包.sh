@@ -13,8 +13,7 @@ yum -y install rpm-build
 
 #######################################################################################--------->shengcheng rpm kongwenjianjia
 rpmbuild -ba XXX.spec
-#cuowu, yonglai shengcheng rpmbuild
-#diyici chuangjian yong; xuyao duoge mulu
+#错误，用来生成空文件
 
 ls ~/rpmbuild/
 
