@@ -19,7 +19,7 @@ ssh -T git@github.com
 git config --global user.name "thehejian"
 git config --global user.email "745544752@qq.com"
 #配置 名称 和 邮箱
-
+#########################################################################################场景一：本地创建文件，并上传到github的origin仓库
 cd ~
 #默认放到家目录
 #不能放到云盘上，上传不了
@@ -55,5 +55,11 @@ git push -u origin main
 #提交所有变更到github
 #第一次加上 -u 
 
-#日常操作
+#########################################################################################场景二：本地克隆
+mkdir -p ~/cloud_linux
+cd ~/cloud_linux
+git clone origin git@github.com:thehejian/cloud_linux.git
+
+##########################################################################################场景三：日常操作
 #请参考脚本000upgate_git.sh
+bash 000upgate_git.sh
