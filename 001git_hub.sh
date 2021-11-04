@@ -1,9 +1,13 @@
 #!/bin/bash
 
+#这个脚本是首次对接github和同步数据到github的origin仓库
+
 mail=745544752@qq.com
 ssh-keygen -t ed25519 -C "$mail"
 
-cp /root/.ssh/id_ed25519.pub /cloudnas/cloudnas/CloudDrive/阿里云盘/001-脚本/
+#需要把公钥粘贴到github上；https://github.com/settings/keys
+#cp /root/.ssh/id_ed25519.pub /cloudnas/cloudnas/CloudDrive/阿里云盘/001-脚本/
+#公钥（证书能复制出去就行）
 #将公钥复制到 nginx 的 html 目录下;
 #详细请参考 002ssh_copy_id.sh
 #参考
@@ -33,9 +37,8 @@ cd ~/cloud_linux
 git init
 #在当前目录（家目录）创建仓库
 
-git add README.md
-#git add .
-#暂存，非必须
+git add --all
+#暂存全部
 
 git commit -m "first commit"
 #提交所有变更到本地仓库
@@ -45,30 +48,12 @@ git branch -M main
 
 git remote add origin git@github.com:thehejian/cloud_linux.git
 #git remote add origin https://github.com/thehejian/cloud_linux.git
+#连接git的origin仓库
 #HTTPS无法访问，用git吧
 
 git push -u origin main
 #提交所有变更到github
 #第一次加上 -u 
 
-#/nas/001-脚本 目录下有更新时
-rm -rf ~/cloud_linux
-#先删除家目录仓库下内容
-/bin/cp -rf /nas/001-脚本/* ~/cloud_linux/
-#脚本复制到仓库
-#alias cp = cp -i
-#-rf 强制，目录
-git add --all
-#暂存所有内容
-git commit -m "202110301327"
-#提交变更到本地
-git push origin main
-#提交变更到github
-
-#github有变更时
-git pull origin main
-#从github仓库的主分支获取全部变更
-rm -rf /nas/001-脚本/* 
-#删除 001-脚本 所有内容
-/bin/cp -rf ~/cloud_linux/* /nas/001-脚本/
-#复制 本地仓库 内容 到 云盘 001-脚本 下
+#日常操作
+#请参考脚本000upgate_git.sh
