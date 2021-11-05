@@ -162,6 +162,73 @@ systemctl status pptpd
 
 ##############################################################################################---->PPTP之客户器端配置
 #windows桥接
+###########################################################################################################################---->IPSec+L2TP
+##############################################################################################---->IPsec
+##############################---->安装IPsec
+yum -y install libreswan
+#主配置文件为 /etc/ipsec.conf
+#include /etc/ipsec.d/*.conf
+
+#参考：http://www.4k8k.xyz/article/weixin_38387929/117552039
+
+##############################---->配置IPsec
+touch /etc/ipsec.d/myipsec.conf
+echo "conn IDC-PSK-NAT" > /etc/ipsec.d/myipsec.conf
+sed -i '1a \
+        rightsubnet=vhost:%priv\
+        also=IDC-PSK-noNAT\
+conn IDC-PSK-NAT\
+        authby=secret\
+           ike=3des-sha1;modp1024\
+           phase2alg=3des-sha1;modp2048\
+        pfs=no\
+        auto=add\
+        keyingtries=3\
+        rekey=no\
+        ikelifetime=8h\
+        keylife=3h\
+        type=transport\
+        left=1.116.26.230\
+        leftprotoport=17/1701\
+        right=%any\
+        rightprotoport=17/%any' /etc/ipsec.d/myipsec.conf
+
+cat /etc/ipsec.d/myipsec.conf
+
+#left=1.116.26.230 唯一需要改的内容
+#rightsubnet=vhost:%priv 允许创建的VPN虚拟网络
+#authby=secret 加密认证
+#           ike=3des-sha1;modp1024 算法
+#           phase2alg=3des-sha1;modp2048
+#right=%any 允许任何客户端连接
+
+##############################---->创建IPsec预定义共享秘钥
+#主配置文件为 /etc/ipsec.secret
+#include /etc/ipsec.d/*.secret
+
+touch /etc/ipsec.d/mypass.secret
+echo "1.116.26.230    %any:    PSK    123456" > /etc/ipsec.d/mypass.secret
+sed -i '1s/123456/"123456"/g' /etc/ipsec.d/mypass.secret
+#1.116.26.230 服务器
+#%any 任何客户端
+#PSK pre share key 预共享秘钥
+#"123456" 密码
+
+##############################---->启动 ipsec
+systemctl start ipsec
+systemctl enable ipsec
+systemctl status ipsec
+
+netstat -lnptu | grep pluto
+
+
+
+
+
+
+
+
+
 
 
 
