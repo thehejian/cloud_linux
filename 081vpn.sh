@@ -209,6 +209,7 @@ cat /etc/ipsec.d/myipsec.conf
 touch /etc/ipsec.d/mypass.secret
 echo "1.116.26.230    %any:    PSK    123456" > /etc/ipsec.d/mypass.secret
 sed -i '1s/123456/"123456"/g' /etc/ipsec.d/mypass.secret
+cat /etc/ipsec.d/mypass.secret
 #1.116.26.230 服务器
 #%any 任何客户端
 #PSK pre share key 预共享秘钥
