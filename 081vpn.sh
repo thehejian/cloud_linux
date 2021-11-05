@@ -231,16 +231,19 @@ cd /usr/local/xl2tpd
 wget https://download-ib01.fedoraproject.org/pub/epel/7/SRPMS/Packages/x/xl2tpd-1.3.15-1.el7.src.rpm
 yum install xl2tpd-1.3.15-1.el7.src.rpm
 
- 3036  2021-11-05 12:54:48 groupadd mockbuild
- 3037  2021-11-05 12:54:55 useradd -s /sbin/nologin mockbuild -g mockbuild
- 3040  2021-11-05 12:55:26 rpm -ivh xl2tpd-1.3.15-1.el7.src.rpm 
+groupadd mockbuild
+useradd -s /sbin/nologin mockbuild -g mockbuild
+创建组和用户名
 
-rpm -Uvh epel-release*rpm
-#安装 epel-release rpm
-
-yum install xl2tpd
+rpm -ivh xl2tpd-1.3.15-1.el7.src.rpm 
 #安装 xl2tpd rpm 包
 
+Download latest epel-release rpm from
+http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/
+Install epel-release rpm:
+# rpm -Uvh epel-release*rpm
+Install xl2tpd rpm package:
+# yum install xl2tpd
 
 
 
