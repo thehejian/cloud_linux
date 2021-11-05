@@ -224,6 +224,36 @@ wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/x/xl2tpd
 #wget https://download-ib01.fedoraproject.org/pub/epel/7/SRPMS/Packages/x/xl2tpd-1.3.15-1.el7.src.rpm
 yum localinstall xl2tpd-1.3.15-1.el7.x86_64.rpm
 
+################################################---->配置文件一/etc/xl2tpd/xl2tpd.conf
+sed -i '/ip ranges/s/ip range = 192.168.1.128-192.168.1.254/ip range = 192.168.1.128-192.168.1.254/g' /etc/xl2tpd/xl2tpd.conf
+sed -i '/local ip/s/local ip = 192.168.1.99/local ip = 1.116.26.230/g' /etc/xl2tpd/xl2tpd.conf
+cat -n /etc/xl2tpd/xl2tpd.conf
+#ip range = 192.168.1.128-192.168.1.254 客户端IP
+#local ip = 1.116.26.230 服务器IP
+
+################################################---->配置文件二/etc/ppp/option.xl2tpd
+sed -i '/\# require-mschap-v2/s/\# require-mschap-v2/require-mschap-v2/g' /etc/ppp/option.xl2tpd
+# require-mschap-v2 Windows的访问打开
+#sed -i 's/crtscts/\# crtscts/g' /etc/ppp/option.xl2tpd
+#sed -i 's/lock/\# lock/g' /etc/ppp/option.xl2tpd
+#新版本已经没这两个参数了
+cat -n /etc/ppp/option.xl2tpd
+
+################################################---->配置文件三/etc/ppp/chap-secrets
+echo "hejian    *    123456    *" >> /etc/ppp/chap-secrets
+cat -n /etc/ppp/chap-secrets
+
+################################################---->启动 xl2tpd
+systemctl start xl2tpd
+systemctl enable xl2tpd
+systemctl status xl2tpd
+
+netstat -lnptu | grep xl2tpd
+
+
+
+
+
 
 
 
