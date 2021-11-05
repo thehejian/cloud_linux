@@ -247,12 +247,18 @@ cat -n /etc/ppp/chap-secrets
 systemctl start xl2tpd
 systemctl enable xl2tpd
 systemctl status xl2tpd
-
 netstat -lnptu | grep xl2tpd
 
+################################################---->客户端连接
+#win10 单击 网络和Internet设置——》左侧手风琴选VPN
+#添加VPN连接
 
-
-
+#VPN提供商——》Windows内置
+#服务器名称或地址——》1.116.26.230
+#VPN类型——》使用预共享秘钥的L2TP/IPsec
+#预共享秘钥123456
+#用户名hejian
+#密码123456
 
 
 
