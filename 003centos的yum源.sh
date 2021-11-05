@@ -21,6 +21,8 @@ yum repolist
 
 yum update -y && yum upgrade -y
 
+echo "yum无法安装的可以去这个网址下载RPM包 https://pkgs.org/"
+
 #(crontab -l;echo "03 03 * * 5 ~/cloud_linux/003centos的yum源.sh > /dev/null 2>&1 ") | crontab
 #非交互式任务
 #每周五的03:03执行
