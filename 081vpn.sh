@@ -231,13 +231,13 @@ cat -n /etc/xl2tpd/xl2tpd.conf
 #ip range = 192.168.1.128-192.168.1.254 客户端IP
 #local ip = 1.116.26.230 服务器IP
 
-################################################---->配置文件二/etc/ppp/option.xl2tpd
-sed -i '/\# require-mschap-v2/s/\# require-mschap-v2/require-mschap-v2/g' /etc/ppp/option.xl2tpd
+################################################---->配置文件二/etc/ppp/options.xl2tpd
+sed -i '/\# require-mschap-v2/s/\# require-mschap-v2/require-mschap-v2/g' /etc/ppp/options.xl2tpd
 # require-mschap-v2 Windows的访问打开
-#sed -i 's/crtscts/\# crtscts/g' /etc/ppp/option.xl2tpd
-#sed -i 's/lock/\# lock/g' /etc/ppp/option.xl2tpd
+#sed -i 's/crtscts/\# crtscts/g' /etc/ppp/options.xl2tpd
+#sed -i 's/lock/\# lock/g' /etc/ppp/options.xl2tpd
 #新版本已经没这两个参数了
-cat -n /etc/ppp/option.xl2tpd
+cat -n /etc/ppp/options.xl2tpd
 
 ################################################---->配置文件三/etc/ppp/chap-secrets
 echo "hejian    *    123456    *" >> /etc/ppp/chap-secrets
