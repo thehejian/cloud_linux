@@ -228,7 +228,8 @@ netstat -lnptu | grep pluto
 ################################################---->安装xl2tpd
 mkdir /usr/local/xl2tpd
 cd /usr/local/xl2tpd
-wget https://download-ib01.fedoraproject.org/pub/epel/7/SRPMS/Packages/x/xl2tpd-1.3.15-1.el7.src.rpm
+wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/x/xl2tpd-1.3.15-1.el7.x86_64.rpm
+#wget https://download-ib01.fedoraproject.org/pub/epel/7/SRPMS/Packages/x/xl2tpd-1.3.15-1.el7.src.rpm
 yum install xl2tpd-1.3.15-1.el7.src.rpm
 
 groupadd mockbuild
@@ -238,11 +239,11 @@ useradd -s /sbin/nologin mockbuild -g mockbuild
 rpm -ivh xl2tpd-1.3.15-1.el7.src.rpm 
 #安装 xl2tpd rpm 包
 
-Download latest epel-release rpm from
-http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/
-Install epel-release rpm:
+#Download latest epel-release rpm from
+#http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/
+#Install epel-release rpm:
 # rpm -Uvh epel-release*rpm
-Install xl2tpd rpm package:
+#Install xl2tpd rpm package:
 # yum install xl2tpd
 
 
