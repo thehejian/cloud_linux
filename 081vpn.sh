@@ -101,19 +101,10 @@ firewall-cmd --set-default-zone=trusted
 ##############################################################################################---->PPTP之服务器端配置
 #zhichi windows
 #windows wangka jia qiaojie
-#mkdir -p /usr/local/pptpd
-#cd /usr/local/pptpd
-#wget -O /usr/local/pptpd/pptpd-1.4.0.tar.gz https://fossies.org/linux/misc/pptpd-1.4.0.tar.gz
-#wget https://sourceforge.net/projects/poptop/files/pptpd/pptpd-1.3.4/pptpd-1.3.4.tar.gz/download
-
-#tar -xf pptpd-1.3.4.tar.gz
-#cd pptpd-1.3.4
-
-#./configure
-#make
-#make install
-
-yum install -y ppp pptpd
+mkdir -p /usr/local/pptpd
+cd /usr/local/pptpd
+wget http://abf-downloads.openmandriva.org/cooker/repository/x86_64/unsupported/release/pptpd-server-1.3.4-4-omv4002.x86_64.rpm
+yum localinstall -y pptpd-server-1.3.4-4-omv4002.x86_64.rpm
 
 ###################################---->PPTP 配置文件1
 sed -i '2a \
@@ -229,22 +220,11 @@ netstat -lnptu | grep pluto
 mkdir /usr/local/xl2tpd
 cd /usr/local/xl2tpd
 wget https://download-ib01.fedoraproject.org/pub/epel/7/x86_64/Packages/x/xl2tpd-1.3.15-1.el7.x86_64.rpm
+#不要下载源码包，二进制包就OK
 #wget https://download-ib01.fedoraproject.org/pub/epel/7/SRPMS/Packages/x/xl2tpd-1.3.15-1.el7.src.rpm
-yum install xl2tpd-1.3.15-1.el7.src.rpm
+yum localinstall xl2tpd-1.3.15-1.el7.x86_64.rpm
 
-groupadd mockbuild
-useradd -s /sbin/nologin mockbuild -g mockbuild
-创建组和用户名
 
-rpm -ivh xl2tpd-1.3.15-1.el7.src.rpm 
-#安装 xl2tpd rpm 包
-
-#Download latest epel-release rpm from
-#http://download-ib01.fedoraproject.org/pub/epel/7/x86_64/
-#Install epel-release rpm:
-# rpm -Uvh epel-release*rpm
-#Install xl2tpd rpm package:
-# yum install xl2tpd
 
 
 
