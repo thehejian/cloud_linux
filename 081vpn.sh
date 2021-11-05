@@ -163,6 +163,8 @@ systemctl status pptpd
 ##############################################################################################---->PPTP之客户器端配置
 #windows桥接
 ###########################################################################################################################---->IPSec+L2TP
+#用户名 hejian/123456————》L2TP
+#预共享秘钥 123456 ————》IPsec
 ##############################################################################################---->IPsec
 ##############################---->安装IPsec
 yum -y install libreswan
@@ -222,9 +224,18 @@ systemctl status ipsec
 
 netstat -lnptu | grep pluto
 
+##############################################################################################---->xl2tpd
+################################################---->安装xl2tpd
+mkdir /usr/local/xl2tpd
+cd /usr/local/xl2tpd
+wget https://download-ib01.fedoraproject.org/pub/epel/7/SRPMS/Packages/x/xl2tpd-1.3.15-1.el7.src.rpm
+yum install xl2tpd-1.3.15-1.el7.src.rpm
 
+rpm -Uvh epel-release*rpm
+#安装 epel-release rpm
 
-
+yum install xl2tpd
+#安装 xl2tpd rpm 包
 
 
 
