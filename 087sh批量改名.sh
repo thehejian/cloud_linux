@@ -10,9 +10,8 @@ ls $path
 ####################——》改文件的名称hejian去掉
 #file=1hejian.txt
 #mv $file ${file%hejian*}.txt
-myls=$(ls $path/*.txt)
 
-for file in $myls
+for file in $(ls $path)
 do
 mv $file ${file%hejian*}.txt;
 done
@@ -24,7 +23,7 @@ ls $path
 #mv $file1 ${file1%.txt}.TXT
 #mv $file1 ${file1/$.txt/.TXT/}
 
-for file1 in $myls
+for file1 in $(ls $path)
 do
 mv $file1 ${file1/$txt/TXT/}
 done
