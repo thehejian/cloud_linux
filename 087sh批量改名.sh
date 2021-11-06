@@ -1,22 +1,23 @@
 #!/bin/bash
 
 ####################——》准备文件
-mkdir -p ~/cloud_linux/087mkdir批量改文件
-rm -rf ~/cloud_linux/087mkdir批量改文件/*.txt
-touch {1..10}hejian.txt
-ls /cloud_linux/087mkdir批量改文件/*.txt
+path=~/cloud_linux/087mkdir批量改文件
+mkdir -p $path
+rm -rf $path/*.txt
+touch $path/{1..10}hejian.txt
+ls $path/*.txt
 
 ####################——》改文件的名称hejian去掉
 #file=1hejian.txt
 #mv $file ${file%hejian*}.txt
-myls=$(ls ~/cloud_linux/087mkdir批量改文件/*.txt)
+myls=$(ls $path/*.txt)
 
 for file in $myls
 do
 mv $file ${file%hejian*}.txt;
 done
 
-ls ~/cloud_linux/087mkdir批量改文件
+ls $path
 
 ####################——》改文件的后缀.txt改成.TXT
 #file1=1hejian.txt
@@ -28,4 +29,4 @@ do
 mv $file1 ${file1/$.txt/.TXT/}
 done
 
-myls
+ls $path
