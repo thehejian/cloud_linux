@@ -37,6 +37,7 @@ echo ""
 #mv $file1 ${file1%txt}doc;
 #mv $file1 ${file1/$txt/doc};
 
+
 for file1 in $(ls $path/*)
 do
 mv $file1 ${file1/%txt/doc};
