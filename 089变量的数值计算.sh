@@ -46,6 +46,32 @@ let i=i+8
 echo $i
 #10
 
+#####################################——》expr
+expr 2+2
+#2+2
+#必须要放空格
 
+expr 2 + 2
+#4
 
+expr 4 * 5
+#expr: syntax error
+#特殊符号必须转义
 
+expr 4 \* 5
+20
+
+i=0
+i=$(expr $i + 1)
+echo $i
+#1
+#比(())效率低
+
+expr $[2+3*6]
+#20
+#使用方括号不需要加空格
+#也不需要转义
+
+hejian=12345
+expr length $hejian
+#5
