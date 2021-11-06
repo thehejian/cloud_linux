@@ -74,6 +74,9 @@ result=${test:-word}
 echo $result
 #test变量不存在时，result变量等于word，存在时等于test；不影响test
 #执行过程中变量赋值，不影响变量值
+#find ${path:-/tmp} -type f -name "*.tar.gz" -exec rm -rf {} \;
+#路径如果不对，就删除tmp缓存路径
+#shell -x ;能看到执行的变量
 
 unset result 
 unset test
