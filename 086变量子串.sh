@@ -2,6 +2,7 @@
 #变量子串
 #084bash.txy 第1089行开始 https://github.com/thehejian/cloud_linux/blob/main/084bash.txt
 #参考https://blog.csdn.net/github_33736971/article/details/53980123
+#######################################################################################################################——》普通用法
 ####################################################################——》字符串长度
 str=abc123
 ${#str}
@@ -68,9 +69,30 @@ echo ${NAME/%I am /teacher}
 #I am a student student
 #尾部没有，所以无法替换
 
+#######################################################################################################################——》扩展用法
+result=${test:-word}
+echo $result
+#test变量不存在时，result变量等于word，存在时等于test；不影响test
+#执行过程中变量赋值，不影响变量值
 
+unset result 
+unset test
+result=${test:=word}
+echo $result
+echo $test
+#test变量不存在时，result变量等于word，并且把test值也变成word；
+#为变量直接赋值
+#word
+#word
 
+echo ${result:?"变量没定义哈"}
+#-bash: result: 变量没定义哈
+#变量不存在时，输出提示内容；并退出
 
+result=123
+echo ${result:+"有变量呢"}
+#判断是否有变量
+#有变量则输出"有变量呢"，没有变量则输入空；
 
 
 
