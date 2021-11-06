@@ -5,7 +5,7 @@ path=~/cloud_linux/087mkdir批量改文件
 mkdir -p $path
 rm -rf $path/*.txt
 touch $path/{1..10}hejian.txt
-ls $path/*.txt
+ls $path
 
 ####################——》改文件的名称hejian去掉
 #file=1hejian.txt
@@ -26,7 +26,7 @@ ls $path
 
 for file1 in $myls
 do
-mv $file1 ${file1/$.txt/.TXT/}
+mv $file1 ${file1/$txt/TXT/}
 done
 
 ls $path
