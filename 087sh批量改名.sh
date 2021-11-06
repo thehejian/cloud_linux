@@ -11,7 +11,7 @@ ls $path
 #file=1hejian.txt
 #mv $file ${file%hejian*}.txt
 
-for file in $(ls $path)
+for file in $(ls $path/.txt)
 do
 mv $file ${file%hejian*}.txt;
 done
