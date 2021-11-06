@@ -104,11 +104,32 @@ export
 #环境变量
 #declare -x HOME="/root"
 
+set -- a b "c c"
+#设置3个变量
 
+echo $1
+echo $2
+echo $3
+#c c
+echo $#
+#3
+#共有3个参数
 
+shift
+#把变量值减小1
+#echo $2
+#a
+#变成之前的$1
 
+time du -sh /etc/
+#41M	/etc/
 
-
+#real	0m0.640s
+#user	0m0.010s
+#sys	0m0.019s
+#实际时间: 从 command 命令行开始执行到运行终止的时间。
+#用户态使用时间：命令执行完成花费的用户 CPU 时间，即命令在用户态中执行时间总和。
+#内核态使用时间：命令执行完成花费的系统 CPU 时间，即命令在核心态中执行时间总和。
 
 
 
