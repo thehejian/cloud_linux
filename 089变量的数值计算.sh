@@ -103,3 +103,16 @@ echo {1..100} | tr " " "+" | bc
 #tr 替换
 seq 100 | awk '{total+=$1}END{print total}' 
 #awk方法
+
+#####################################——》typeset
+#内置命令
+#效率高
+
+typeset -i a=1 b=3
+a=a+b
+echo $a
+
+
+
+
+
