@@ -85,4 +85,21 @@ echo "${hejian:2:3}"
 echo "${hejian:1:3}"
 #23a
 
-
+#####################################——》bc
+#可以计算小数
+#类似bash的处理
+      
+echo $((1+2+7.6))     
+#错误
+echo "1+2+7.6" | bc   
+#9.6
+expr 1 + 2 + 7.6 
+#错误
+echo "obase=16; 1" | bc  
+#转换为16进制
+seq -s "+" 100 | bc
+#-s 把默认的 \n 换成 +
+echo {1..100} | tr " " "+" | bc
+#tr 替换
+seq 100 | awk '{total+=$1}END{print total}' 
+#awk方法
