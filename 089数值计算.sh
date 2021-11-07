@@ -112,7 +112,12 @@ typeset -i a=1 b=3
 a=a+b
 echo $a
 
+#####################################——》S[]
+#$[]不能计算小数点
 
-
+echo $[2+3]
+5
+echo $[2+3.3]
+-bash: 2+3.3: syntax error: invalid arithmetic operator (error token is ".3")
 
 
