@@ -32,37 +32,42 @@ test ! -f file && echo "true" || echo "false"
 #the length of STRING is zero
 #是否存在
 
-#-e 是否存在
+#-e 是否(文件或者目录)存在
 #-d 是否为目录
 #-f 是否为文件
 #-r 是否可读
 #-w 是否可写
 #-x 是否可执行
-#-L 符号连接
+#-L 是否为链接文件
 #-c 是否字符设备
 #-b 是否块设备
 #-s 文件非空
+#f1 -nt f2 f1比f2新，则为真 new time
+#f1 -ot f2 f1比f2旧，则为真 old time
 
 ###########——》[]
-[-f file] && echo "true" || echo "false"
+[ -f file ] && echo "true" || echo "false"
+#前后都必须加空格，不然报错
 #-bash: [-f: command not found
 #false
 
-[ ! -f file] && echo "true" || echo "false"
+[ ! -f file ] && echo "true" || echo "false"
 #-bash: [: missing `]'
 #false
-#不知道什么原因，报错了
+#前后必须加空格，报错了
 
 
 ###########——》[[]]
 #支持 && ||
+[[ -f file && -d path ]] && echo true || echo false
+#后面没加空格-bash: [-f: command not found
+#false
 
+[ -f file ] && [ -d path ] && echo true || echo false
+#-f前面，最后面没加空格 -bash: [-f: command not found
 
-
-
-
-
-
-
-
+[ -f file -a -d path ] && echo true || echo false
+#-bash: [-f: command not found
+#false
+#-a -o and or
 
