@@ -42,3 +42,27 @@ test ! -f file && echo "true" || echo "false"
 #-c 是否字符设备
 #-b 是否块设备
 #-s 文件非空
+
+###########——》[]
+[-f file] && echo "true" || echo "false"
+#-bash: [-f: command not found
+#false
+
+[ ! -f file] && echo "true" || echo "false"
+#-bash: [: missing `]'
+#false
+#不知道什么原因，报错了
+
+
+###########——》[[]]
+#支持 && ||
+
+
+
+
+
+
+
+
+
+
