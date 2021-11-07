@@ -84,3 +84,5 @@ echo "${hejian:2:3}"
 #3ab
 echo "${hejian:1:3}"
 #23a
+
+
