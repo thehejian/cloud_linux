@@ -75,3 +75,12 @@ expr $[2+3*6]
 hejian=12345
 expr length $hejian
 #5
+
+hejian=123abc
+expr substr $hejian 2 3
+#23a
+#类似下面的
+echo "${hejian:2:3}"
+#3ab
+echo "${hejian:1:3}"
+#23a
