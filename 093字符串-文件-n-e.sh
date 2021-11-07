@@ -23,27 +23,38 @@ test -f file && echo "true" || echo "false"
 
 test ! -f file && echo "true" || echo "false"
 #ture
-
-#-n STRING
+######################################——》字符串操作符
+#字符串判断要加引号
+#[[ -n "STRING" ]]
 #the length of STRING is nonzero
-#是否是数字
+#字符串长度不是0输出为真；字符串存在为真；
 
-#-z STRING
+#[[ -z "STRING" ]]
 #the length of STRING is zero
-#是否存在
+#字符串长度是0（zero）为真；字符串不存在为真；
 
-#-e 是否(文件或者目录)存在
-#-d 是否为目录
-#-f 是否为文件
-#-r 是否可读
-#-w 是否可写
-#-x 是否可执行
-#-L 是否为链接文件
-#-c 是否字符设备
-#-b 是否块设备
+#[[ "字符串1" ==  "字符串2" ]]
+#[[ "字符串1" !=  "字符串2" ]]
+
+[[ -n "$hejian" ]] && echo 0 || echo 1
+#1
+#需要加引号
+######################################——》文件操作符
+#文件判断不见""
+#-e 是否(文件或者目录)存在 exist
+#-d 是否为目录 directory
+#-f 是否为文件 file
 #-s 文件非空
-#f1 -nt f2 f1比f2新，则为真 new time
-#f1 -ot f2 f1比f2旧，则为真 old time
+
+#-r 是否可读 read
+#-w 是否可写 write
+#-x 是否可执行 executable
+
+#-h -L 是否为链接文件 link
+#-c 是否字符设备 
+#-b 是否块设备
+#f1 -nt f2 f1比f2新，则为真 newer then
+#f1 -ot f2 f1比f2旧，则为真 older then
 
 ###########——》[]
 [ -f file ] && echo "true" || echo "false"
