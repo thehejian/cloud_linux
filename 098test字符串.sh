@@ -1,5 +1,7 @@
 #!/bin/bash
 
+#test 更类似单方括号
+
 file=abc123
 file1=efg456
 num1=123
