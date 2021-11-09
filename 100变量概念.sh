@@ -109,6 +109,19 @@ echo "${myname:-hejian}"
 #hejian
 #空字符串和空格也会被当做没有，替换掉————《
 
+:不识别原来变量中的空字串，然后再判断
+-不影响之前的，要影响使用=
+
+
+变数设定方式        str 没有设定	        str 为空字串	       str 已设定非为空字串 
+var=${str-expr}     var=expr	        var=	                var=$str                
+var=${str:-expr}    var=expr	        var=expr	            var=$str                               
+var=${str+expr}	    var=	            var=expr	            var=expr                
+var=${str:+expr}	var=	            var=	                var=expr               
+var=${str=expr}	    str=expr            str 不变                str 不变                
+var=${str:=expr}	str=expr            str=expr                str 不变
+var=${str?expr}	    expr 输出至stderr	  var=	                 var=$str
+var=${str:?expr}	expr 输出至stderr	  expr 输出至stderr      var=$str
 
 
 
