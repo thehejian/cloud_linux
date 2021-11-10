@@ -14,6 +14,8 @@ x=$(awk '/Failed password for root/{ip[$11]++}END{for(i in ip){print ip[i]","i}}
 for i in $x
 do
 	ip=${i#*,};
+	#shanchu qianmian
 	ipn=${i%,*};
-	[ $ipn -gt 3 ] && echo "告警！IP $ip 密码输入错误 $ipn  次" | mail -s test root
+	#shanchu houmian
+	[ $ipn -gt 3 ] && echo "告警！IP $ip 密码输入错误
 done
