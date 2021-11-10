@@ -36,7 +36,15 @@ echo "$path" | grep -o "bin" -i
 #-o --only-matching 只打印匹配行的匹配（非空）部分，每个这样的部分在单独的输出行上
 
 ######################################——》排序 sort wc uniq
-
+sort 
+#-f
+#-b --ignore-leading-blanks忽略前导空格
+#-M  --month-sort 月份排序
+#-n
+#-r
+#-u
+#-t
+#-k
 
 
 
