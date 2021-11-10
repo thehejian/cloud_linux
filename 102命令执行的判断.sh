@@ -105,7 +105,21 @@ join [-ti12] file1 file2
 head -n 3 /etc/passwd /etc/shadow
 /etc/passwd /etc/shadow | head -n 3
 #冒号分割，相同的隐藏
+join -t ':' /etc/passwd /etc/shadow | head -n 3 | awk -F ":" '{print $1,$8}'
+#只看用户名和密码
+join -t ':' -1 4 /etc/passwd -2 3 /etc/group | head -n 3
+#-t ':' 以：分割
+#-1 4 /etc/passwd 分析第一个文件的第四位
+#-2 3 /etc/group 分析第二个文件的第三位
+join -t ':' -1 4 /etc/passwd -2 3 /etc/group | head -n 3 | awk -F ":" '{print $8,$1}'
+#显示用户名和UID
+join -t ':' -1 4 /etc/passwd -2 3 /etc/group | head -n 3 | awk -F ":" '{print $8,$1}'
 
+#########################################################——》paste
+paste [-d] file1 file2
+選項與參數：
+-d  ：後面可以接分隔字元。預設是以 [tab] 來分隔的！
+-   ：如果 file 部分寫成 - ，表示來自 standard input 的資料的意思。
 
 
 
