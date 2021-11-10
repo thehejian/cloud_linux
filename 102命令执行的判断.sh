@@ -37,14 +37,74 @@ echo "$path" | grep -o "bin" -i
 
 ######################################——》排序 sort wc uniq
 sort 
-#-f
+#-f 忽略大小写的差异，例如A 与a 视为编码相同
 #-b --ignore-leading-blanks忽略前导空格
 #-M  --month-sort 月份排序
-#-n
-#-r
-#-u
-#-t
-#-k
+#-n 使用『纯数字』进行排序(预设是以文字型态来排序的)
+#-r 反向排序
+#-u 就是uniq ，相同的资料中，仅出现一行代表
+#-t 分隔符号，预设是用[tab] 键来分隔
+#-k 以那个区间(field) 来进行排序的意思
+
+cat /etc/passwd | sort -t ":" -k 3 -n
+#以：为分割，第3块，按照数字排序
+#cat /etc/passwd | awk -F ":" '{print $3}' | sort -n
+#这个不行啊，只能实现显示内容的排序啊
+
+last | cut -d " " -f 1 | sort
+#-d 分隔符
+#-f 取第几个
+
+last | cut -d " " -f 1 | uniq -c | sort -r -n
+#cut -d " " -f 1 以空格作为间隔，取第1个
+#uniq不显示重复的 -c并计数
+#sort -r -n 倒叙，按数字排序
+
+cat /var/log/secure | awk -F "]:" '/Failed password/{print $2}' | awk -F "from" '{print $2}' | awk '{print $1}' | uniq -c | sort -n
+#密码错误的ssh登录IP
+
+########################——》wc
+wc
+#-l  ：僅列出行；
+#-w  ：僅列出多少字(英文單字)；
+#-m  ：多少字元；
+
+last | grep [a-zA-Z0-9] | egrep -v "wtmp|reboot|unknown" | wc -l
+#157
+#grep [a-zA-Z0-9]去掉空白行
+######################################——》双向重导向
+
+last | tee last.txt | cut -d " " -f 1
+#输出文件，并屏幕显示
+#屏幕显示的内容继续执行，保存的文件不改变
+
+#####################################——》字符串转换命令tr col join paste expend
+tr [-ds] SET1 ...
+選項與參數：
+-d  ：刪除訊息當中的 SET1 這個字串；
+-s  ：取代掉重複的字元！
+
+last | tr [a-z] [A-Z]
+cat /etc/passwd | tr -d ":"
+#删除所有：
+
+ol [-xb]
+選項與參數：
+-x  ：將 tab 鍵轉換成對等的空白鍵
+cat -A /etc/man_db.conf 
+
+
+join [-ti12] file1 file2
+選項與參數：
+-t  ：join 預設以空白字元分隔資料，並且比對『第一個欄位』的資料，
+      如果兩個檔案相同，則將兩筆資料聯成一行，且第一個欄位放在第一個！
+-i  ：忽略大小寫的差異；
+-1  ：這個是數字的 1 ，代表『第一個檔案要用那個欄位來分析』的意思；
+-2  ：代表『第二個檔案要用那個欄位來分析』的意思。
+
+head -n 3 /etc/passwd /etc/shadow
+/etc/passwd /etc/shadow | head -n 3
+#冒号分割，相同的隐藏
 
 
 
