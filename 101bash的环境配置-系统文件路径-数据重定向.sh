@@ -108,17 +108,8 @@ find /home -name ".bashrc" > all.txt 2>1&
 find /home -name ".bashrc" &> all.txt
 #正确错误结果放一起
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+#使用 eof 可以不用输入 ^D
+cat > 001.txt << "eof"
+> this is
+> ok
+> eof
