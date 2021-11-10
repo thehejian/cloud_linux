@@ -64,7 +64,7 @@ cat /var/log/secure | awk -F "]:" '/Failed password/{print $2}' | awk -F "from" 
 #密码错误的ssh登录IP
 
 ########################——》wc
-wc
+#########################################################——》wc
 #-l  ：僅列出行；
 #-w  ：僅列出多少字(英文單字)；
 #-m  ：多少字元；
@@ -92,9 +92,9 @@ ol [-xb]
 選項與參數：
 -x  ：將 tab 鍵轉換成對等的空白鍵
 cat -A /etc/man_db.conf 
+cat /etc/man_db.conf | col -x | cat -A | more
 
-
-join [-ti12] file1 file2
+#########################################################——》join [-ti12] file1 file2
 選項與參數：
 -t  ：join 預設以空白字元分隔資料，並且比對『第一個欄位』的資料，
       如果兩個檔案相同，則將兩筆資料聯成一行，且第一個欄位放在第一個！
@@ -120,7 +120,7 @@ paste [-d] file1 file2
 選項與參數：
 -d  ：後面可以接分隔字元。預設是以 [tab] 來分隔的！
 -   ：如果 file 部分寫成 - ，表示來自 standard input 的資料的意思。
-
+paste -d ":" /etc/passwd /etc/shadow | head -n 3
 
 
 
