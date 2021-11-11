@@ -121,8 +121,104 @@ paste [-d] file1 file2
 -d  ：後面可以接分隔字元。預設是以 [tab] 來分隔的！
 -   ：如果 file 部分寫成 - ，表示來自 standard input 的資料的意思。
 paste -d ":" /etc/passwd /etc/shadow | head -n 3
+#root:x:0:0:root:/root:/bin/bash:root:$6$dnKRK5s9yINu5IFT$EN8wAeyzbGwFqH8kFnJFevwGahgP4Hyp2CFoM9eRlGLwIR1xLyp/.dVtahsRDI.b.V4Gp6L6J0BihKDU6CNO90::0:99999:7:::
+
+#########################################################——》expand
+expand [-t] file
+選項與參數：
+-t  ：後面可以接數字。一般來說，一個 tab 按鍵可以用 8 個空白鍵取代。
+      我們也可以自行定義一個 [tab] 按鍵代表多少個字元呢！
+grep "^MANPATH" /etc/man_db.conf | head -n 3 | cat -A
+#MANPATH_MAP^I/bin^I^I^I/usr/share/man$
+#有tab展示成^I
+grep "^MANPATH" /etc/man_db.conf | head -n 3 | expand -t 9 | cat -A
+MANPATH_MAP       /bin                       /usr/share/man$
+#没有tab的展示，把tab转换为空格了
+
+#########################################################——》分割，split
+split [-bl] file PREFIX
+選項與參數：
+-b  ：後面可接欲分割成的檔案大小，可加單位，例如 b, k, m 等；
+-l  ：以行數來進行分割。
+PREFIX ：代表前置字元的意思，可作為分割檔案的前導文字。
+
+split -b 300k services service_split_
+#分割成300k的文件
+ls service_split_*
+#service_split_aa  service_split_ab  service_split_ac
+
+cat service_split_* >> new_service
+#将3个新文件进行合并
+
+ls -al / | split -l 10 - lsroot
+#查看根目录，并每隔10行分割，并创建新文件
+
+wc -l lsroot*
+#  10 lsrootaa
+#  10 lsrootab
+#  10 lsrootac
+#   3 lsrootad
+#  33 total
+###################################——》参数代换，xargs
+#作用：解决不支持管道的命令
+#
+xargs [-0epn] command
+#x 乘号；args arguments（参数）
+選項與參數：
+-0  ：如果輸入的 stdin 含有特殊字元，例如 `, \, 空白鍵等等字元時，這個 -0 參數
+      可以將他還原成一般字元。這個參數可以用於特殊狀態喔！
+-e  ：這個是 EOF (end of file) 的意思。後面可以接一個字串，當 xargs 分析到這個字串時，
+      就會停止繼續工作！
+-p  ：在執行每個指令的 argument 時，都會詢問使用者的意思；
+-n  ：後面接次數，每次 command 指令執行時，要使用幾個參數的意思。
+
+id $(cut -d ":" -f 1 /etc/passwd | head -3)
+#id: extra operand ‘bin’
+#报错，无法看 UID和GID
+#id不支持多个参数
+
+cut -d ":" -f 1 /etc/passwd | head -3 | id
+#uid=0(root) gid=0(root) groups=0(root)
+#id不是管道命令，不支持这样书写
+
+cut -d ":" -f 1 /etc/passwd | head -n 3 | xargs id
+#id: extra operand ‘bin’
+#报错，id不支持多个参数的执行
+
+head -n 3 /etc/passwd | cut -d ":" -f 1 | xargs -n 1 id
+#uid=0(root) gid=0(root) groups=0(root)
+#uid=1(bin) gid=1(bin) groups=1(bin)
+#uid=2(daemon) gid=2(daemon) groups=2(daemon)
+#正确，每次执行一个参数分三次执行
+head -n 3 /etc/passwd | awk -F ":" '{print $1}' | xargs -n 1 id
+#正确，同上
+head -n 3 /etc/passwd | awk -F ":" '{print $1}' | xargs -n 1 -p id
+#正确，-p 没步骤都询问
+#id root ?...y
+id bin ?...uid=0(root) gid=0(root) groups=0(root)
+y
+uid=1(bin) gid=1(bin) groups=1(bin)
+id daemon ?...y
+uid=2(daemon) gid=2(daemon) groups=2(daemon)
+
+head /etc/passwd | cut -d ":" -f 1 | xargs -n 1 -e"sync" id
+#执行到 sync就不执行，sync行不会被执行
+#-e"sync 之间不能有空格
 
 
+#################################——》关于减号
+tar -cvf - /home | tar -xvf - -C /tmp/homeback
+#把/home打包 提取到新目录到新目录
+#-减号代表管道前面的输出
+-c, --create 创建新存档
+-v, --verbose 详细列出已处理的文件
+-f, --file=ARCHIVE 使用归档文件或设备 ARCHIVE
+-cvf 打包新文件
+-x, --extract, --get 从存档中提取文件
+-xvf 提取文件
+-C, --directory=DIR 切换到目录 DIR
+      
+   
 
 
 
