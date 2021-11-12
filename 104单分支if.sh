@@ -53,13 +53,23 @@ fi
 ((a>b)) && echo "$a大于$b" || echo "$a小于$b"
 
 ######################——》存在文件则输出，没有则新建后输出
-if [ -e ~/test.sh ]; then
-cat ~/test.sh;
+file=~/test.sh
+cat > tmp.txt << "104eof"
+hehehe
+hehehe
+104eof
+
+if [ -e "$file" ]; then
+cat $file;
 else
-echo "123" > ~/test.sh;
-echo "新建文件 ~/test.sh";
-cat ~/test.sh;
+cat tmp.txt > $file;
+cat $file;
 fi
+
+rm -rf tmp.txt;
+#不能这样搞，放在循环中会出错
+#最好搞个暂存文件，后面再删了,删除临时文件放循环外面吧；
+
 
 
 
