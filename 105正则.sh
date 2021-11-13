@@ -248,8 +248,9 @@ find / -type f | xargs -n 10 grep -l "*"
 ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2}'
 ifconfig eth0 | grep inet | grep -v inet6 | sed 's/.*inet//g' | sed 's/netmask.*//g' | sed 's/[[:blank:]]//g'
 alias="myip=ifconfig eth0 | grep inet | grep -v inet6 | sed 's/.*inet//g' | sed 's/netmask.*//g' | sed 's/[[:blank:]]//g'"
-
-
+alias="myip=ifconfig eth0 | grep 'inet ' | sed 's/^.*inet //g' | sed 's/ netmask.*$//'"
+#inet后面的空格和netmask前面的空格可以sed去掉
+alias myip="ifconfig eth0 | grep 'inet ' | sed 's/^.*inet //g'| sed 's/ *netmask.*$//g'"
 
 
 
