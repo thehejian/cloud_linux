@@ -227,6 +227,29 @@ egrep -n "o{2}" 105regular_express.txt
 grep -n "o\{2\}" 105regular_express.txt
 #不加E时，要对{}进行转义
 
+########################################################——》回顾
+grep '\*' /etc/* 2>/dev/null
+#etc下面全部文件中含有*的文件
+#2>/dev/null 标准错误输出到黑洞
+
+grep "*" $(find /etc/ -type f) 2>/dev/null
+#搜索/etc 下所有文件中包含*的文件和含*的那一行
+
+grep "*" $(find / -type f)
+-bash: /usr/bin/grep: Argument list too long
+#文件太多时会报错
+
+#find找到文件,文件路径紧跟find
+#xargs -n 10 每次传参10个 进行执行
+#xargs配合管道
+find / -type f | xargs -n 10 grep "*"
+find / -type f | xargs -n 10 grep -l "*"
+
+ifconfig eth0 | grep inet | grep -v inet6 | awk '{print $2}'
+ifconfig eth0 | grep inet | grep -v inet6 | sed 's/.*inet//g' | sed 's/netmask.*//g' | sed 's/[[:blank:]]//g'
+alias="myip=ifconfig eth0 | grep inet | grep -v inet6 | sed 's/.*inet//g' | sed 's/netmask.*//g' | sed 's/[[:blank:]]//g'"
+
+
 
 
 
