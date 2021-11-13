@@ -250,7 +250,28 @@ ifconfig eth0 | grep inet | grep -v inet6 | sed 's/.*inet//g' | sed 's/netmask.*
 alias="myip=ifconfig eth0 | grep inet | grep -v inet6 | sed 's/.*inet//g' | sed 's/netmask.*//g' | sed 's/[[:blank:]]//g'"
 alias="myip=ifconfig eth0 | grep 'inet ' | sed 's/^.*inet //g' | sed 's/ netmask.*$//'"
 #inet后面的空格和netmask前面的空格可以sed去掉
+
 alias myip="ifconfig eth0 | grep 'inet ' | sed 's/^.*inet //g'| sed 's/ *netmask.*$//g'"
+myip=$(ifconfig eth0 | grep 'inet ' | sed 's/^.*inet //g'| sed 's/ *netmask.*$//g')
+MYIP=$myip
+
+cat >> ~/.bashrc << "eof"
+alias myip="ifconfig eth0 | grep 'inet ' | sed 's/^.*inet //g'| sed 's/ *netmask.*$//g'"
+myip=$(ifconfig eth0 | grep 'inet ' | sed 's/^.*inet //g'| sed 's/ *netmask.*$//g')
+MYIP=$myip
+eof
+#这个方法比sed合适
+tail -n 10 ~/.bashrc
+
+find /etc -type f | xargs -n 10 grep "[XYZ]" --color=auto
+#在 /etc 底下，只要含有 XYZ 三個字元的任何一個字元的那一行就列出來
+find /etc -type f | xargs -n 10 grep -l "[XYZ]"
+
+/etc/kdump.conf 內容取出後，(1)去除開頭為 # 的行 (2)去除空白行 (3)取出開頭為英文字母的那幾行 (4)最終統計總行數
+egrep -v "^#|^$" /etc/kdump.conf | grep "^[a-zA-Z]" | wc -l
+egrep -v "^#|^$" /etc/kdump.conf | grep "^[[:alpha:]]" | wc -l
+
+
 
 
 
