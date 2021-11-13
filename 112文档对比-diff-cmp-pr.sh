@@ -34,6 +34,38 @@ Only in /etc/init.d/: netconsole
 Only in /etc/init.d/: network
 Only in /etc/init.d/: README
 
+#####################################################——》cmp
+cmp [-l] file1 file2
+選項與參數：
+-l  ：將所有的不同點的位元組處都列出來。因為 cmp 預設僅會輸出第一個發現的不同點。
+
+範例一：用 cmp 比較一下 passwd.old 及 passwd.new
+[dmtsai@study testpw]$ cmp passwd.old passwd.new
+passwd.old passwd.new differ: char 106, line 4
+#第一個發現的不同點在第四行，而且位元組數是在第 106 個位元組處
+
+cmp -l 112diff_passwd_old.txt 112diff_passwd.txt
+#列出全部不同
+
+##################################################——》pr
+pr /etc/man_db.conf
+
+
+2014-06-10 05:35                 /etc/man_db.conf                 Page 1
+
+
+#
+#
+# This file is used by the man-db package to configure the man and cat paths.
+# It is also used to provide a manpath for those without one by examining
+# configure script.
+
+
+
+
+
+
+
 
 
 
