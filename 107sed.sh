@@ -43,10 +43,9 @@ nl 105regular_express.txt | sed '1,26c 12345\
 
 #########################################——》子串替换
 sed 's/要被取代的字串/新的字串/g'
+ifconfig eth0 | grep "inet " | sed 's/^.*inet//g' | sed 's/netmask.*$//g'
+#ifconfig eth0 | grep "inet " | sed 's/^.*inet//g' | sed 's/netmask*$//g'
+#底下这个代表netmask出现0次及以上;会显示全部内容
+#netmask.*代表netmask出现1次及以上
 
-
-
-
-
-
-
+ifconfig eth0 | grep "inet " | awk -F " " '{print $2}'
