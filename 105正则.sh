@@ -1,4 +1,36 @@
 #!/bin/bash
+^word           意義：待搜尋的字串(word)在行首！
+                範例：搜尋行首為 # 開始的那一行，並列出行號
+                grep -n '^#' regular_express.txt
+word$	        意義：待搜尋的字串(word)在行尾！
+                範例：將行尾為 ! 的那一行列印出來，並列出行號
+                grep -n '!$' regular_express.txt
+.	        意義：代表『一定有一個任意字元』的字符！
+                範例：搜尋的字串可以是 (eve) (eae) (eee) (e e)， 但不能僅有 (ee) ！亦即 e 與 e 中間『一定』僅有一個字元，而空白字元也是字元！
+                grep -n 'e.e' regular_express.txt
+\	        意義：透過 shell 的跳脫字符，將特殊符號的特殊意義去除！
+                範例：搜尋含有單引號 ' 的那一行！
+                grep -n \' regular_express.txt
+*	        意義：重複零個到無窮多個的前一個 RE 字符
+                範例：找出含有 (es) (ess) (esss) 等等的字串，注意，因為 * 可以是 0 個，所以 es 也是符合帶搜尋字串。另外，因為 * 為重複『前一個 RE 字符』的符號， 因此，在 * 之前必須要緊接著一個 RE 字符喔！例如任意字元則為 『.*』 ！
+                grep -n 'ess*' regular_express.txt
+[list]	        意義：字元集合的 RE 字符，裡面列出想要擷取的字元！
+                範例：搜尋含有 (gl) 或 (gd) 的那一行，需要特別留意的是，在 [] 當中『謹代表一個待搜尋的字元』， 例如『 a[afl]y 』代表搜尋的字串可以是 aay, afy, aly 即 [afl] 代表 a 或 f 或 l 的意思！
+                grep -n 'g[ld]' regular_express.txt
+                [n1-n2]	意義：字元集合的 RE 字符，裡面列出想要擷取的字元範圍！
+                範例：搜尋含有任意數字的那一行！需特別留意，在字元集合 [] 中的減號 - 是有特殊意義的，他代表兩個字元之間的所有連續字元！但這個連續與否與 ASCII 編碼有關，因此，你的編碼需要設定正確(在 bash 當中，需要確定 LANG 與 LANGUAGE 的變數是否正確！) 例如所有大寫字元則為 [A-Z]
+                grep -n '[A-Z]' regular_express.txt
+[^list]	        意義：字元集合的 RE 字符，裡面列出不要的字串或範圍！
+                範例：搜尋的字串可以是 (oog) (ood) 但不能是 (oot) ，那個 ^ 在 [] 內時，代表的意義是『反向選擇』的意思。 例如，我不要大寫字元，則為 [^A-Z]。但是，需要特別注意的是，如果以 grep -n [^A-Z] regular_express.txt 來搜尋，卻發現該檔案內的所有行都被列出，為什麼？因為這個 [^A-Z] 是『非大寫字元』的意思， 因為每一行均有非大寫字元，例如第一行的 "Open Source" 就有 p,e,n,o.... 等等的小寫字
+                grep -n 'oo[^t]' regular_express.txt
+\{n,m\}	        意義：連續 n 到 m 個的『前一個 RE 字符』
+                意義：若為 \{n\} 則是連續 n 個的前一個 RE 字符，
+                意義：若是 \{n,\} 則是連續 n 個以上的前一個 RE 字符！ 範例：在 g 與 g 之間有 2 個到 3 個的 o 存在的字串，亦即 (goog)(gooog)
+                grep -n 'go\{2,3\}g' regular_express.txt
+
+#################################################——》通配符意思
+『萬用字元』並不相同， 例如，在萬用字元當中的 * 代表的是『 0 ~ 無限多個字元』的意思
+正規表示法當中， * 則是『重複 0 到無窮多個的前一個 RE 字符』
 ################################################——》特殊符号
 [:alnum:]       代表英文大小寫字元及數字，亦即 0-9, A-Z, a-z
 [:alpha:]       代表任何英文大小寫字元，亦即 A-Z, a-z
@@ -177,18 +209,23 @@ grep -n "g*" 105regular_express.txt
 grep -n "gg*" 105regular_express.txt
 #g出现1个以上；g颜色
 
+grep -n -E "^g|g$" 105regular_express.txt
+#g开头或者g结尾的
+#g在行首
 
+grep -n "g.*g" 105regular_express.txt
+#g开头或者g结尾的
+#g在行中任意位置
 
+grep -n "[0-9]" 105regular_express.txt
+grep -n "[0-9][[:digit:]]*" 105regular_express.txt
+#结果一样，下面为正则（RE）的写法
 
-
-
-
-
-
-
-
-
-
+grep -n "ooo*" 105regular_express.txt
+grep -En "o{2}" 105regular_express.txt
+egrep -n "o{2}" 105regular_express.txt
+grep -n "o\{2\}" 105regular_express.txt
+#不加E时，要对{}进行转义
 
 
 
