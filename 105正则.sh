@@ -94,9 +94,9 @@ grep -n '^[^[:upper:]]' 105regular_express.txt
 #最里面一层这种情况，永远不会出现^
 
 
-
-
-
+grep -n "\.$" 105regular_express.txt
+cat -An 105regular_express.txt | head -n 10 | tail -n 4
+grep -n "^$" 105regular_express.txt
 
 
 
