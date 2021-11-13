@@ -48,4 +48,60 @@ ifconfig eth0 | grep "inet " | sed 's/^.*inet//g' | sed 's/netmask.*$//g'
 #底下这个代表netmask出现0次及以上;会显示全部内容
 #netmask.*代表netmask出现1次及以上
 
+ifconfig eth0 | grep "inet " | sed 's/^.*inet //g' | sed 's/netmask.*$//g'
+
 ifconfig eth0 | grep "inet " | awk -F " " '{print $2}'
+
+myip=$(ifconfig eth0 | grep "inet ")
+echo "${myip%%netmask*255}" | sed 's/[[a-z]]*//g' | sed 's/[[:blank:]]//g'
+#%%变量字符串中没有^$没有首字母和结尾字母，这玩意儿只能正则用
+
+ifconfig eth0 | grep "inet " | sed 's/.*inet//g' | sed 's/netmask.*//g' | sed 's/[[:blank:]]//g'
+#ifconfig eth0 | grep "inet " | sed 's/^.*inet//g' | sed 's/netmask.*$//g' | sed 's/[[:blank:]]//g'
+#这种场景$和^好像可以省略掉
+
+cat /etc/man_db.conf | grep "MAN" | grep -v "^#"
+cat /etc/man_db.conf | grep "MAN" | sed 's/^#//g'
+
+cat /etc/man_db.conf | grep "MAN" | grep -v '#.*'
+cat /etc/man_db.conf | grep "MAN" | sed 's/#.*//g'
+cat /etc/man_db.conf | grep "MAN" | sed 's/#.*//g' | sed '/^$/d'
+cat /etc/man_db.conf | grep "MAN" | sed '/#.*/d'
+
+
+cat /etc/man_db.conf | sed -n '/MAN/p' | sed '/^#/d'
+cat /etc/man_db.conf | grep "MAN" | grep -v "^#"
+
+tail -n 8 105regular_express.txt | sed 's/./!/g'
+#不是想要的结果，这个.代表所以字符，会把所以内容改成！
+tail -n 8 105regular_express.txt | sed 's/.$/!/g'
+#不是想要的内容，会把所有结尾的内容改成!
+tail -n 8 105regular_express.txt | sed 's/$/!/g'
+#不是想要的内容，会给所有结尾额外再加！
+
+tail -n 8 105regular_express.txt | sed 's/\./!/g'
+#转义后代表把所有的.换成！，不管是不是结尾
+tail -n 8 105regular_express.txt | sed 's/.$/!/g'
+#代表只替换结尾处的.
+
+sed '$a 98764554' 105regular_express.txt
+#sed '^i 98764554' 105regular_express.txt
+#首行木有，就是1
+sed '1i 98764554' 105regular_express.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
