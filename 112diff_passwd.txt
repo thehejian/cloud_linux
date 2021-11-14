@@ -1,0 +1,5 @@
+vaenish:x:1001:1001::/home/vaenish:/sbin/nologin
+hejian:x:1002:1002::/home/hejian:/bin/bash
+unbound:x:993:990:Unbound DNS resolver:/etc/unbound:/sbin/nologin
+mock:x:1003:1003::/home/mock:/sbin/nologin
+mockbuild:x:1004:1004::/home/mockbuild:/sbin/nologin
