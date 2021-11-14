@@ -24,6 +24,7 @@
 -ef	判斷 file1 與 file2 是否為同一檔案，可用在判斷 hard link 的判定上。 主要意義在判定，兩個檔案是否均指向同一個 inode 哩！
 
 整數判定
+#########################这些玩意儿只能进行整数判断，涉及字符串时，必须使用==这些
 -eq	兩數值相等 (equal)
 -ne	兩數值不等 (not equal)
 -gt	n1 大於 n2 (greater than)
@@ -42,6 +43,11 @@ test str1 != str2	判定 str1 是否不等於 str2 ，若相等，則回傳 fals
 -a	(and)兩狀況同時成立！例如 test -r file -a -x file，則 file 同時具有 r 與 x 權限時，才回傳 true。
 -o	(or)兩狀況任何一個成立！例如 test -r file -o -x file，則 file 具有 r 或 x 權限時，就可回傳 true。
 !	反相狀態，如 test ! -x file ，當 file 不具有 x 時，回傳 true
+
+变量的参数
+$# ：    代表後接的參數『個數』，以上表為例這裡顯示為『 4 』；
+"$@" ：  代表『 "$1" "$2" "$3" "$4" 』之意，每個變數是獨立的(用雙引號括起來)；
+"$*" ：  代表『 "$1c$2c$3c$4" 』，其中 c 為分隔字元，預設為空白鍵， 所以本例中代表『 "$1 $2 $3 $4" 』之意。
 
 test -e /etc && echo 1 || echo 0
 
@@ -64,6 +70,30 @@ echo -e "$filename的文件类型是$filetype \n$filename的权限是$fileperm"
 #-e代表支持\n等
 eof
 bash 114test_file.sh
+
+###################################################——》中括号
+在中括號 [] 內的每個元件都需要有空白鍵來分隔；
+在中括號內的變數，最好都以雙引號括號起來；
+在中括號內的常數，最好都以單或雙引號括號起來。
+
+############################################3
+cat > 114cmd.sh << "eof"
+#當執行一個程式的時候，這個程式會讓使用者選擇 Y 或 N ，
+read -p "请输入是否执行y or n " mycmd
+#如果使用者輸入 Y 或 y 時，就顯示『 OK, continue 』
+[ "$mycmd" == "Y" -o "$mycmd" == "y" ] && echo -e "OK, continue\n"
+#这里不能用-eq，不知道什么原因
+#如果使用者輸入 n 或 N 時，就顯示『 Oh, interrupt ！』
+[ "$mycmd" == "N" -o "$mycmd" == "n" ] && echo -e "Oh, interrupt ！\n"
+#如果不是 Y/y/N/n 之內的其他字元，就顯示『 I don't know what your choice is 』
+#[ "$mycmd" != "Y" -o "$mycmd" != "y"  -o "$mycmd" != "N" -o "$mycmd" != "n" ] && echo -e "I don't know what your choice is\n"
+echo -e "I don't know what your choice is\n"
+eof
+bash 114cmd.sh
+
+file /etc/init.d/network 
+#/etc/init.d/network: Bourne-Again shell script, ASCII text executable
+
 
 
 
