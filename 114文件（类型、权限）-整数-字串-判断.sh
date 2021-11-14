@@ -76,13 +76,13 @@ bash 114test_file.sh
 在中括號內的變數，最好都以雙引號括號起來；
 在中括號內的常數，最好都以單或雙引號括號起來。
 
-############################################3
+############################################——》显示文件
 cat > 114cmd.sh << "eof"
 #當執行一個程式的時候，這個程式會讓使用者選擇 Y 或 N ，
 read -p "请输入是否执行y or n " mycmd
 #如果使用者輸入 Y 或 y 時，就顯示『 OK, continue 』
 [ "$mycmd" == "Y" -o "$mycmd" == "y" ] && echo -e "OK, continue\n"
-#这里不能用-eq，不知道什么原因
+#这里不能用-eq，不知道什么原因；-eq只能用于整数，不能用于
 #如果使用者輸入 n 或 N 時，就顯示『 Oh, interrupt ！』
 [ "$mycmd" == "N" -o "$mycmd" == "n" ] && echo -e "Oh, interrupt ！\n"
 #如果不是 Y/y/N/n 之內的其他字元，就顯示『 I don't know what your choice is 』
@@ -94,7 +94,12 @@ bash 114cmd.sh
 file /etc/init.d/network 
 #/etc/init.d/network: Bourne-Again shell script, ASCII text executable
 
-
+程式的檔名為何？
+共有幾個參數？
+若參數的個數小於 2 則告知使用者參數數量太少
+全部的參數內容為何？
+第一個參數為何？
+第二個參數為何
 
 
 
