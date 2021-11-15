@@ -5,7 +5,7 @@
 #vim /usr/local/nginx/conf/nginx.conf
 #/usr/local/nginx/html/
 
-mydate=date +'%Y%m%d'
+mydate=$(date +'%Y%m%d')
 cp /usr/local/nginx/conf/nginx.conf /usr/local/nginx/conf/nginx.conf.$mydate.bak
 #备份conf文件
 
