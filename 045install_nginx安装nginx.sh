@@ -9,7 +9,12 @@ fi
 
 yum install -y gcc pcre-devel openssl-devel
 #gcc c语言解释器 pcre-devel支持正则 openssl-devel用来加密，配置https的私钥和证书（公钥）
-
+#OpenSSL源码安装错误
+	 #环境变量的问题
+	 #echo "export LD_LIBRARY_PATH=/usr/local/lib" >> ~/.bashrc
+	 #export LD_LIBRARY_PATH=/usr/local/lib
+	 #echo $LD_LIBRARY_PATH
+	 
 useradd -s /sbin/nologin nginx
 #添加不登录的nginx用户
 
