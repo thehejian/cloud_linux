@@ -54,24 +54,22 @@ openssl req -new -x509 -key /usr/local/nginx/conf/cert.key  > /usr/local/nginx/c
 #generate public key (certificate) 
 #创建公钥（证书）
 
-    #server {
-    #    listen       443 ssl;
-    #    server_name  localhost;
-    #    charset utf-8;
-    #    autoindex on;      
-    #    auth_basic               "input password";
-    #    auth_basic_user_file    "/usr/local/nginx/pass";
-    #    ssl_certificate      cert.pem;
-    #    ssl_certificate_key  cert.key;
-    #    ssl_session_cache    shared:SSL:1m;
-    #    ssl_session_timeout  5m;
-    #    ssl_ciphers  HIGH:!aNULL:!MD5;
-    #    ssl_prefer_server_ciphers  on;
-    #    location / {
-    #        root   html;
-    #        index  index.html index.htm;
-    #    } 
-    #    }
+   server {
+        listen       443 ssl;
+        server_name  localhost;
+        charset utf-8;
+        autoindex on;      
+        ssl_certificate      cert.pem;
+        ssl_certificate_key  cert.key;
+        ssl_session_cache    shared:SSL:1m;
+        ssl_session_timeout  5m;
+        ssl_ciphers  HIGH:!aNULL:!MD5;
+        ssl_prefer_server_ciphers  on;
+        location / {
+            root   html;
+            index  index.html index.htm;
+        } 
+        }
 # 上面的文件复制到  /usr/local/nginx/conf/nginx.conf 下，第9行开始；sed用法搞不定
 
 killall -9 nginx
