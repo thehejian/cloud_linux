@@ -42,32 +42,29 @@ make && make install
 #make并make安装
 #升级时，只make不makeinstall
 
-ln -s /usr/local/nginx/sbin/nginx /sbin
-#sbin中加快捷启动操作
-
 echo "启动目录 /usr/local/nginx/sbin/nginx"
 echo "关闭 /usr/local/nginx/sbin/nginx -s stop"
 echo "启动 /usr/local/nginx/sbin/nginx"
 echo "查看版本 /usr/local/nginx/sbin/nginx -V"
 echo "重新加载配置文件 /usr/local/nginx/sbin/nginx -s reload"
 
-touch /usr/lib/systemd/system/nginx.service
-echo "" > /usr/lib/systemd/system/nginx.service
-#将nginx加入systemctl模块
+ln -s /usr/local/nginx/sbin/nginx /sbin
+#sbin中加快捷启动操作
 
-sed -i '1a [Unit]\
-Description=nginx \
-After=network.target \
-[Service] \
-Type=forking \
-PIDFile=/usr/local/nginx/logs/nginx.pid \
-ExecStart=/usr/local/nginx/sbin/nginx \
-ExecReload=/usr/local/nginx/sbin/nginx -s reload \
-ExecStop=/usr/local/nginx/sbin/nginx -s stop \
-PrivateTmp=true \
-[Install] \
-WantedBy=multi-user.target '  /usr/lib/systemd/system/nginx.service 
-
+cat > /usr/lib/systemd/system/nginx.service << "eof"
+[Unit]
+Description=nginx
+After=network.target
+[Service]
+Type=forking
+PIDFile=/usr/local/nginx/logs/nginx.pid
+ExecStart=/usr/local/nginx/sbin/nginx
+ExecReload=/usr/local/nginx/sbin/nginx -s reload
+ExecStop=/usr/local/nginx/sbin/nginx -s stop
+PrivateTmp=true
+[Install]
+WantedBy=multi-user.target
+eof
 systemctl daemon-reload
 #重新加载sys系统设置
 
@@ -76,6 +73,26 @@ killall -9 nginx
 systemctl start nginx
 systemctl enable nginx
 systemctl status nginx
+
+#下面的为1.0的写法
+		touch /usr/lib/systemd/system/nginx.service
+		echo "" > /usr/lib/systemd/system/nginx.service
+		#将nginx加入systemctl模块
+
+		sed -i '1a [Unit]\
+		Description=nginx \
+		After=network.target \
+		[Service] \
+		Type=forking \
+		PIDFile=/usr/local/nginx/logs/nginx.pid \
+		ExecStart=/usr/local/nginx/sbin/nginx \
+		ExecReload=/usr/local/nginx/sbin/nginx -s reload \
+		ExecStop=/usr/local/nginx/sbin/nginx -s stop \
+		PrivateTmp=true \
+		[Install] \
+		WantedBy=multi-user.target '  /usr/lib/systemd/system/nginx.service 
+
+
 
 
 
