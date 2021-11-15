@@ -23,6 +23,7 @@ mkdir -p /usr/local/nginx
 cd /usr/local/nginx
 
 wget -O /usr/local/nginx/nginx-$vision.tar.gz http://nginx.org/download/nginx-$vision.tar.gz
+
 #官网下载tar.gz包
 
 tar -xf nginx-$vision.tar.gz
