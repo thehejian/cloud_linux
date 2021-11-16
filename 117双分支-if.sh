@@ -22,6 +22,7 @@ bash 117_digit.sh
 ####################################——》判断数字1.0
 cat > 117_panduan.sh << "eof"
 #!/bin/bash
+#不够严谨的方法，建议用方法二
 read -p "input " a
 mya1=$(echo "$a" | grep "[0-9]")
 #判断数字
@@ -39,7 +40,7 @@ eof
 bash 117_panduan.sh
 
 ####################################——》判断数字2.0
-cat > 117_panduan.sh_2.0 << "eof"
+cat > 117_panduan.sh_v2.0 << "eof"
 #!/bin/bash
 read -p "input " a
 mynum=$(echo "$a" | sed 's#[0-9]##g')
@@ -58,6 +59,17 @@ mynum=$(echo "$a" | sed 's#[0-9]##g' | grep "")
 [ -z $mynum ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字"
 eof
 bash 117_panduan_v3.0.sh
+
+####################################——》判断数字4.0
+cat > 117_panduan.sh_v4.0 << "eof"
+#!/bin/bash
+read -p "input " a
+mynum=$(echo "${a//[0-9]/}")
+#[ ${#mynum} -eq 0 ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字"
+[ -z $mynum ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字"
+eof
+bash 117_panduan_v4.0.sh
+
 
 
 
