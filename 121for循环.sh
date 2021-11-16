@@ -29,3 +29,37 @@ done
 eof
 bash 121_args_01.sh
 
+######################################——》ping
+cat > 121_ping.sh << "eof"
+#偵測的網域是本機ping所在的 192.168.1.1~192.168.1.100
+#2>&1  意思是把 标准错误输出 重定向到 标准输出.
+#&>file  意思是把标准输出 和 标准错误输出 都重定向到文件file中
+myip=10.243.232
+for i in $(seq 1 100)
+do
+	ping $myip.$i -c 1 -w 1 &> /dev/null && result=0 || result=1
+	[ $result -eq 0 ] && echo -e "$myip.$i ping成功成功成功成功！！" || echo -e "$myip.$i ping不通"
+done
+eof
+bash 121_ping.sh
+
+######################################——》ping 2.0
+cat > 121_ping2.0.sh << "eof"
+#!/bin/bash
+for i in {1..100}
+do
+	ping -c 1 -w 1 10.243.232.$i &> /dev/null
+	[ $? -eq 0 ] && echo -e "10.243.232.$i ping成功成功成功成功！！" || echo -e "10.243.232.$i ping不通"
+done
+eof
+bash 121_ping2.0.sh
+
+
+
+
+
+
+
+
+
+
