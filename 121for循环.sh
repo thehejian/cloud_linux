@@ -54,6 +54,46 @@ done
 eof
 bash 121_ping2.0.sh
 
+######################################——》找权限
+cat > 121_ll.sh << "eof"
+#!/bin/bash
+#使用者輸入某個目錄檔名， 然後我找出某目錄內的檔名的權限
+read -p "请输入路径，像/etc " mypath
+[ -z "$mypath" -o  ! -d "$mypath" ] && echo -e "\n滚，你丫没输入,Usage {$0}"
+#! -d不是目录
+myls=$(ls "$mypath")
+for i in $myls
+do
+	perm=""
+	[ -r "$mypath"/"$i" ] && perm="$perm读"
+	[ -w "$mypath"/"$i" ] && perm="$perm写"
+	[ -x "$mypath"/"$i" ] && perm="$perm执行"
+	echo "$i拥有$perm "
+done
+eof
+bash 121_ll.sh
+
+##################################################################——》找权限2.0
+cat > 121_ll2.0.sh << "eof"
+#!/bin/bash
+read -p "Please input a directory: " dir
+if [ "${dir}" == "" -o ! -d "${dir}" ]; then
+	echo "The ${dir} is NOT exist in your system."
+	exit 1
+fi
+
+# 2. 開始測試檔案囉～
+filelist=$(ls ${dir})        # 列出所有在該目錄下的檔案名稱
+for filename in ${filelist}
+do
+	perm=""
+	test -r "${dir}/${filename}" && perm="${perm} readable"
+	test -w "${dir}/${filename}" && perm="${perm} writable"
+	test -x "${dir}/${filename}" && perm="${perm} executable"
+	echo "The file ${dir}/${filename}'s permission is ${perm} "
+done
+eof
+bash 121_ll2.0.sh
 
 
 
