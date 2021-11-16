@@ -40,7 +40,7 @@ eof
 bash 117_panduan.sh
 
 ####################################——》判断数字2.0
-cat > 117_panduan.sh_v2.0 << "eof"
+cat > 117_panduan_v2.0.sh << "eof"
 #!/bin/bash
 read -p "input " a
 mynum=$(echo "$a" | sed 's#[0-9]##g')
@@ -61,14 +61,41 @@ eof
 bash 117_panduan_v3.0.sh
 
 ####################################——》判断数字4.0
-cat > 117_panduan.sh_v4.0 << "eof"
+cat > 117_panduan_v4.0.sh << "eof"
 #!/bin/bash
 read -p "input " a
 mynum=$(echo "${a//[0-9]/}")
+#利用变量自身的替换来实现 
 #[ ${#mynum} -eq 0 ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字"
 [ -z $mynum ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字"
 eof
 bash 117_panduan_v4.0.sh
+
+
+####################################——》判断数字5.0
+cat > 117_panduan_v5.0.sh << "eof"
+#!/bin/bash
+#如果a长度不为0，把a中的非数字删除，跟原来的a判断；相等则为数字
+read -p "input " a
+mynum=$(echo "${a//[^0-9]/}")
+[ -n "$a" -a "$a" == "$mynum" ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字" 
+        #[ -z "$a" ] && echo "输入为空，请重新执行 $0" &&  exit
+        #为空时退出
+        #不能用;代表不论成功失败都执行下面的内容，会跳出循环
+        #跟sed不同，记着最后没有/
+        #mynum=$(echo "$a" | sed 's#[^0-9]##g')
+        #[ "$a" == "$mynum" ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字" 
+eof
+bash 117_panduan_v5.0.sh
+
+
+
+
+
+
+
+
+
 
 
 
