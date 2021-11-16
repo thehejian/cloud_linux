@@ -48,7 +48,16 @@ mynum=$(echo "$a" | sed 's#[0-9]##g')
 eof
 bash 117_panduan_v2.0.sh
 
-
+####################################——》判断数字3.0
+cat > 117_panduan_v3.0.sh << "eof"
+#!/bin/bash
+read -p "input " a
+mynum=$(echo "$a" | sed 's#[0-9]##g' | grep "")
+#脱裤子放屁，多此一举
+#[ ${#mynum} -eq 0 ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字"
+[ -z $mynum ] && echo -e "\n$a是纯数字" || echo -e "\n$a不是纯数字"
+eof
+bash 117_panduan_v3.0.sh
 
 
 
