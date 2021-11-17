@@ -128,8 +128,10 @@ bash 117_panduan_daxiaov2.0.sh
 cat > 117_panduan_daxiaov3.0.sh << "eof"
 #!/bin/bash
 read -p "input two num like:0 1 " a b
-[ -z "$a" -o -z "$b" ] && echo -e "\n你丫输入的内容不够，需要输入两个数字 bash $0" && exit
+#[ -z "$a" -o -z "$b" ] && echo -e "\n你丫输入的内容不够，需要输入两个数字 bash $0" && exit
 #字符判断，记着加双引号呀
+#[ "$a" == "" -o "$b" == "" ] && echo -e "\n你丫输入的内容不够，需要输入两个数字 bash $0" && exit
+[ ${#a} -eq 0 -o ${#b} -eq 0 ] && echo -e "\n你丫输入的内容不够，需要输入两个数字 bash $0" && exit
 expr $a + $b + 2 > /dev/null 2>&1
 #判断多个数字最好用这个办法
 [ $? -ne  0 ] && echo -e "\n你丫输入的不是数字 bash $0" && exit
