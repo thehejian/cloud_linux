@@ -128,13 +128,17 @@ bash 117_panduan_daxiaov2.0.sh
 cat > 117_panduan_daxiaov3.0.sh << "eof"
 #!/bin/bash
 read -p "input two num like:0 1 " a b
+
+#判断是否存在；
 #[ -z "$a" -o -z "$b" ] && echo -e "\n你丫输入的内容不够，需要输入两个数字 bash $0" && exit
 #字符判断，记着加双引号呀
 #[ "$a" == "" -o "$b" == "" ] && echo -e "\n你丫输入的内容不够，需要输入两个数字 bash $0" && exit
 [ ${#a} -eq 0 -o ${#b} -eq 0 ] && echo -e "\n你丫输入的内容不够，需要输入两个数字 bash $0" && exit
+
+#判断多个数字
 expr $a + $b + 2 > /dev/null 2>&1
-#判断多个数字最好用这个办法
 [ $? -ne  0 ] && echo -e "\n你丫输入的不是数字 bash $0" && exit
+
 if [ $a -gt $b ]; then
     echo -e "\n$a大于$b";
 elif [ $a -lt $b ]; then
@@ -144,6 +148,32 @@ else
 fi
 eof
 bash 117_panduan_daxiaov3.0.sh
+
+####################################——》判断httpd
+cat > 117_panduan_nginx.sh << "eof"
+#!/bin/bash
+#如果httpd没启动，则启动
+app=httpd
+netstat -lnptu | grep "$app" &> /dev/null
+#netstat -lnptu | grep $app > /dev/null 2>&1
+if [ $? -eq 0 ]; then
+    echo -e "$app已经启动\n";
+else
+    echo -e "$app启动中..\n";
+    systemctl start "$app";
+    [ $? -eq 0 ] && echo -e "$app启动成功\n" || echo -e "$app启动失败\n" 
+fi
+eof
+bash 117_panduan_nginx.sh
+
+
+
+
+
+
+
+
+
 
 
 
