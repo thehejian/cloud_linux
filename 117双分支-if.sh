@@ -156,6 +156,11 @@ cat > 117_panduan_nginx.sh << "eof"
 app=httpd
 netstat -lnptu | grep "$app" &> /dev/null
 #netstat -lnptu | grep $app > /dev/null 2>&1
+
+#netstat -lnptu | grep "httpd" | awk -F "[:]+" '{print $2}'
+#80
+#awk -F "[:]+" 分隔符是空格加冒号
+
 if [ $? -eq 0 ]; then
     echo -e "$app已经启动\n";
 else
@@ -166,7 +171,7 @@ fi
 eof
 bash 117_panduan_nginx.sh
 
-
+ 
 
 
 
