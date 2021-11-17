@@ -8,3 +8,11 @@ ssh-keygen -f /root/.ssh/id_rsa -N '' -y
 #-y 默认覆盖指定位置
 ssh-copy-id $IP
 #客户端密码传到服务器
+
+
+#windows powershell方法
+ssh-keygen -f C:\Users\Administrator\.ssh\id_rsa -N '' -y
+scp C:\Users\Administrator\.ssh\id_rsa.pub root@1.116.26.230:/root/.ssh/authorized_keys
+
+C:\Windows\System32\drivers\etc
+1.116.26.230 txy
