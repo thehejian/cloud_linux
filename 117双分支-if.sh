@@ -176,23 +176,30 @@ cat > 117_panduan_mariaDB.sh << "eof"
 #!/bin/bash
 #mysql -u root -p '123456' > /dev/null 2>&1
 #mysql -u root > /dev/null 2>&1
+#mysql -u root -e -h 1.116.26.230  "show databases;" > /dev/null 2>&
+#-h远程连接
 #没设置密码，-p就省略掉吧
 #得加个交互式命令，不然会卡死
 mysql -u root -e "show databases;" > /dev/null 2>&1
 [ $? -eq 0 ] && echo "mysql已启动" || {
-echo "mysql没启动"
-echo "重启中"
+echo "mysql没启动，你丫赶紧处理下，参考 systemctl start maridb"
 systemctl start maridb
 eof
 bash 117_panduan_mariaDB.sh
 
-
-
-
-
-
-
-
+####################################——》判断mariaDb——php脚本
+cat > 117_panduan_mariaDB_php.php << "eof" 
+<?php
+$link_id=mysql_connect('localhost','root','') or mysql_error();
+//'主机名','用户','密码'
+if($link_id){
+    echo "mysql连接错误";
+}else{
+    echo mysql_error();
+}
+?>
+eof
+php 117_panduan_mariaDB_php.php
 
 
 
