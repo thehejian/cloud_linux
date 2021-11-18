@@ -198,8 +198,24 @@ if($link_id){
     echo mysql_error();
 }
 ?>
+
+<?php
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+try { 
+    $conn = new PDO("mysql:host=$servername;dbname=mysql;port=3306", $username, $password); 
+    echo "连接成功 -> 1.116.26.230"; 
+} 
+catch(PDOException $e) 
+{ 
+    echo $e->getMessage(); 
+} 
+?>
+
 eof
-php 117_panduan_mariaDB_php.php
+#php 117_panduan_mariaDB_php.php
+/bin/cp -rf 117_panduan_mariaDB_php.php /usr/local/nginx/html/
 
 
 
