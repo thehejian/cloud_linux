@@ -190,11 +190,11 @@ bash 117_panduan_mariaDB.sh
 ####################################——》判断mariaDb——php脚本
 cat > 117_panduan_mariaDB_php.php << "eof" 
 <?php
-$link_id=mysql_connect('localhost','root','') or mysql_error();
+$link_id = mysql_connect('localhost','root','') or mysql_error();
 //'主机名','用户','密码'
-if($link_id){
+if ($link_id){
     echo "mysql连接错误";
-}else{
+} else{
     echo mysql_error();
 }
 ?>
@@ -222,6 +222,23 @@ eof
 #php 117_panduan_mariaDB_phpv2.0.php
 /bin/cp -rf 117_panduan_mariaDB_phpv2.0.php /usr/local/nginx/html/
 curl http://1.116.26.230/117_panduan_mariaDB_phpv2.0.php
+
+####################################——》判断nginx
+
+#namp
+nmap 1.116.26.230 -p 80
+
+#wget
+wget -T 10 -q --spider http://1.116.26.230
+#-T timeout
+#-q quiet (no output)
+#--spider don't download anything
+
+
+
+
+
+
 
 
 
