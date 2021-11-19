@@ -171,6 +171,14 @@ fi
 eof
 bash 117_panduan_nginx.sh
 
+###bash -x 117_panduan_nginx.sh
++ app=httpd
++ netstat -lnptu
++ grep httpd
++ '[' 0 -eq 0 ']'
++ echo -e 'httpd已经启动\n'
+httpd已经启动
+
 ####################################——》判断mariaDb
 cat > 117_panduan_mariaDB.sh << "eof" 
 #!/bin/bash
@@ -224,38 +232,57 @@ eof
 curl http://1.116.26.230/117_panduan_mariaDB_phpv2.0.php
 
 ####################################——》判断nginx
-#namp
+#########——》#namp
+cat > 117_web_nmap.sh << "eof"
+echo -e "\nnmap 162.166.94.62 -p 80 | grep open | wc -l0"
+[ $mynmap -eq 1 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
+#nmap 1.116.26.230 -p 80 
 #$?不行哈
-nmap 1.116.26.230 -p 80
 mynmap=$(nmap 162.166.94.62 -p 80 | grep open | wc -l)
 #1
-[ $nmap -eq 1 ]
+eof
+bash 117_web_nmap.sh
 
-#curl
+#########——》#curl
+cat > 117_web_curl.sh << "eof"
+echo -e "\ncurl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62"
 mycurl=$(curl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62)
+[ $mycurl -eq 200 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
+#curl -o /dev/null -s -w %"{http_code}\n" 10.243.232.63
+#504
 #200
 #-o, --output FILE   Write output to <file> instead of stdout
 #-s, --silent        Silent mode. Don't output anything
 #不加-s的结果
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-100  1842  100  1842    0     0   603k      0 --:--:-- --:--:-- --:--:--  899k
+#  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#                                 Dload  Upload   Total   Spent    Left  Speed
+#100  1842  100  1842    0     0   603k      0 --:--:-- --:--:-- --:--:--  899k
 #-w, --write-out FORMAT  What to output after completion
 #-w "%{http_code}" 看返回码
 #$?不能判断
-[ $mycurl -eq 200 ]
+eof
+bash 117_web_curl.sh
 
-#wget
+#########——》#wget
+cat > 117_web_wget.sh << "eof"
+#!/bin/bash
+echo -e "\nwget -T 10 -q --spider http://162.166.94.62"
 wget -T 10 -q --spider http://162.166.94.62
+[ $? -eq 0 ] && echo -e "\nwebserver nginx/apache is UP" || echo -e "\nwebserver nginx/apache is DOWN"
 #-T timeout
 #-q quiet (no output)
 #--spider don't download anything
-[ $? -eq 0 ]
+eof
+bash 117_web_wget.sh
 
-#ps
-ps -ef | grep nginx | grep -v grep
-[ $? -eq 0 ]
-
+#########——》#ps
+cat > 117_web_ps.sh << "eof"
+#!/bin/bash
+echo -e "\nps -ef | grep nginx | grep -v grep"
+ps -ef | grep nginx | grep -v grep &> /dev/null
+[ $? -eq 0 ] && echo -e "\nwebserver nginx/apache is UP" || echo -e "\nwebserver nginx/apache is DOWN"
+eof
+bash 117_web_ps.sh
 
 
 
