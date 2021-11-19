@@ -116,15 +116,66 @@ echo -e "\n1加到100等于 $s"
 eof
 bash 121_for_jia.sh
 
+###################################################################——》随机选餐
+cat > 121_suijishu.sh << "eof"
+#!/bin/bash
+#9人的取余
+#$((RANDOM%10))
+#$(( ${RANDOM} * 9 / 32767 + 1 ))
+eat[1]="賣噹噹漢堡"       # 寫下你所收集到的店家！
+eat[2]="肯爺爺炸雞"
+eat[3]="彩虹日式便當"
+eat[4]="越油越好吃大雅"
+eat[5]="想不出吃啥學餐"
+eat[6]="太師父便當"
+eat[7]="池上便當"
+eat[8]="懷念火車便當"
+eat[9]="一起吃泡麵"
+num=$((RANDOM%10))
+#num=$(($RANDOM%10))
+#取0~9随机数
+echo -e "\n今晚吃${eat[$num]}"
+#记着把数组内的值大括号框起来
+eof
+bash 121_suijishu.sh
 
+###################################################################——》随机选餐v2.0
+cat > 121_suijishuv2.0.sh << "eof"
+#看不懂，暂时放弃了；
+#!/bin/bash
+eat[1]="賣噹噹漢堡"
+eat[2]="肯爺爺炸雞"
+eat[3]="彩虹日式便當"
+eat[4]="越油越好吃大雅"
+eat[5]="想不出吃啥學餐"
+eat[6]="太師父便當"
+eat[7]="池上便當"
+eat[8]="懷念火車便當"
+eat[9]="一起吃泡麵"
+eatnum=9
 
-
-
-
-
-
-
-
+eated=0
+while [ "${eated}" -lt 3 ]; 
+#eatd会从0、1、2、3
+do
+        check=$PANDOM%10;
+        mycheck=0;
+        [ "${eated}" -ge 1 ] && {
+	#eated为0时这个会跳过，执行下面的if；
+                for i in $(seq 1 ${eated} )
+                do
+                        [ ${eatedcon[$i]} == $check ] && mycheck=1;
+                done
+        }
+        #eated为0时，执行这个；
+	if [ ${mycheck} == 0 ]; then
+                echo "your may eat ${eat[${check}]}"
+                eated=$(( ${eated} + 1 ))
+                eatedcon[${eated}]=${check}
+        fi
+done 
+eof
+bash 121_suijishuv2.0.sh
 
 
 
