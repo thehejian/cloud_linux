@@ -235,10 +235,10 @@ curl http://1.116.26.230/117_panduan_mariaDB_phpv2.0.php
 #########——》#namp
 cat > 117_web_nmap.sh << "eof"
 echo -e "\nnmap 162.166.94.62 -p 80 | grep open | wc -l0"
+mynmap=$(nmap 162.166.94.62 -p 80 | grep open | wc -l)
 [ $mynmap -eq 1 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
 #nmap 1.116.26.230 -p 80 
 #$?不行哈
-mynmap=$(nmap 162.166.94.62 -p 80 | grep open | wc -l)
 #1
 eof
 bash 117_web_nmap.sh
@@ -266,10 +266,10 @@ bash 117_web_curl.sh
 #########——》#wget
 cat > 117_web_wget.sh << "eof"
 #!/bin/bash
-echo -e "\nwget -T 10 -q --spider http://162.166.94.62"
-wget -T 10 -q --spider http://162.166.94.62
+echo -e "\nwget -q --spider http://162.166.94.62"
+wget -q --spider http://162.166.94.62
 [ $? -eq 0 ] && echo -e "\nwebserver nginx/apache is UP" || echo -e "\nwebserver nginx/apache is DOWN"
-#-T timeout
+#-T timeout 千万不要加
 #-q quiet (no output)
 #--spider don't download anything
 eof
