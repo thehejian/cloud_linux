@@ -1,6 +1,11 @@
-echo -e "\ncurl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62"
-mycurl=$(curl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62)
-[ $mycurl -eq 200 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
+echo -e "\ncurl --connect-timeout 1 -m 2 cur 10.234.232.63 &> /dev/null"
+curl --connect-timeout 1 -m 2 cur 10.234.232.63 &> /dev/null
+#连接超时时间用--connect-timeout参数来指定，数据传输的最大允许时间用-m参数来指定
+[ $? -eq 0 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
+
+
+#mycurl=$(curl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62)
+#[ $mycurl -eq 200 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
 #curl -o /dev/null -s -w %"{http_code}\n" 10.243.232.63
 #504
 #200
