@@ -155,20 +155,18 @@ eat[9]="一起吃泡麵"
 eatnum=9
 
 eated=0
-while [ "${eated}" -lt 3 ]; 
-#eatd会从0、1、2、3
-do
-        check=$PANDOM%10;
-        mycheck=0;
-        [ "${eated}" -ge 1 ] && {
-	#eated为0时这个会跳过，执行下面的if；
+while [ "${eated}" -lt 3 ]; do
+        check=$(( ${RANDOM} * ${eatnum} / 32767 + 1 ))
+        mycheck=0
+        if [ "${eated}" -ge 1 ]; then
                 for i in $(seq 1 ${eated} )
                 do
-                        [ ${eatedcon[$i]} == $check ] && mycheck=1;
+                        if [ ${eatedcon[$i]} == $check ]; then
+                                mycheck=1
+                        fi
                 done
-        }
-        #eated为0时，执行这个；
-	if [ ${mycheck} == 0 ]; then
+        fi
+        if [ ${mycheck} == 0 ]; then
                 echo "your may eat ${eat[${check}]}"
                 eated=$(( ${eated} + 1 ))
                 eatedcon[${eated}]=${check}
