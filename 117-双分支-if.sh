@@ -224,15 +224,39 @@ eof
 curl http://1.116.26.230/117_panduan_mariaDB_phpv2.0.php
 
 ####################################——》判断nginx
-
 #namp
+#$?不行哈
 nmap 1.116.26.230 -p 80
+mynmap=$(nmap 162.166.94.62 -p 80 | grep open | wc -l)
+#1
+[ $nmap -eq 1 ]
+
+#curl
+mycurl=$(curl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62)
+#200
+#-o, --output FILE   Write output to <file> instead of stdout
+#-s, --silent        Silent mode. Don't output anything
+#不加-s的结果
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  1842  100  1842    0     0   603k      0 --:--:-- --:--:-- --:--:--  899k
+#-w, --write-out FORMAT  What to output after completion
+#-w "%{http_code}" 看返回码
+#$?不能判断
+[ $mycurl -eq 200 ]
 
 #wget
-wget -T 10 -q --spider http://1.116.26.230
+wget -T 10 -q --spider http://162.166.94.62
 #-T timeout
 #-q quiet (no output)
 #--spider don't download anything
+[ $? -eq 0 ]
+
+#ps
+ps -ef | grep nginx | grep -v grep
+[ $? -eq 0 ]
+
+
 
 
 
