@@ -245,9 +245,14 @@ bash 117_web_nmap.sh
 
 #########——》#curl
 cat > 117_web_curl.sh << "eof"
-echo -e "\ncurl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62"
-mycurl=$(curl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62)
-[ $mycurl -eq 200 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
+echo -e "\ncurl --connect-timeout 1 -m 2 cur 10.234.232.63 &> /dev/null"
+curl --connect-timeout 1 -m 2 cur 10.234.232.63 &> /dev/null
+#连接超时时间用--connect-timeout参数来指定，数据传输的最大允许时间用-m参数来指定
+[ $? -eq 0 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
+
+
+#mycurl=$(curl -o /dev/null -s -w "%{http_code}\n" 162.166.94.62)
+#[ $mycurl -eq 200 ] && echo -e "\nwebserver(nginx/apache) is UP" || echo -e "\nwebserver(nginx/apache) is DOWN"
 #curl -o /dev/null -s -w %"{http_code}\n" 10.243.232.63
 #504
 #200
@@ -266,10 +271,14 @@ bash 117_web_curl.sh
 #########——》#wget
 cat > 117_web_wget.sh << "eof"
 #!/bin/bash
-echo -e "\nwget -q --spider http://162.166.94.62"
-wget -q --spider http://162.166.94.62
+echo -e "\nwget -t 1 --timeout=1 http://10.243.232.63"
+wget -t 1 -T 1 http://10.243.232.63 &> /dev/null
 [ $? -eq 0 ] && echo -e "\nwebserver nginx/apache is UP" || echo -e "\nwebserver nginx/apache is DOWN"
-#-T timeout 千万不要加
+#-T timeout -T 1 或者 --timeout=1 每次的超时时间为1s，默认还是会无线重复
+#-t 1 只执行1次
+
+
+#下面两个配置无所谓
 #-q quiet (no output)
 #--spider don't download anything
 eof
