@@ -308,6 +308,18 @@ fi
 eof
 bash 117_web2.0.sh
 
+###############################################################——》#检查站点目录是否修改
+cat > 117_zhandian站点目录是否修改.sh << "eof"
+source /etc/init.d/functions
+#检查站点目录是否修改
+
+for i in $(ls /etc/*.conf)
+#遍历全部的配置文件
+do
+	md5sum $i > 117_md5sum_nginx.txt
+done
+eof
+bansh 117_zhandian站点目录是否修改.sh
 
 
 
