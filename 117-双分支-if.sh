@@ -323,7 +323,7 @@ done
 
 source /etc/init.d/functions
 mydiff=$(diff 117_md5sum_nginx_"$mydate".txt 117_md5sum_nginx_ori.txt)
-[ -z $mydiff ] && action "$path配置没变化" /bin/true || action "$path变化了，修改文件请查看$mydiff" /bin/false
+[ -z "$mydiff" ] && action "$path配置没变化" /bin/true || action "$path配置文件变化了" /bin/false; echo -e "详情如下:\n$mydiff"
 
 eof
 bash 117_zhandian站点目录是否修改.sh
