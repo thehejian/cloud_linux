@@ -310,18 +310,36 @@ bash 117_web2.0.sh
 
 ###############################################################——》#检查站点目录是否修改
 cat > 117_zhandian站点目录是否修改.sh << "eof"
-source /etc/init.d/functions
 #检查站点目录是否修改
-
-for i in $(ls /etc/*.conf)
+mypath=/usr/local/nginx
+mydate=$(date +%Y%m%d)
+myfind=$(find $mypath -type f -name "*.conf")
+rm -rf 117_md5sum_nginx_"$mydate".txt
+for i in $myfind
 #遍历全部的配置文件
 do
-	md5sum $i > 117_md5sum_nginx.txt
+	md5sum $i >> 117_md5sum_nginx_"$mydate".txt
+done
+
+source /etc/init.d/functions
+mydiff=$(diff 117_md5sum_nginx_"$mydate".txt 117_md5sum_nginx_ori.txt)
+[ -z $mydiff ] && action "$path配置没变化" /bin/true || action "$path变化了，修改文件请查看$mydiff" /bin/false
+
+eof
+bash 117_zhandian站点目录是否修改.sh
+
+################——》##建立默认文件
+cat > 117_zhandian站点目录是否修改_path.sh << "eof"
+#建立默认文件
+mypath=/usr/local/nginx
+myfind=$(find "$mypath" -type f -name "*.conf")
+for i in $myfind
+#遍历全部的配置文件
+do
+	md5sum $i >> 117_md5sum_nginx_ori.txt
 done
 eof
-bansh 117_zhandian站点目录是否修改.sh
-
-
+bash 117_zhandian站点目录是否修改_path.sh
 
 
 
