@@ -104,7 +104,27 @@ EXPIRE= <==帳號失效日，在 shadow 內的第 8 欄
 SHELL=/bin/bash <==預設的 shell
 SKEL=/etc/skel  <==使用者家目錄的內容資料參考目錄
 CREATE_MAIL_SPOOL=yes <==是否主動幫使用者建立郵件信箱(mailbox)
+#ll /var/spool/mail/
 
+egrep -v "^#|^$" /etc/login.defs
+MAIL_DIR	/var/spool/mail <==使用者預設郵件信箱放置目錄
+PASS_MAX_DAYS	99999   <==/etc/shadow 內的第 5 欄，多久需變更密碼日數
+PASS_MIN_DAYS	0       <==/etc/shadow 內的第 4 欄，多久不可重新設定密碼日數
+PASS_MIN_LEN    8       <==密碼最短的字元長度，已被 pam 模組取代，失去效用！
+PASS_WARN_AGE	7       <==/etc/shadow 內的第 6 欄，過期前會警告的日數
+UID_MIN                  1000   <==使用者最小的 UID，意即小於 1000 的 UID 為系統保留
+UID_MAX                 60000    <==使用者能夠用的最大 UID
+SYS_UID_MIN               201   <==保留給使用者自行設定的系統帳號最小值 UID
+SYS_UID_MAX               999    <==保留給使用者自行設定的系統帳號最大值 UID
+GID_MIN                  1000   <==使用者自訂群組的最小 GID，小於 1000 為系統保留
+GID_MAX                 60000   <==使用者自訂群組的最大 GID
+SYS_GID_MIN               201   <==保留給使用者自行設定的系統帳號最小值 GID
+SYS_GID_MAX               999   <==保留給使用者自行設定的系統帳號最大值 GID
+CREATE_HOME	yes     <==在不加 -M 及 -m 時，是否主動建立使用者家目錄？
+UMASK           077     <==使用者家目錄建立的 umask ，因此權限會是 700
+USERGROUPS_ENAB yes     <==使用 userdel 刪除時，是否會刪除初始群組
+ENCRYPT_METHOD MD5      <==密碼加密的機制
+MD5_CRYPT_ENAB yes      
 
 #等同
 cat /etc/default/useradd 
@@ -116,10 +136,6 @@ EXPIRE=
 SHELL=/bin/bash
 SKEL=/etc/skel
 CREATE_MAIL_SPOOL=yes
-
-
-
-
 
 useradd [-u UID] [-g 初始群組] [-G 次要群組] [-mM]\
 >  [-c 說明欄] [-d 家目錄絕對路徑] [-s shell] 使用者帳號名
@@ -139,9 +155,109 @@ useradd [-u UID] [-g 初始群組] [-G 次要群組] [-mM]\
       亦即帳號失效日的設定項目囉；
 -f  ：後面接 shadow 的第七欄位項目，指定密碼是否會失效。0為立刻失效，
       -1 為永遠不失效(密碼只會過期而強制於登入時重新設定而已。)
+#####################################################################################################——》passwd
+ passwd [--stdin] [帳號名稱]  <==所有人均可使用來改自己的密碼
+[root@study ~]# passwd [-l] [-u] [--stdin] [-S] \
+>  [-n 日數] [-x 日數] [-w 日數] [-i 日數] 帳號 <==root 功能
+選項與參數：
+--stdin ：可以透過來自前一個管線的資料，作為密碼輸入，對 shell script 有幫助！
+-l  ：是 Lock 的意思，會將 /etc/shadow 第二欄最前面加上 ! 使密碼失效；
+-u  ：與 -l 相對，是 Unlock 的意思！
+-S  ：列出密碼相關參數，亦即 shadow 檔案內的大部分資訊。
+-n  ：後面接天數，shadow 的第 4 欄位，多久不可修改密碼天數
+-x  ：後面接天數，shadow 的第 5 欄位，多久內必須要更動密碼
+-w  ：後面接天數，shadow 的第 6 欄位，密碼過期前的警告天數
+-i  ：後面接天數，shadow 的第 7 欄位，密碼失效天數
 
 
+echo "123456" | passwd --stdin hejian
+#Changing password for user hejian.
+#passwd: all authentication tokens updated successfully.
 
+passwd -S
+passwd -S hejian
+#hejian PS 2021-11-21 0 99999 7 -1 (Password set, MD5 crypt.)
+# 上面說明密碼建立時間 (2021-11-21)、0 最小天數、99999 變更天數、7 警告日數與密碼不會失效 (-1)
+
+#密碼使具有 60 天變更、密碼過期 10 天後帳號失效的設定
+passwd -x 60 -i 10 hejian
+#Adjusting aging data for user hejian.
+#passwd: Success
+passwd -S hejian
+hejian PS 2021-11-21 0 60 7 10 (Password set, MD5 crypt.)
+grep hejian /etc/shadow 
+#hejian:$1$h405qXDy$1/B9s9Q2XGTN4OksKhZD91:18952:0:60:7:10::
+
+passwd -l hejian
+#Locking password for user hejian.
+#passwd: Success
+passwd -S hejian
+#hejian LK 2021-11-21 0 60 7 10 (Password locked.)
+#锁定，无法登陆
+
+passwd -u hejian
+#Unlocking password for user hejian.
+#passwd: Success
+passwd -S hejian
+#hejian PS 2021-11-21 0 60 7 10 (Password set, MD5 crypt.)
+#解锁，恢复登录
+
+##########################################################################################################——》chage
+chage [-ldEImMW] 帳號名
+選項與參數：
+-l ：列出該帳號的詳細密碼參數；
+-d ：後面接日期，修改 shadow 第三欄位(最近一次更改密碼的日期)，格式 YYYY-MM-DD
+-E ：後面接日期，修改 shadow 第八欄位(帳號失效日)，格式 YYYY-MM-DD
+-I ：後面接天數，修改 shadow 第七欄位(密碼失效日期)
+-m ：後面接天數，修改 shadow 第四欄位(密碼最短保留天數)
+-M ：後面接天數，修改 shadow 第五欄位(密碼多久需要進行變更)
+-W ：後面接天數，修改 shadow 第六欄位(密碼過期前警告日期)
+
+chage -l hejian
+Last password change					: Nov 21, 2021
+Password expires					: Jan 20, 2022
+Password inactive					: Jan 30, 2022
+Account expires						: never
+Minimum number of days between password change		: 0
+Maximum number of days between password change		: 60
+Number of days of warning before password expires	: 7
+
+useradd hejian_chage
+echo "123456" | passwd --stdin hejian_chage
+#Changing password for user hejian_chage.
+#passwd: all authentication tokens updated successfully.
+
+chage -l hejian_chage 
+Last password change					: Nov 21, 2021
+Password expires					: never
+Password inactive					: never
+Account expires						: never
+Minimum number of days between password change		: 0
+Maximum number of days between password change		: 99999
+Number of days of warning before password expires	: 7
+
+chage -d 0 hejian_chage
+#把密码失效时间改为1970年，所有登录时，必须修改密码
+
+chage -l hejian_chage
+Last password change					: password must be changed
+Password expires					: password must be changed
+Password inactive					: password must be changed
+Account expires						: never
+Minimum number of days between password change		: 0
+Maximum number of days between password change		: 99999
+Number of days of warning before password expires	: 7
+
+ssh hejian_chage@txy
+hejian_chage@txy's password:
+You are required to change your password immediately (root enforced)
+Last login: Sun Nov 21 11:05:20 2021
+WARNING: Your password has expired.
+You must change your password now and login again!
+Changing password for user hejian_chage.
+Changing password for hejian_chage.
+(current) UNIX password:
+#修改完密码会被踢出，需要重新登录
 
 
 
