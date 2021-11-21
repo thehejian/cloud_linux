@@ -75,7 +75,70 @@ GID：
 此群組支援的帳號名稱：
 我們知道一個帳號可以加入多個群組，那某個帳號想要加入此群組時，將該帳號填入這個欄位即可。 舉例來說，如果我想要讓 dmtsai 與 alex 也加入 root 這個群組，那麼在第一行的最後面加上『dmtsai,alex』，注意不要有空格， 使成為『 root:x:0:dmtsai,alex 』就可以囉～
 
+useradd -u 1002 -g hejian hejian
+ll -d /home/hejian
+#drwx------ 2 hejian hejian 4096 Oct 31 11:33 /home/hejian
+grep hejian /etc/passwd /etc/shadow /etc/group
+/etc/passwd:hejian:x:1002:1002::/home/hejian:/bin/bash
+/etc/shadow:hejian:$1$6/OFk1bK$DE8tXOW5o8iAc1Gg7wVCD.:18931:0:99999:7:::
+/etc/group:hejian:x:1002:
 
+##################################################################——》创建系统账号
+useradd -r hejian_r
+#不会主动创建家目录
+ll -d /home/hejian_r
+ls: cannot access /home/hejian_r: No such file or directory
+grep hejian_r /etc/passwd /etc/shadow /etc/group
+/etc/passwd:hejian_r:x:991:989::/home/hejian_r:/bin/bash
+/etc/shadow:hejian_r:!!:18952::::::
+/etc/group:hejian_r:x:989:
+
+useradd -D
+GROUP=100 <==預設的群組
+HOME=/home  <==預設的家目錄所在目錄
+INACTIVE=-1 <==密碼失效日，在 shadow 內的第 7 欄
+EXPIRE= <==帳號失效日，在 shadow 內的第 8 欄
+#你可以直接設定帳號在哪個日期後就直接失效，而不理會密碼的問題。 通常不會設定此項目，但如果是付費的會員制系統，或許這個欄位可以設定喔！
+#grep root /etc/shadow
+#root:$1$YDGwpJct$OdStASaZVjqoyDk2L2EOO.:18892:0:99999:7:::
+SHELL=/bin/bash <==預設的 shell
+SKEL=/etc/skel  <==使用者家目錄的內容資料參考目錄
+CREATE_MAIL_SPOOL=yes <==是否主動幫使用者建立郵件信箱(mailbox)
+
+
+#等同
+cat /etc/default/useradd 
+# useradd defaults file
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=yes
+
+
+
+
+
+useradd [-u UID] [-g 初始群組] [-G 次要群組] [-mM]\
+>  [-c 說明欄] [-d 家目錄絕對路徑] [-s shell] 使用者帳號名
+選項與參數：
+-u  ：後面接的是 UID ，是一組數字。直接指定一個特定的 UID 給這個帳號；
+-g  ：後面接的那個群組名稱就是我們上面提到的 initial group 啦～
+      該群組的 GID 會被放置到 /etc/passwd 的第四個欄位內。
+-G  ：後面接的群組名稱則是這個帳號還可以加入的群組。
+      這個選項與參數會修改 /etc/group 內的相關資料喔！
+-M  ：強制！不要建立使用者家目錄！(系統帳號預設值)
+-m  ：強制！要建立使用者家目錄！(一般帳號預設值)
+-c  ：這個就是 /etc/passwd 的第五欄的說明內容啦～可以隨便我們設定的啦～
+-d  ：指定某個目錄成為家目錄，而不要使用預設值。務必使用絕對路徑！
+-r  ：建立一個系統的帳號，這個帳號的 UID 會有限制 (參考 /etc/login.defs)
+-s  ：後面接一個 shell ，若沒有指定則預設是 /bin/bash 的啦～
+-e  ：後面接一個日期，格式為『YYYY-MM-DD』此項目可寫入 shadow 第八欄位，
+      亦即帳號失效日的設定項目囉；
+-f  ：後面接 shadow 的第七欄位項目，指定密碼是否會失效。0為立刻失效，
+      -1 為永遠不失效(密碼只會過期而強制於登入時重新設定而已。)
 
 
 
