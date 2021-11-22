@@ -421,7 +421,7 @@ bash 117_jianchav4.0_md5sum_ori.txt
 #cat 117_md5_v4.0_ori.txt
 
 ###############################################################——》#检查站点目录是否修改v5.0
-##没搞出来
+##搞定了，错误在变量的赋值，for中，$mulu设置错误，错误成命令而不是文本了
 cat > 117_jianchav5.0.sh << "eof"
 #千万不要少个<号
 #!/bin/bash
@@ -432,21 +432,22 @@ myfile=$path/117_md5_v5.0_ori.txt
 [ ! -f $myfile ] && md5sum $myfind > $myfile
 #不存在，就建立指纹库
 
+mulu=$(md5sum -c $myfile 2> /dev/null | sed 's/[[:blank:]]//g')
 
 source /etc/init.d/functions
-for i in $(md5sum -c $myfile 2> /dev/null)
+for i in $mulu
 do
-	mypanduan=$(echo $i | awk -F "[:]" '{print $2}' | sed 's/[[:blank:]]//g') 
-	echo_path=$(echo $i | awk -F "[:]" '{print $1}')
-	[ "$mypanduan" == "OK" ] && action "$echo_path 文件没变" /bin/true || action "$echo_path 文件变化了" /bin/false
+	mypanduan=$(echo $i | awk -F "[:]" '{print $2}');
+	echo_path=$(echo $i | awk -F "[:]" '{print $1}');
+	[ "$mypanduan" == "OK" ] && action "$echo_path  文件没变" /bin/true ||  action "$echo_path  文件变化了" /bin/false;
 done
 eof
 bash 117_jianchav5.0.sh
 
-
-
-
-
+#for i in $mulu
+#先让i=mulu的命令，如果不能设置变量就得调整mu命令的结果
+#比如i=/usr/local/nginx/conf/fastcgi.conf: OK
+#这种是绝对禁止的，会当命令（/usr/local/nginx/conf/fastcgi.conf:）和参数（OK）去执行
 
 
 
