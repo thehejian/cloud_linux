@@ -1,0 +1,6 @@
+70 /usr/local/nginx/conf.bak/fastcgi.conf
+80 /usr/local/nginx/conf.bak/nginx.conf
+70 /usr/local/nginx/conf/fastcgi.conf
+92 /usr/local/nginx/conf/nginx.conf
+70 /usr/local/nginx/nginx-1.12.2/conf/fastcgi.conf
+80 /usr/local/nginx/nginx-1.12.2/conf/nginx.conf

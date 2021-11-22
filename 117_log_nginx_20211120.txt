@@ -1,0 +1,6 @@
+/usr/local/nginx/conf.bak/fastcgi.conf
+/usr/local/nginx/conf.bak/nginx.conf
+/usr/local/nginx/conf/fastcgi.conf
+/usr/local/nginx/conf/nginx.conf
+/usr/local/nginx/nginx-1.12.2/conf/fastcgi.conf
+/usr/local/nginx/nginx-1.12.2/conf/nginx.conf

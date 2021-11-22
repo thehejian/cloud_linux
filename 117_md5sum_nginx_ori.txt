@@ -1,0 +1,6 @@
+178a634a52a0777a4cf6f3a394fd2b53  /usr/local/nginx/conf.bak/fastcgi.conf
+3a0b1f2d0a5734fe3200a48703bafed2  /usr/local/nginx/conf.bak/nginx.conf
+178a634a52a0777a4cf6f3a394fd2b53  /usr/local/nginx/conf/fastcgi.conf
+7cfd2a706a2843fa4ade2aa5db79ffdb  /usr/local/nginx/conf/nginx.conf
+178a634a52a0777a4cf6f3a394fd2b53  /usr/local/nginx/nginx-1.12.2/conf/fastcgi.conf
+3a0b1f2d0a5734fe3200a48703bafed2  /usr/local/nginx/nginx-1.12.2/conf/nginx.conf
