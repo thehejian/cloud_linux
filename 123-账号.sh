@@ -574,6 +574,7 @@ Last login: Mon Nov 22 03:46:32 EST 2021 on pts/0
 [hejian@host-162-166-94-62 ~]$ 
 
 [hejian@host-162-166-94-62 ~]$ su
+# non-login shell 的方式，這種方式很多原本的變數不會被改變
 Password: 
 [root@host-162-166-94-62 hejian]# id
 uid=0(root) gid=0(root) groups=0(root)
@@ -581,9 +582,25 @@ uid=0(root) gid=0(root) groups=0(root)
 USER=hejian
 XDG_RUNTIME_DIR=/run/user/1001
 
+[root@host-162-166-94-62 hejian]# su -
+Last login: Mon Nov 22 04:07:16 EST 2021 on pts/1
+[root@host-162-166-94-62 ~]# id
+uid=0(root) gid=0(root) groups=0(root)
+[root@host-162-166-94-62 ~]# env | grep -i "user"
+USER=root
+#su - 会切换身份
 
+[root@host-162-166-94-62 ~]# exit
+[hejian@host-162-166-94-62 ~]$ head -n 3 /etc/shadow
+head: cannot open ‘/etc/shadow’ for reading: Permission denied
 
-
+[hejian@host-162-166-94-62 ~]$ su - -c "head -n 3 /etc/shadow"
+Password: 
+root:$6$dnKRK5s9yINu5IFT$EN8wAeyzbGwFqH8kFnJFevwGahgP4Hyp2CFoM9eRlGLwIR1xLyp/.dVtahsRDI.b.V4Gp6L6J0BihKDU6CNO90::0:99999:7:::
+bin:*:17110:0:99999:7:::
+daemon:*:17110:0:99999:7:::
+[hejian@host-162-166-94-62 ~]$
+#-c 临时执行一次
 
 
 
