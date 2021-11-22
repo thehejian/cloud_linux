@@ -421,6 +421,7 @@ bash 117_jianchav4.0_md5sum_ori.txt
 #cat 117_md5_v4.0_ori.txt
 
 ###############################################################——》#检查站点目录是否修改v5.0
+##没搞出来
 cat > 117_jianchav5.0.sh << "eof"
 #千万不要少个<号
 #!/bin/bash
@@ -431,22 +432,16 @@ myfile=$path/117_md5_v5.0_ori.txt
 [ ! -f $myfile ] && md5sum $myfind > $myfile
 #不存在，就建立指纹库
 
-myfailed=$(md5sum -c $myfile 2> /dev/null | grep ": FAILED")
-echo_myfailed=$(echo $myfailed | awk -F "[:]" '{print $1}')
-
-mytrued=$(md5sum -c $myfile 2> /dev/null | grep ": OK")
-echo_mytrued=$(echo $mytrued | awk -F "[:]" '{print $1}')
 
 source /etc/init.d/functions
-[ -n "$myfailed" ] && action "$echo_myfailed 文件变化了" /bin/false || action "$echo_mytrued 文件没变" /bin/true
-
+for i in $(md5sum -c $myfile 2> /dev/null)
+do
+	mypanduan=$(echo $i | awk -F "[:]" '{print $2}' | sed 's/[[:blank:]]//g') 
+	echo_path=$(echo $i | awk -F "[:]" '{print $1}')
+	[ "$mypanduan" == "OK" ] && action "$echo_path 文件没变" /bin/true || action "$echo_path 文件变化了" /bin/false
+done
 eof
 bash 117_jianchav5.0.sh
-
-
-
-
-
 
 
 
