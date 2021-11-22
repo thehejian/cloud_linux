@@ -337,6 +337,7 @@ bash 117_zhandian站点目录是否修改v2.0.sh
 ###############################################################——》#检查站点目录是否修改
 cat > 117_zhandian站点目录是否修改.sh << "eof"
 #检查站点目录是否修改
+#md5sum方法
 mypath=/usr/local/nginx
 mydate=$(date +%Y%m%d)
 myfind=$(find $mypath -type f -name "*.conf")
@@ -387,10 +388,37 @@ for j in $myfind
 do
 	mynow=$(cat "$j" | wc -L);
 	myori=$(grep "$j" 117_path_ori.txt | awk '{print $1}');
-	[  $mynow -eq $myori ] && action "$j  文件没变" /bin/true || action "$j  文件变了" /bin/fasle;
+	[  $mynow -eq $myori ] && action "$j  文件没变" /bin/true || action "$j  文件变了" /bin/false;
 done
 eof
 bash 117_jianchav3.0.sh
+
+
+###############################################################——》#检查站点目录是否修改v4.0
+cat > 117_jianchav4.0.sh << "eof"
+#千万不要少个<号
+#!/bin/bash
+path=/usr/local/nginx
+myfind=$(find $path -type f -name "*.conf")
+source /etc/init.d/functions
+for i in $myfind
+do
+	[ $(md5sum $i | awk '{print $1}') == $(grep $i 117_md5_v4.0_ori.txt | awk '{print $1}') ] && action "$i  文件没变" /bin/true || action "$i  文件变了" /bin/false;
+done
+eof
+bash 117_jianchav4.0.sh
+
+#默认建立md5初始值
+cat > 117_jianchav4.0_md5sum_ori.txt << "eof"
+path=/usr/local/nginx
+myfind=$(find $path -type f -name "*.conf")
+for i in $myfind
+do
+	md5sum $i >> 117_md5_v4.0_ori.txt
+done
+eof
+bash 117_jianchav4.0_md5sum_ori.txt
+#cat 117_md5_v4.0_ori.txt
 
 
 
