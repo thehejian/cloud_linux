@@ -443,6 +443,161 @@ setfacl [-bkRd] [{-m|-x} acl參數] 目標檔名
 
 
 
+# 1. 針對特定使用者的方式：
+# 設定規範：『 u:[使用者帳號列表]:[rwx] 』，例如針對 vbird1 的權限規範 rx ：
+
+[root@host-162-166-94-62 html]# touch acl_test; ll acl_test
+-rw-r--r-- 1 root root 0 Nov 22 03:06 acl_test
+
+[root@host-162-166-94-62 html]# setfacl -m u:root:rx acl_test; ll acl_test 
+-rw-r-xr--+ 1 root root 0 Nov 22 03:06 acl_test
+
+[root@host-162-166-94-62 html]# setfacl -m u::rwx acl_test; ll acl_test 
+-rwxr-xr--+ 1 root root 0 Nov 22 03:06 acl_test
+# 設定值中的 u 後面無使用者列表，代表設定該檔案擁有者，所以上面顯示 root 的權限成為 rwx 了！
+
+getfacl filename
+選項與參數：
+getfacl 的選項幾乎與 setfacl 相同！所以鳥哥這裡就免去了選項的說明啊！
+
+#-m mask 有效權限 (effective permission)
+[root@host-162-166-94-62 html]# getfacl acl_test 
+# file: acl_test
+# owner: root
+# group: root
+user::rwx   #setfacl -m u::rwx acl_test
+user:root:r-x     #setfacl -m u:root:rx acl_test      有效權限 (effective permission)
+group::r--
+mask::r-x
+other::r--
+
+#-g 组权限
+[root@host-162-166-94-62 html]# setfacl -m g:grouptest:rx acl_test ; ll acl_test ; getfacl acl_test 
+-rwxr-xr--+ 1 root root 0 Nov 22 03:06 acl_test
+# file: acl_test
+# owner: root
+# group: root
+user::rwx
+user:root:r-x
+group::r--
+group:grouptest:r-x     #setfacl -m g:grouptest:rx acl_test
+mask::r-x
+other::r--
+
+[root@host-162-166-94-62 html]# setfacl -m u:hejian:rx acl_test ; ll acl_test ; getfacl acl_test 
+-rwxr-xr--+ 1 root root 0 Nov 22 03:06 acl_test
+# file: acl_test
+# owner: root
+# group: root
+user::rwx
+user:root:r-x
+user:hejian:r-x   #setfacl -m u:hejian:rx acl_test
+group::r--
+group:grouptest:r-x
+mask::r-x
+other::r--
+
+[root@host-162-166-94-62 html]# setfacl -m m:r acl_test ; getfacl acl_test 
+# file: acl_test
+# owner: root
+# group: root
+user::rwx
+user:root:r-x			#effective:r--    <==hejian+mask均存在者，僅有 r 而已，x 不會生效
+user:hejian:r-x			#effective:r--
+group::r--
+group:grouptest:r-x		#effective:r--
+mask::r--
+other::r--
+#默认將 mask 設定為 rwx 
+
+###########################################################################################
+針對預設權限的設定方式：
+# 設定規範：『 d:[ug]:使用者列表:[rwx] 』
+
+[root@host-162-166-94-62 html]# mkdir acl_test ; getfacl acl_test
+# file: acl_test
+# owner: root
+# group: root
+user::rwx
+group::r-x
+other::r-x
+
+[root@host-162-166-94-62 html]# setfacl -m d:u:hejian:rx acl_test/ ; getfacl acl_test/
+# file: acl_test/
+# owner: root
+# group: root
+user::rwx
+group::r-x
+other::r-x
+default:user::rwx
+default:user:hejian:r-x #新增权限
+default:group::r-x
+default:mask::r-x
+default:other::r-x
+
+[root@host-162-166-94-62 html]# cd acl_test/ ; mkdir -p test001 ; getfacl test001
+# file: test001
+# owner: root
+# group: root
+user::rwx
+user:hejian:r-x
+group::r-x
+mask::r-x
+other::r-x
+default:user::rwx
+default:user:hejian:r-x
+default:group::r-x
+default:mask::r-x
+default:other::r-x
+#setfacl -m d:u:hejian:rx acl_test/ 
+#子目录全部继承
+
+#########################################################################################################试用者身份切换
+su
+su [-lm] [-c 指令] [username]
+選項與參數：
+-   ：單純使用 - 如『 su - 』代表使用 login-shell 的變數檔案讀取方式來登入系統；
+      若使用者名稱沒有加上去，則代表切換為 root 的身份。
+-l  ：與 - 類似，但後面需要加欲切換的使用者帳號！也是 login-shell 的方式。
+-m  ：-m 與 -p 是一樣的，表示『使用目前的環境設定，而不讀取新使用者的設定檔』
+-c  ：僅進行一次指令，所以 -c 後面可以加上指令喔！
+
+
+[hejian@host-162-166-94-62 html]$ id
+uid=1001(hejian) gid=1002(hejian) groups=1002(hejian)
+[hejian@host-162-166-94-62 html]$ su -
+Password: 
+Last login: Mon Nov 22 03:45:17 EST 2021 on pts/0
+[root@host-162-166-94-62 ~]# 
+[root@host-162-166-94-62 ~]# su - hejian
+Last login: Mon Nov 22 03:46:32 EST 2021 on pts/0
+[hejian@host-162-166-94-62 ~]$ 
+
+[hejian@host-162-166-94-62 ~]$ su
+Password: 
+[root@host-162-166-94-62 hejian]# id
+uid=0(root) gid=0(root) groups=0(root)
+[root@host-162-166-94-62 hejian]# env | grep -i "user"
+USER=hejian
+XDG_RUNTIME_DIR=/run/user/1001
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
