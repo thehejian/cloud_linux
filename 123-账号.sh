@@ -288,6 +288,230 @@ df -hT /mnt
 Filesystem     Type  Size  Used Avail Use% Mounted on
 /dev/vda2      ext3  7.8G  5.8G  1.6G  79% /
 
+finger [-s] username
+選項與參數：
+-s  ：僅列出使用者的帳號、全名、終端機代號與登入時間等等；
+-m  ：列出與後面接的帳號相同者，而不是利用部分比對 (包括全名部分)
+
+finger -s root
+Login     Name       Tty      Idle  Login Time   Office     Office Phone   Host
+root      root       pts/0          Nov 10 22:51                           (10.182.152.127)
+
+finger root
+Login: root           			Name: root
+Directory: /root                    	Shell: /bin/bash
+On since Wed Nov 10 22:51 (EST) on pts/0 from 10.182.152.127
+   5 seconds idle
+Mail last read Tue Jul 27 21:42 2021 (EDT)
+No Plan.
+
+Login：為使用者帳號，亦即 /etc/passwd 內的第一欄位；
+Name：為全名，亦即 /etc/passwd 內的第五欄位(或稱為註解)；
+Directory：就是家目錄了；
+Shell：就是使用的 Shell 檔案所在；
+Never logged in.：figner 還會調查使用者登入主機的情況喔！
+No mail.：調查 /var/spool/mail 當中的信箱資料；
+No Plan.：調查 ~vbird1/.plan 檔案，並將該檔案取出來說明！
+
+echo "I will study Linux during this year." > ~/.plan
+finger root
+
+Login: root           			Name: root
+Directory: /root                    	Shell: /bin/bash
+On since Wed Nov 10 22:51 (EST) on pts/0 from 10.182.152.127
+   1 second idle
+Mail last read Tue Jul 27 21:42 2021 (EDT)
+Plan:
+I will study Linux during this year.
+###################################################################################################################################
+chfn
+chfn [-foph] [帳號名]
+選項與參數：
+-f  ：後面接完整的大名；
+-o  ：您辦公室的房間號碼；
+-p  ：辦公室的電話號碼；
+-h  ：家裡的電話號碼！
+
+#chfn
+Changing finger information for root.
+Name [root]: root
+Office []: huawei
+Office Phone []: 123456
+Home Phone []: 456123
+
+Finger information changed.
+
+#finger root
+Login: root           			Name: root
+Directory: /root                    	Shell: /bin/bash
+Office: huawei, 123456			Home Phone: 456123
+On since Wed Nov 10 22:51 (EST) on pts/0 from 10.182.152.127
+Mail last read Tue Jul 27 21:42 2021 (EDT)
+Plan:
+I will study Linux during this year.
+
+grep root /etc/passwd
+root:x:0:0:root,huawei,123456,456123:/root:/bin/bash
+operator:x:11:0:operator:/root:/sbin/nologin
+dockerroot:x:996:991:Docker User:/var/lib/docker:/sbin/nologin
+
+#########################################################################################################################
+chsh
+chsh [-ls]
+選項與參數：
+-l  ：列出目前系統上面可用的 shell ，其實就是 /etc/shells 的內容！
+-s  ：設定修改自己的 Shell 囉
+
+[root@host-162-166-94-62 html]# chsh -l
+/bin/sh
+/bin/bash
+/usr/bin/sh
+/usr/bin/bash
+[root@host-162-166-94-62 html]# cat /etc/shells 
+/bin/sh
+/bin/bash
+/usr/bin/sh
+/usr/bin/bash
+
+#########################################################################################################################
+群组
+ groupadd [-g gid] [-r] 群組名稱
+選項與參數：
+-g  ：後面接某個特定的 GID ，用來直接給予某個 GID ～
+-r  ：建立系統群組啦！與 /etc/login.defs 內的 GID_MIN 有關。
+
+[root@host-162-166-94-62 html]# groupadd group_test
+[root@host-162-166-94-62 html]# grep group_test /etc/group /etc/gshadow
+/etc/group:group_test:x:1001:
+/etc/gshadow:group_test:!::
+
+groupmod [-g gid] [-n group_name] 群組名
+選項與參數：
+-g  ：修改既有的 GID 數字；
+-n  ：修改既有的群組名稱
+[root@host-162-166-94-62 html]# groupmod -g 201 -n mygroup group_test
+[root@host-162-166-94-62 html]# grep mygroup /etc/group /etc/gshadow
+/etc/group:mygroup:x:201:
+/etc/gshadow:mygroup:!::
+
+groupdel [groupname]
+[root@host-162-166-94-62 html]# groupdel mygroup
+
+###############################################################################################################################
+# 關於系統管理員(root)做的動作：
+[root@study ~]# gpasswd groupname
+[root@study ~]# gpasswd [-A user1,...] [-M user3,...] groupname
+[root@study ~]# gpasswd [-rR] groupname
+選項與參數：
+    ：若沒有任何參數時，表示給予 groupname 一個密碼(/etc/gshadow)
+-A  ：將 groupname 的主控權交由後面的使用者管理(該群組的管理員)
+-M  ：將某些帳號加入這個群組當中！
+-r  ：將 groupname 的密碼移除
+-R  ：讓 groupname 的密碼欄失效
+
+# 關於群組管理員(Group administrator)做的動作：
+[someone@study ~]$ gpasswd [-ad] user groupname
+選項與參數：
+-a  ：將某位使用者加入到 groupname 這個群組當中！
+-d  ：將某位使用者移除出 groupname 這個群組當中。
+
+[root@host-162-166-94-62 html]# groupadd grouptest
+[root@host-162-166-94-62 html]# gpasswd grouptest
+Changing the password for group grouptest
+New Password: 
+Re-enter new password: 
+
+[root@host-162-166-94-62 html]# useradd hejian
+[root@host-162-166-94-62 html]# gpasswd -A hejian grouptest
+[root@host-162-166-94-62 html]# grep grouptest /etc/group /etc/gshadow
+/etc/group:grouptest:x:1001:
+/etc/gshadow:grouptest:$6$Bf/7R/7jHOgl$OWbe35S9uIH6xCZQYMLbWsztWm8rO3j8Vh/7/0lwbtXehJAjdVrC37DQu4UE6bwfr7JzT5R5V/M8uRJfXKYqf/:hejian:
+
+######################################################################################################
+ACL
+[root@host-162-166-94-62 html]# dmesg | grep -i acl
+[    2.590442] systemd[1]: systemd 219 running in system mode. (+PAM +AUDIT +SELINUX +IMA -APPARMOR +SMACK +SYSVINIT +UTMP +LIBCRYPTSETUP +GCRYPT +GNUTLS +ACL +XZ +LZ4 -SECCOMP +BLKID +ELFUTILS +KMOD +IDN)
+
+setfacl [-bkRd] [{-m|-x} acl參數] 目標檔名
+選項與參數：
+-m ：設定後續的 acl 參數給檔案使用，不可與 -x 合用；
+-x ：刪除後續的 acl 參數，不可與 -m 合用；
+-b ：移除『所有的』 ACL 設定參數；
+-k ：移除『預設的』 ACL 參數，關於所謂的『預設』參數於後續範例中介紹；
+-R ：遞迴設定 acl ，亦即包括次目錄都會被設定起來；
+-d ：設定『預設 acl 參數』的意思！只對目錄有效，在該目錄新建的資料會引用此預設值
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
