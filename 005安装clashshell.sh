@@ -15,6 +15,7 @@ echo '安装完记着 设置——网络——VPN——networkproxy——手动'
 export url='https://cdn.jsdelivr.net/gh/juewuy/ShellClash@master' && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh  && sh /tmp/install.sh && source /etc/profile &> /dev/null
 
 #导入配置
+https://gateway.subscribe.meirixin.com.cn/api/v1/client/subscribe?token=5576e36a45a6086179bdad543f7adeb9&flag=clash
 #https://global.gateway.subscribe.flyint.top/api/v1/client/subscribe?token=5576e36a45a6086179bdad543f7adeb9&flag=clash
 
 #设置——网络——VPN——networkproxy——手动
