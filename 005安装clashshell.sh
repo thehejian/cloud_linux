@@ -13,8 +13,11 @@ echo '安装完记着 设置——网络——VPN——networkproxy——手动'
 linux-设置代理和取消代理
 设置代理：
 
- export http_proxy="http://proxy-XXXXX"
- export https_proxy="https://proxy-XXXXX:"
+ export http_proxy="http://172.0.0.1:7890"
+ export https_proxy="https://172.0.0.1:7890"
+
+
+
 
 
 取消代理：
@@ -40,3 +43,5 @@ https://gateway.subscribe.meirixin.com.cn/api/v1/client/subscribe?token=5576e36a
 #https		172.0.0.1	7890
 #socks主机 	172.0.0.1	7890
 #忽略主机	localhost, 127.0.0.0/8, ::1
+
+
