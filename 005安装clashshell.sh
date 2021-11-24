@@ -12,24 +12,16 @@ yum install wget curl -y
 echo '安装完记着 设置——网络——VPN——networkproxy——手动'
 linux-设置代理和取消代理
 设置代理：
-
  export http_proxy="http://172.0.0.1:7890"
  export https_proxy="https://172.0.0.1:7890"
-
-
-
-
-
 取消代理：
-
 unset http_proxy
-
 unset https_proxy
-
- 
-
- 如果想要使代理服务器永久生效，可以修改 /etc/profile文件 ，在profile 中添加或者删除。
-
+如果想要使代理服务器永久生效，可以修改 /etc/profile文件 ，在profile 中添加或者删除。
+alias clash="bash /etc/clash/clash.sh"
+export clashdir="/etc/clash"
+export all_proxy=http://127.0.0.1:7890
+export ALL_PROXY=$all_proxy
 
 #安装clashshell
 export url='https://cdn.jsdelivr.net/gh/juewuy/ShellClash@master' && wget -q --no-check-certificate -O /tmp/install.sh $url/install.sh  && sh /tmp/install.sh && source /etc/profile &> /dev/null
