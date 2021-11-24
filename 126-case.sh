@@ -29,12 +29,33 @@ esac
 eof
 bash 126_shuzi.sh
 
+##############################################################################
+cat > 126_02_文字颜色.sh << "eof"
+#!/bin/bash
 
+#echo -e "\033[31m 红色字 \033[0m" 
+#echo -e "\033[32m 绿色字 \033[0m" 
+#echo -e "\033[33m 黄色字 \033[0m" 
 
+myred=\\033[31m
+mygreen=\\033[32m
+myyellow=\\033[33m
+rest=\\033[0m
 
-
-
-
+read -p "请输入内容(成功 1 |失败 2 |待定 3 ) " myword
+case "$myword" in
+  1 | 成功)
+  echo -e "$mygreen $myword$rest"
+  ;;
+  2 | 失败)
+  echo -e "$myred$myword$rest"
+  ;;
+  *)
+  echo -e "$myyellow$myword$rest"
+  ;;
+esac
+eof
+bash 126_02_文字颜色.sh
 
 
 
