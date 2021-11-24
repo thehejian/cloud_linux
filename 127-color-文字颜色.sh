@@ -1,4 +1,12 @@
 #!/bin/bash
+#系统设定
+        SETCOLOR_SUCCESS="echo -en \\033[1;32m"
+        SETCOLOR_FAILURE="echo -en \\033[1;31m"
+        SETCOLOR_WARNING="echo -en \\033[1;33m"
+
+SETCOLOR_SUCCESS="echo -en \\033[1;32m"
+echo "成功"  && $SETCOLOR_SUCCESS
+#$脚本中使用，下一行会变色
 
 下面是相应的字和背景颜色，可以自己来尝试找出不同颜色搭配 
 echo -e "\033[31m 红色字 \033[0m"
