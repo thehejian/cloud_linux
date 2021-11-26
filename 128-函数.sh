@@ -112,61 +112,13 @@ case $1 in
 esac
 }
 eof
-####
+#########################################################
 cat > 128_06_rsync.sh << "eof"
 read -p "请输入指令 (start | 1)(stop | 2)(restart | 3) " mycmd
 source 128_05function.sh
 fun_rsync $mycmd
 eof
 bash 128_06_rsync.sh
-
-#################################################################################################################
-cat > 128_07function.sh << "eof"
-source /etc/init.d/functions
-start () {
-    ps -ef | grep -v grep | grep rsync &> /dev/null
-    if [ $? -eq 0 ]; then
-        action "已启动" /bin/true
-    else
-        rsync --daemon
-        action "启动成功" /bin/true
-    fi
-}
-stop () {
-    ps -ef | grep -v grep | grep rsync &> /dev/null
-    [ $? -eq 0 ] && {
-    pkill rsync
-    action "关闭成功" /bin/true
-    } || action "已关闭" /bin/true
-}
-restart () {
-    pkill rsync
-    sleep 2
-    rsync --daemon
-    [ $? -eq 0 ] && action "重启成功" /bin/true || action "重启失败" /bin/false
-}
-eof
-###########################################################################
-cat > 128_08_rsync.sh << "eof"
-read -p "请输入指令 (start | 1)(stop | 2)(restart | 3) " mycmd
-source 128_07function.sh
-case $mycmd in
-    start | 1)
-    start
-    ;;
-    stop | 2)
-    stop
-    ;;
-    restart | 3)
-    restart
-    ;;
-    *)
-    action "Usage: $0 {(start | 1)(stop | 2)(restart | 3)}" /bin/false
-    ;;
-esac
-eof
-bash 128_08_rsync.sh
-
 
 
 
