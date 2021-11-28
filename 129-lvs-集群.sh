@@ -37,10 +37,111 @@
 yum -y install ipvsadm
 #工具，把命令转给内核的lvs
 
+ipvsadm -A -t 192.168.29.158:80 -s wrr
+#-A 新建
+#-t tcp service address
+#-s wrr 调度类型为加权轮询
 
+pvsadm -a -t 192.168.29.158:80 -r 1.116.26.230 -w 1
+#-a 添加真实IP
+#-r realIP
+#-w weighted 权重
 
+ipvsadm -a -t 192.168.29.158:80 -r 192.168.29.151 -w 1
+ipvsadm -L
+#IP Virtual Server version 1.2.1 (size=4096)
+#Prot LocalAddress:Port Scheduler Flags
+#  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+#TCP  192.168.29.158:http wrr
+#  -> 192.168.29.151:http          Route   1      0          0         
+#  -> txy:http                     Route   1      0          0 
+#调度器是centos 192.168.29.158
+#real server txy 1.116.26.230
+#real server ubuntu 192.168.29.151
+#默认时DR模式
+#-g 默认，DR模式
+#-m nat模式 --masquerading -m                   masquerading (NAT)
+#-i 隧道模式   --ipip         -i                   ipip encapsulation (tunneling)
+#--numeric      -n                   numeric output of addresses and ports
+#-A -E -D 新建 修改 删除
+#-a -e -d 新增 修改 删除Real server
 
+[root@192 cloud_linux]# ipvsadm -l
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  192.168.29.158:http wrr
+  -> 192.168.29.151:http          Route   1      0          0         
+  -> txy:http                     Route   1      0          0         
+[root@192 cloud_linux]# ipvsadm -ln
+IP Virtual Server version 1.2.1 (size=4096)
+Prot LocalAddress:Port Scheduler Flags
+  -> RemoteAddress:Port           Forward Weight ActiveConn InActConn
+TCP  192.168.29.158:80 wrr
+  -> 192.168.29.151:80            Route   1      0          0         
+  -> 1.116.26.230:80              Route   1      0          0
 
+#轮询时，权重无效
+
+ipvsadm-save -n > /etc/sysconfig/ipvsadm-config  
+#永久保存规则
+
+#ipvsadm -C
+#清空所有规则
+
+####################################################################################################
+#step1
+
+#开启调度器路由功能
+echo 1 > /proc/sys/net/ipv4/ip_forward
+#重定向可以，不能用vim；
+#ipforward打开，当路由器用；
+#临时生效
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+#永久生效
+
+#step 2
+ipvsadm -A -t 192.168.29.158:80 -s wrr
+#-s wrr 调度模式为加权轮询
+ipvsadm -a -t 192.168.29.158:80 -r 1.116.26.230 -w 1 -m
+#-m NAT模式
+ipvsadm -a -t 192.168.29.158:80 -r 192.168.29.151 -w 1 -m
+ipvsadm -Ln
+#查看，-n数字模式，ip
+ipvsadm --save -n > /etc/sysconfig/ipvsadm-config 
+#永久保存
+
+#step3
+curl http://192.168.29.158
+#curl 可以使用，浏览器好像有延续呀
+
+#查看网关
+#区域网的网关需要一致
+[root@192 cloud_linux]# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         192.168.29.2    0.0.0.0         UG    100    0        0 ens33
+0.0.0.0         192.168.29.2    0.0.0.0         UG    101    0        0 ens37
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+192.168.29.0    0.0.0.0         255.255.255.0   U     100    0        0 ens33
+192.168.29.0    0.0.0.0         255.255.255.0   U     101    0        0 ens37
+
+[root@VM-0-14-centos ~]# route -n
+Kernel IP routing table
+Destination     Gateway         Genmask         Flags Metric Ref    Use Iface
+0.0.0.0         172.17.0.1      0.0.0.0         UG    0      0        0 eth0
+169.254.0.0     0.0.0.0         255.255.0.0     U     1002   0        0 eth0
+172.17.0.0      0.0.0.0         255.255.240.0   U     0      0        0 eth0
+172.18.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+
+root@hejian-virtual-machine:~# route -n
+
+内核 IP 路由表
+目标            网关            子网掩码        标志  跃点   引用  使用 接口
+0.0.0.0         192.168.29.2    0.0.0.0         UG    100    0        0 ens33
+169.254.0.0     0.0.0.0         255.255.0.0     U     1000   0        0 ens33
+172.17.0.0      0.0.0.0         255.255.0.0     U     0      0        0 docker0
+192.168.29.0    0.0.0.0         255.255.255.0   U     100    0        0 ens33
 
 
 
