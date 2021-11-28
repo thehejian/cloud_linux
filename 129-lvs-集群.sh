@@ -32,18 +32,110 @@ curl http://192.168.29.158
 #web2：txy 1.116.26.230；需要设置双IP；VIP;lo: VIP lo:192.168.1.162
 #有几个web就得有几个公网IP
 
+################################调度proxy配置
 #修改主机名称
 hostname proxy
 #临时修改主机名；立即生效
 vim /etc/hosts
 #127.0.0.1   proxy localhost localhost.localdomain localhost4 localhost4.localdomain4
 
-#创建虚拟网卡
+#创建虚拟网卡(VIP)
 #主网卡  ens33 192.168.29.161  DIP
 #虚拟机网卡 ens33:0 192.168.29.162 VIP
 cd /etc/sysconfig/network-scripts/
+
 cp ifcfg-ens33{,:0}
 #cp ifcfg-ens33 ifcfg-ens33:0
+cat > /etc/sysconfig/network-scripts/ifcfg-ens33:0 << "eof"
+TYPE=Ethernet
+BOOTPROTO=none
+DEFROUTE=yes
+NAME=ens33:0
+DEVICE=ens33:0
+ONBOOT=yes
+IPADDR=192.168.29.162
+PREFIX=24
+eof
+
+#systemctl stop NetworkManager
+systemctl restart network
+#重启网络
+
+################################webserver1配置
+#修改主机名称
+hostname web1-ubuntu
+#临时修改主机名；立即生效
+vim /etc/hosts
+#127.0.0.1   web1-ubuntu localhost localhost.localdomain localhost4 localhost4.localdomain4
+#lo 是vip 192.168.29.162
+cd /etc/sysconfig/network-scripts/
+cp ifcfg-lo{,:0}
+cat > /etc/sysconfig/network-scripts/ifcfg-lo:0 << "eof"
+DEVICE=lo:0
+IPADDR=192.168.29.162
+#vip
+NETMASK=255.255.255.255
+NETWORK=192.168.29.162
+# If you're having problems with gated making 127.0.0.0/8 a martian,
+# you can change this to something else (255.255.255.255, for example)
+BROADCAST=192.168.29.162
+ONBOOT=yes
+NAME=lo:0
+eof
+
+#地址可能会冲突，做下面的操作
+cat >> /etc/sysctl.conf << "eof"
+net.ipv4.conf.all.arp_ignore=1
+#当arp广播问谁是vip（192.168.29.162）时，忽略arp广播，所有网卡；
+#不回vip，其他的正常
+net.ipv4.conf.lo.arp_ignore=1
+#忽略arp广播（回环）
+net.ipv4.conf.all.arp_announce=2
+#声明，宣告；回包；
+#不对外宣称自己的的loip是vip；
+#2坚决不声明；1尽可能
+net.ipv4.conf.lo.arp_announce=2
+eof
+systemctl restart network
+
+#centos有2个程序管理网络，可能冲突；network 和 networkManager
+##########################################
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=none
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33:0
+#UUID=44701f4e-612f-47a7-85b3-4bcd65c8e3fb
+DEVICE=ens33:0
+ONBOOT=yes
+IPADDR=192.168.29.162
+PREFIX=24
+#############################################
+TYPE=Ethernet
+PROXY_METHOD=none
+BROWSER_ONLY=no
+BOOTPROTO=dhcp
+DEFROUTE=yes
+IPV4_FAILURE_FATAL=no
+IPV6INIT=yes
+IPV6_AUTOCONF=yes
+IPV6_DEFROUTE=yes
+IPV6_FAILURE_FATAL=no
+IPV6_ADDR_GEN_MODE=stable-privacy
+NAME=ens33
+UUID=44701f4e-612f-47a7-85b3-4bcd65c8e3fb
+DEVICE=ens33
+ONBOOT=yes
+#############################################
+
+
 
 
 
