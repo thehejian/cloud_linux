@@ -25,13 +25,25 @@ curl http://192.168.29.158
 #curl 可以使用，浏览器好像有延续呀
 #转发效率高，但是默认是没有健康检查的；
 ####################################################################################################  LVS-DR
-#调度器：centos 192.168.29.158
-#vip
-#dip
-#web1：ubuntu 192.168.29.151
-#web2：txy 1.116.26.230
+#调度器：centos
+  #dip  调度器给后端web的ip；作为主IP;192.168.29.161;ens33
+  #vip  用户访问的IP；这个IP要隐藏起来；作为次IP(虚拟接口);ens33:0;192.168.29.162 ——《用户访问这个
+#web1：ubuntu 192.168.29.151；需要设置双IP；lo: VIP lo:192.168.1.162
+#web2：txy 1.116.26.230；需要设置双IP；VIP;lo: VIP lo:192.168.1.162
+#有几个web就得有几个公网IP
 
+#修改主机名称
+hostname proxy
+#临时修改主机名；立即生效
+vim /etc/hosts
+#127.0.0.1   proxy localhost localhost.localdomain localhost4 localhost4.localdomain4
 
+#创建虚拟网卡
+#主网卡  ens33 192.168.29.161  DIP
+#虚拟机网卡 ens33:0 192.168.29.162 VIP
+cd /etc/sysconfig/network-scripts/
+cp ifcfg-ens33{,:0}
+#cp ifcfg-ens33 ifcfg-ens33:0
 
 
 
