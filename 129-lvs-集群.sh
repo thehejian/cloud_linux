@@ -1,5 +1,5 @@
 #!/bin/bash
-####################################################################################################  LVS-NAT
+###########################################################################################################################################LVS-NAT
 #step1
 #开启调度器路由功能
 echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -24,7 +24,7 @@ ipvsadm --save -n > /etc/sysconfig/ipvsadm-config
 curl http://192.168.29.158
 #curl 可以使用，浏览器好像有延续呀
 #转发效率高，但是默认是没有健康检查的；
-####################################################################################################  LVS-DR
+###########################################################################################################################################LVS-DR
 #调度器：centos
   #dip  调度器给后端web的ip；作为主IP;192.168.29.161;ens33
   #vip  用户访问的IP；这个IP要隐藏起来；作为次IP(虚拟接口);ens33:0;192.168.29.162 ——《用户访问这个
@@ -32,7 +32,17 @@ curl http://192.168.29.158
 #web2：txy 1.116.26.230；需要设置双IP；VIP;lo: VIP lo:192.168.1.162
 #有几个web就得有几个公网IP
 
-################################调度proxy配置
+#step1
+#开启调度器路由功能
+echo 1 > /proc/sys/net/ipv4/ip_forward
+#重定向可以，不能用vim；
+#ipforward打开，当路由器用；
+#临时生效
+echo "net.ipv4.ip_forward=1" >> /etc/sysctl.conf
+#永久生效
+#（web和proxy都需要改一下）
+
+################################——》调度proxy配置
 #修改主机名称
 hostname proxy
 #临时修改主机名；立即生效
@@ -61,7 +71,7 @@ eof
 systemctl restart network
 #重启网络
 
-################################webserver1配置
+################################——》webserver1配置
 #修改主机名称
 hostname web1-ubuntu
 #临时修改主机名；立即生效
@@ -93,12 +103,60 @@ net.ipv4.conf.lo.arp_ignore=1
 net.ipv4.conf.all.arp_announce=2
 #声明，宣告；回包；
 #不对外宣称自己的的loip是vip；
-#2坚决不声明；1尽可能
+#2坚决不声明；1尽可能不声明；
 net.ipv4.conf.lo.arp_announce=2
 eof
-systemctl restart network
+sysctl -p
+#立即生效
 
+systemctl restart network
 #centos有2个程序管理网络，可能冲突；network 和 networkManager
+
+################################——》proxy做DR模式的代理
+ipvsadm -C
+ipvsadm -A -t 192.168.29.161:80 -s wrr
+#161是DIP，主IP
+ipvsadm -a -t 192.168.29.161:80 -r 1.116.26.230 -g -w 1
+#-g DR模式，默认；可以不加
+#-w 1 权重为1，默认。可以不加
+ipvsadm -a -t 192.168.29.161:80 -r 192.168.29.151
+#RIP webserver IP
+ipvsadm -Ln
+ipvsadm --save -n > /etc/sysconfig/ipvsadm-config 
+#永久保存
+
+################################——》健康检查
+#默认不健康检查，
+cat > 129_01_jiankangjiancha.sh << "eof"
+#!/bin/bash
+VIP=192.168.29.162
+RIP1=192.168.29.151
+RIP2=1.116.26.230
+while :
+do
+  for IP in $RIP1 $RIP2
+  do
+    curl -s http://$IP &> /dev/null
+    #访问RIP，webserverIP
+    if [ $? -eq 0 ]; then
+        ipvsadm -Ln | grep -q $IP || ipvsadm -a -t $VIP -r $IP
+        #RIP能访问通，就加进来
+      else
+        ipvsadm -Ln | grep -q $IP || ipvsadm -d -t $VIP -r $IP
+        #访问不通就删掉
+    fi
+  done
+  sleep 1
+done
+eof
+bash 129_01_jiankangjiancha.sh
+
+
+
+
+
+
+#网卡备份
 ##########################################
 TYPE=Ethernet
 PROXY_METHOD=none
@@ -134,16 +192,6 @@ UUID=44701f4e-612f-47a7-85b3-4bcd65c8e3fb
 DEVICE=ens33
 ONBOOT=yes
 #############################################
-
-
-
-
-
-
-
-
-
-
 
 
 #多个服务器集中起来，提供一种服务；
