@@ -54,40 +54,122 @@ vrrp_instance VI_1 {
 
 #相当于ipvsadm -A 
 #可以实现多个集群
-virtual_server 192.168.4.15 80 {    #ipvsadm -A 192.168.4.15:80 -t -s wrr
+virtual_server 192.168.4.15 80 {    #ipvsadm -A 192.168.4.15:80 -t -s wrr       (需要修改)
     delay_loop 6
     lb_algo rr  #轮询    调度算法
-    lb_kind NAT #NAT   调度类型
+    lb_kind DR #NAT   调度类型
     #persistence_timeout 50    #需要注释掉，保持连接；客户端在一定时间内访问的是同一台服务器  (需要修改)
     protocol TCP        #-t TCP协议
-
     real_server 1.116.26.230 80 {   #ipvsadm -a 192.168.4.15:80 -r 1.116.26.230 -w 1 -m （需要修改）
         weight 1
-        SSL_GET {       #健康检查功能，重要      （需要修改）
+        #HTTP_GET {       #健康检查功能，重要      （443）      （需要修改）
         #类型有3中
-                #TCP_CHECK
-                #HTTP_GET
+                #TCP_CHECK 只检查80端口，网页被篡改，内容无法检查；不需要URL检查
+                #HTTP_GET 访问网页并检查 80
                         #ping（能ping通IP，服务（apache）如果关了则检查不出来）
                         #curl（网页能否打开；缺点；网页如果被篡改，则无法检查出来）
                         #md5sum方式
-                                myurl=1.116.26.230
-                                mytxt=$(curl "$myurl" | md5sum)
-                                [ "mytxt" == "myori_index" ] && echo "网页OK" || echo "网页被篡改了"
+                                #myurl=1.116.26.230
+                                #mytxt=$(curl "$myurl" | md5sum)
+                                #[ "mytxt" == "myori_index" ] && echo "网页OK" || echo "网页被篡改了"
                                 #myori_index是原始网页的MD5sum值
-                #SSL_GET
-            url {
-              path /
-              digest ff20ad2481f97b1754ef3e12ecd3a9cc
-            }
-            url {
-              path /mrtg/
-              digest 9b3a0c85a887a256d6939da88aabd8cd
-            }
+                #SSL_GET 443
+            #url {
+            #  path /
+            #  digest 41adc458d6f0d1588aada7abf1d664fb   #md5sum值        （需要修改）
+            #}
+            #url {      #支持多个目录的检查
+            #  path /mrtg/
+            #  digest 9b3a0c85a887a256d6939da88aabd8cd
+            #}
+        TCP_CHECK {
             connect_timeout 3
-            nb_get_retry 3
-            delay_before_retry 3
+            nb_get_retry 3      #再试3次
+            delay_before_retry 3        #隔3s再访问
+        }
+    }    
+    real_server 10.243.232.63 80 {   #ipvsadm -a 192.168.4.15:80 -r 1.116.26.230 -w 1 -m （需要修改）
+        weight 1
+            TCP_CHECK {
+            connect_timeout 3
+            nb_get_retry 3      #再试3次
+            delay_before_retry 3        #隔3s再访问
         }
     }
-}
 
+}
 eof
+
+systemctl restart keepalived
+ipvsadm -Ln
+ip a s
+#查看虚拟网络
+iptables -F
+setenforce 0
+#清防火墙规则
+
+######################################################################################——》web修改
+#Realsever改lo：0ip
+#lo 是vip 192.168.29.162——》192.168.4.15
+cd /etc/sysconfig/network-scripts/
+#suse是下面
+#cd /etc/sysconfig/network/
+cp ifcfg-lo{,:0}
+cat > ifcfg-lo:0 << "eof"
+DEVICE=lo:0
+IPADDR=192.168.4.15
+#vip
+NETMASK=255.255.255.255
+NETWORK=192.168.4.15
+# If you're having problems with gated making 127.0.0.0/8 a martian,
+# you can change this to something else (255.255.255.255, for example)
+BROADCAST=192.168.4.15
+ONBOOT=yes
+NAME=lo:0
+eof
+
+#地址可能会冲突，做下面的操作
+cat >> /etc/sysctl.conf << "eof"
+net.ipv4.conf.all.arp_ignore=1
+#当arp广播问谁是vip（192.168.29.162）时，忽略arp广播，所有网卡；
+#不回vip，其他的正常
+net.ipv4.conf.lo.arp_ignore=1
+#忽略arp广播（回环）
+net.ipv4.conf.all.arp_announce=2
+#声明，宣告；回包；
+#不对外宣称自己的的loip是vip；
+#2坚决不声明；1尽可能不声明；
+net.ipv4.conf.lo.arp_announce=2
+eof
+sysctl -p
+#立即生效
+
+systemctl restart network
+#centos有2个程序管理网络，可能冲突；network 和 networkManager
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  
+  
+  
+
+
