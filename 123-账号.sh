@@ -616,9 +616,35 @@ root    ALL=(ALL)       ALL  <==找到這一行，大約在 98 行左右
 『(可切換的身份)』：這個帳號可以切換成什麼身份來下達後續的指令，預設 root 可以切換成任何人；
 『可下達的指令』：可用該身份下達什麼指令？這個指令請務必使用絕對路徑撰寫。 預設 root 可以切換任何身份且進行任何指令之意
 
+############################################################################——》limit
+vim /etc/security/limits.conf
+vbird1    soft        fsize         90000
+vbird1    hard        fsize        100000
+#帐号   限制依据    限制项目     限制值
+# 第一字段为帐号，或者是群组！若为群组则前面需要加上 @ ，例如 @projecta
+# 第二字段为限制的依据，是严格（hard），还是仅为警告（soft）；
+# 第三字段为相关限制，此例中限制文件大小，
+# 第四字段为限制的值，在此例中单位为 KB。
+# 若以 vbird1 登陆后，进行如下的操作则会有相关的限制出现！
 
-
-
+[root@host-162-166-94-62 html]# ulimit -a
+#设置完成就生效了，你不用重新启动任何服务
+core file size          (blocks, -c) 0
+data seg size           (kbytes, -d) unlimited
+scheduling priority             (-e) 0
+file size               (blocks, -f) unlimited
+pending signals                 (-i) 31051
+max locked memory       (kbytes, -l) 64
+max memory size         (kbytes, -m) unlimited
+open files                      (-n) 1024
+pipe size            (512 bytes, -p) 8
+POSIX message queues     (bytes, -q) 819200
+real-time priority              (-r) 0
+stack size              (kbytes, -s) 8192
+cpu time               (seconds, -t) unlimited
+max user processes              (-u) 31051
+virtual memory          (kbytes, -v) unlimited
+file locks                      (-x) unlimited
 
 
 
