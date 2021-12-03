@@ -40,19 +40,41 @@
 #Client ceph客户端
 
 #生产环境建议OSD和monitor分开装，至少准备6台机器
+#3osd 3mon 也可以osd和mon装在一个机器
+#每个机器配置vdb（SSD）/vdc/vdd各20GB
+#3个盘都需要格式化；SSD盘格两个区（手动格），SATA格一个区（直接用ceph-deploy格）
+#总共提供3*（20+20）=120共享空间；需要120+（10+10）*3=120+60=180的server空间；     120SATA；60SSD
+#缓存盘          共享盘           共享盘     
+#SSD             STAT            SATA
+#vdb             vdc             vdd
+#vdb1(10GB)      vdc1(20GB)                      vdb1作为vdc1的缓存盘
+#vdb2(10GB)                      vdd1(20GB)      vdb2作为vdd1的缓存盘
 
+######################################################################——》配置域名
+mydate=$(date +'%Y%m%d')
+cat >> /etc/hosts << "eof"
+10.185.81.181    node1
+10.243.232.63    node2
+1.116.26.230     node3       
+eof
+
+for i in node1 node2 node3
+do
+        mv $i:/etc/hosts $i:/etc/hosts.$mydate.bak
+        scp /etc/hosts $i:/etc/hosts
+done
 ######################################################################——》ssh免登陆
 #选一台server，可以登录其他节点（server）
 ssh-keygen -f /root/.ssh/id_rsa -N ''
-ip1=10.185.81.181
-ip2=10.243.232.63
-for i in $ip1 $ip2
+
+for i in node1 node2 node3
 do
         ssh-copy-id $i
 done
 #ssh 10.243.232.63
 #免密码登录
 
+#这步可以不做，后面有涉及
 #useradd cephadm
 #echo '123456' | passwd --stdin cephadm
 #echo "cephadm ALL = (root) NOPASSWD:ALL" | tee /etc/sudoers.d/cephadm
@@ -63,34 +85,25 @@ done
 #ssh-copy-id cephadm@ceph-mon2
 #ssh-copy-id cephadm@ceph-mon3
 #ssh-copy-id cephadm@ceph-osd4
-######################################################################——》配置域名
-cat >> /etc/hosts << "eof"
-10.185.81.181    node1
-10.243.232.63    node2
-eof
-ssh node2
-
-######################################################################——》NTP服务器时间要一致
-cp /etc/chrony.conf /etc/chrony.conf.bak
+######################################################################——》NTP服务器时间要一致/改下主机名
+mv /etc/chrony.conf /etc/chrony.conf.$mydate.bak
 cat > /etc/chrony.conf << "eof"
 server ntp.aliyun.com iburst
 eof
 
-for i in node1 node2
+for i in node1 node2 node3
 do
         scp /etc/chrony.conf $i:/etc/chrony.conf
         ssh $i "systemctl restart chronyd"
+        ssh $i "hostname $i"
+        #顺便改下主机名
 done
 
 chronyc sources
 #查看时间同步情况，跟谁同步时间
-######################################################################——》给服务器加3个磁盘
-#手动操作，加3块盘；server都要加，client不关注
-lsblk
-#列出块设备信息
 
 ########################################################################——》ceph yum源
-#本地文件生成yum源
+#本地文件生成yum源的方法
 #cp a.rpm /var/ftp/pub
 #createrepo /var/ftp/pub/
 #cat /var/ftp/pub/repodata
@@ -126,7 +139,7 @@ eof
 ########################################################################——》安装ceph
 
 #批量安装包
-for i in node1 node2
+for i in node1 node2 node3
 do
         scp  /etc/yum.repos.d/ceph.repo $i:/etc/yum.repos.d/ceph.repo
         ssh $i "yum -y install ceph-mon ceph-osd ceph-mds ceph-radosgw"
@@ -134,23 +147,26 @@ do
         #ceph-mds       文件系统
         #ceph-radosgw   对象存储
 done
-
-#yum install -y yum-utils && yum-config-manager --add-repo https://dl.fedoraproject.org/pub/epel/7/x86_64/ && yum install --nogpgcheck -y epel-release && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 && rm -f /etc/yum.repos.d/dl.fedoraproject.org*
-
-#yum -y install ceph-deploy ceph-common
 #ceph-deploy    远程其他电脑不需要密码，就是ssh-keygen那台机器,是python写的；用来自动部署
 #cat /usr/bin/ceph-deploy
 #ceph-deploy --help
 
+#按照上面的安装就可以了
+#yum install -y yum-utils && yum-config-manager --add-repo https://dl.fedoraproject.org/pub/epel/7/x86_64/ && yum install --nogpgcheck -y epel-release && rpm --import /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7 && rm -f /etc/yum.repos.d/dl.fedoraproject.org*
+#yum -y install ceph-deploy ceph-common
+
 ########################################################################——》创建目录
+#这是client盘还得sever（node）盘做的操作呢？
 mkdir -p ~/cloud_linux/tedu/ceph-cluster
 cd ~/cloud_linux/tedu/ceph-cluster
 
-########################################################################——》部署ceph集群
+######——》部署ceph集群
+#服务器端，node1
 #monitor
-ceph-deploy new node1 node2
+ceph-deploy new node1 node2 node3
 ls
 #ceph.conf  ceph-deploy-ceph.log  ceph.mon.keyring
+
 cat ceph.conf 
 #[global]
 #fsid = c3738875-0508-40e1-9f04-8e480c53c25d
@@ -161,10 +177,100 @@ cat ceph.conf
 #auth_service_required = cephx
 #auth_client_required = cephx
 
+########################################################################——》格式化磁盘
+#每台机器先在vmwave上挂载3个盘进来，vdb（20GB）（SSD）、vdc（20GB）（SATA）（20GB）、vdd（20GB）（SATA）（20GB）
+#对vdb进行分区，分成两个主分区，各10GB；分区表格式为gpt；vdb为缓存盘
+#其他盘vdc和vdd作为共享盘，暂不处理
 
+#缓存盘          共享盘           共享盘     
+#SSD             STAT            SATA
+#vdb             vdc             vdd
+#vdb1(10GB)      vdc1(20GB)                      vdb1作为vdc1的缓存盘
+#vdb2(10GB)                      vdd1(20GB)      vdb2作为vdd1的缓存盘
 
+for i in node1 node2 node3
+#for循环中不要用fdisk，不能交互式
+do
+        ssh $i "parted /dev/vdb mklabel gpt"
+        #创建分区表 mklabel,mktable LABEL-TYPE               create a new disklabel (partition table)
+        #分区表格式 https://zhuanlan.zhihu.com/p/26098509
+                #gpt分区可以大于4个； 容量也可以大于2TB
+                #MBR主分区不能大于4；最大单分区不能超过2TB
+        ssh $i "parted /dev/vdb mkpart primary 1 50%"
+        #primary 主分区
+        #主分区空间是从1到50%的大小
+        #vdb1
+        ssh $i "parted /dev/vdb mkpart primary 50% 100%"
+        #primary 主分区
+        #主分区空间是从50%到100%的大小
+        #vdb2
+done
+#执行完，需要分区表写到/etc/fstab，开机自动启动，永久生效
 
+lsblk
+#列出系统上的所有的磁盘列表
+#NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+#sr0     11:0    1   18M  0 rom  
+#vda    253:0    0  200G  0 disk 
+#├─vda1 253:1    0    1G  0 part /boot
+#├─vda2 253:2    0    8G  0 part /
+#├─vda3 253:3    0 1023M  0 part [SWAP]
+#└─vda4 253:4    0  190G  0 part /mnt/sdc
 
+fdisk -l
+#fdisk -l：查看机器所挂硬盘个数及分区情况
+#Disk /dev/vda: 214.7 GB, 214748364800 bytes, 419430400 sectors
+#Units = sectors of 1 * 512 = 512 bytes
+#Sector size (logical/physical): 512 bytes / 512 bytes
+#I/O size (minimum/optimal): 512 bytes / 512 bytes
+#Disk label type: dos
+#Disk identifier: 0x000e1317
+
+#   Device Boot      Start         End      Blocks   Id  System
+#/dev/vda1   *        2048     2099199     1048576   83  Linux
+#/dev/vda2         2099200    18868223     8384512   83  Linux
+#/dev/vda3        18868224    20963327     1047552   82  Linux swap / Solaris
+#/dev/vda4        20963328   419430399   199233536   83  Linux
+
+########################################################################——》修改磁盘权限（缓存盘vdb1、vdb2）
+#默认权限ceph软件无法读取，需要改权限
+for i in node1 node2 node3
+do
+        ssh $i "chown ceph.ceph /dev/vdb1"
+        ssh $i "chown ceph.ceph /dev/vdb2"
+        #ssh $i "chown ceph.ceph /dev/vdc"
+        #vdc和vdd好像非必须;用更便捷的ceph-deploy方法下面
+        #ssh $i "chown ceph.ceph /dev/vdd"
+done
+#临时修改，立即生效
+ll /dev/vd*
+
+#永久生效
+cat > /etc/udev/rules.d/70-ceph.rules << "eof"
+#用于ceph分区；名称是自己起的
+ENV{DEVNAME}=="/dev/vdb1",OWNER="ceph",GROUP="ceph"
+ENV{DEVNAME}=="/dev/vdb2",OWNER="ceph",GROUP="ceph"
+#ENV{DEVNAME}=="/dev/vdc",OWNER="ceph",GROUP="ceph"
+#ENV{DEVNAME}=="/dev/vdd",OWNER="ceph",GROUP="ceph"
+#==是判断，如果有设备名称为/dev/vdb1，则设备文件的所有者和组为ceph
+eof
+cat /etc/udev/rules.d/70-ceph.rules
+
+#改好的规则给其他也复制下
+for i in node1 node2 node3
+do
+        scp /etc/udev/rules.d/70-ceph.rules $i:/etc/udev/rules.d/70-ceph.rules
+done
+
+########################################################################——》修改磁盘权限（共享盘vdc、vdd）
+cd ~/cloud_linux/tedu/ceph-cluster
+#这个盘之前做了ceph-deploy new
+#ceph-deploy命令要先进入此文件夹
+ceph-deploy disk zap node1:vdc node1:vdd
+#zap 格式化
+#默认分区格式gpt
+ceph-deploy disk zap node2:vdc node1:vdd
+ceph-deploy disk zap node3:vdc node1:vdd
 
 
 
