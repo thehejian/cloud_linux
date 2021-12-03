@@ -272,6 +272,22 @@ ceph-deploy disk zap node1:vdc node1:vdd
 ceph-deploy disk zap node2:vdc node1:vdd
 ceph-deploy disk zap node3:vdc node1:vdd
 
+########################################################################——》创建共享存储块共享盘
+#osd类型管理缓存盘和共享盘进行关联
+#至少需要3osd（副本）才能正常访问，一个osd就是一个块
+ceph-deploy osd create node1:vdc:/dev/vdb1 node1:vdd:/dev/vdb2
+ceph-deploy osd create node2:vdc:/dev/vdb1 node2:vdd:/dev/vdb2
+ceph-deploy osd create node3:vdc:/dev/vdb1 node3:vdd:/dev/vdb2
+
+ceph -s
+#health Error WARN clock（时间不同步等） OK
+
+########################################################################——》常见错误
+#重新配置秘钥
+#ceph-deploy gatherkeys node1 node2 node3
+
+
+
 
 
 
