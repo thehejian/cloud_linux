@@ -281,10 +281,20 @@ ceph-deploy osd create node3:vdc:/dev/vdb1 node3:vdd:/dev/vdb2
 
 ceph -s
 #health Error WARN clock（时间不同步等） OK
+ceph osd tree
+#能看到共享盘的情况
 
 ########################################################################——》常见错误
 #重新配置秘钥
 #ceph-deploy gatherkeys node1 node2 node3
+
+########################################################################——》共享池
+#操作时，最好先退出再重新进入，就有tab键补齐了
+#集群部署，在任何node都可以
+#ceph120GB
+        #共享池|共享镜像（可以多个镜像，最多不超过120GB）
+ceph osd lspools 
+#默认有一个池子，叫rbd 编号为0
 
 
 
