@@ -294,10 +294,6 @@ ceph -s
 ceph osd tree
 #能看到共享盘的情况
 
-########################################################################——》常见错误
-#重新配置秘钥
-#ceph-deploy gatherkeys node1 node2 node3
-
 ########################################################################——》共享池
 #操作时，最好先退出再重新进入，就有tab键补齐了
 #集群部署，在任何node都可以
@@ -331,6 +327,9 @@ scp node1:/etc/ceph/ceph.conf /etc/ceph/ceph.conf
 #配置文件拷贝到client
 scp node1:/etc/ceph/ceph.client.admin.keyring /etc/ceph/
 
+#ceph-deploy mon create-initial
+#需要有ceph.conf
+#ceph-deploy mon create node1 node2 node3
 rbd map image
 lsblk
 #多了一个rbd0
@@ -339,20 +338,93 @@ rbd showmapped
 #######################################################################——》客户端挂载硬盘
 mkfs.xfs /dev/rbd0
 #格式
-mount /dev/rbd0 /mnt/ceph
+mount /dev/rbd0 /mnt
 #挂载
-echo "test" /mnt/ceph/test.txt
+echo "test" /mnt/test.txt
 
+########################################################################——》常见错误
+#重新配置秘钥
+#ceph-deploy gatherkeys node1 node2 node3
+#cat /usr/lib/systemd/system/ceph.service
 
+#权限错误问题
+#ceph-deploy osd create node2
+#systemctl status ceph-osd@2.service
+#running _> up
+#30分钟内最多起3次
+#启动后把盘共享出去
 
+########################################################################——》创建快照
+#ceph的3副本是防止某台机器坏了，做的高可用；
+#文件删除时，3副本会同步删除文件
+#快照
+#做数据的备份，主动做的存储；关键节点操作钱做快照操作
 
+#client端操作
+rbd snap ls A-ceph-image
+#查看前面创建的A-ceph-image是否有快照
 
+rbd snap create A-ceph-image --snap A-ceph-image-snap-20211204
+#为镜像A-ceph-image创建名为A-ceph-image-snap-20211204的镜像
 
+########################################################################——》误删除数据-客户端
+#client端
+rm -rf /mnt/test.txt
+umount /mnt
 
+########################################################################——》还原快照-服务器端
+#服务器端node1
+rbd snap rollback A-ceph-image --snap A-ceph-image-snap-20211204
+#镜像A-ceph-image回滚到A-ceph-image-snap-20211204这个快照
+#回滚结束重新挂载
+mount /dev/rbd0 /mnt
+ls /mnt
 
+########################################################################——》快照创建镜像
+#服务器rbd create创建的镜像是空镜像，没有数据的
+#旧的镜像克隆镜像，镜像太大，可以通过镜像的快照来克隆
+#快照优点：数据小，旧镜像不影响正常使用
+rbd snap protect A-ceph-image --snap A-ceph-image-snap-20211204
+#保护镜像的快照不会被删掉，结束后unprotect一下
+#rbd snap rm A-ceph-image --snap A-ceph-image-snap-20211204
+#保护后，无法删除
 
+rbd clone A-ceph-image --snap A-ceph-image-snap-20211204 A-clone-image --image-feature layering
+#通过A-ceph-image镜像的A-ceph-image-snap-20211204快照去克隆新的镜像
+#新镜像格式layering
+#--image-feature layering 开启layering功能，COW功能
+#qcow2 镜像类型，支持镜像快照功能，增量快照
 
+rbd list
+#镜像列表
 
+rbd info A-clone-image
+#看下A-clone-image这个镜像的详细信息
+#parent:        rbd/A-ceph-image@snap A-ceph-image-snap-20211204
+#继承关系
+#快照不能删除，不要取消保护
+
+#脱离父子关系，独立存在（可以删除之前的快照）
+rbd flatten A-clone-image
+rbd info A-clone-image
+#速度会慢一点，真实复制数据；跟普通镜像一样
+
+#rbd snap unprotect A-ceph-image --snap A-ceph-image-snap-20211204
+#rbd snap rm A-ceph-image --snap A-ceph-image-snap-20211204
+#可以取消快照的保护，并删除快照了
+
+########################################################################——》其他操作
+#客户端取消挂载
+umount /mnt
+
+rbd showmapped
+#id     pool    image           snap                            device
+#0      rbd     A-ceph-image    A-ceph-image-snap-20211204      /dev/rbd0
+rbd unmap /dev/rbd0
+#rbd unmap A-ceph-image
+#A-ceph-image 就是 /dev/rbd0
+
+#一个盘就是一个osd
 
 
 
