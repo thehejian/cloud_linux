@@ -50,7 +50,14 @@
 #vdb1(10GB)      vdc1(20GB)                      vdb1作为vdc1的缓存盘
 #vdb2(10GB)                      vdd1(20GB)      vdb2作为vdd1的缓存盘
 
-######################################################################——》配置域名
+#创建1个client客户端
+#创建3个server服务器端 存储集群（mon osd）
+#4台机器的主机名、yum源、ntp
+#4台ssh免密登录
+#3台虚拟机共享磁盘
+        #ceph-deploy这个脚本快速执行，前提是免密ssh
+
+######################################################################——》修改主机名
 mydate=$(date +'%Y%m%d')
 cat >> /etc/hosts << "eof"
 10.185.81.181    node1
@@ -147,6 +154,9 @@ do
         #ceph-mds       文件系统
         #ceph-radosgw   对象存储
 done
+#也可以用ceph-deploy
+#ceph-deploy install ceph-mon ceph-osd ceph-mds ceph-radosgw node1 node2 node3
+#rhel7才支持，centos不支持
 #ceph-deploy    远程其他电脑不需要密码，就是ssh-keygen那台机器,是python写的；用来自动部署
 #cat /usr/bin/ceph-deploy
 #ceph-deploy --help
@@ -295,6 +305,56 @@ ceph osd tree
         #共享池|共享镜像（可以多个镜像，最多不超过120GB）
 ceph osd lspools 
 #默认有一个池子，叫rbd 编号为0
+########################################################################——》共享镜像
+rbd create A-ceph-image --image-feature layering --size 10G
+#A-ceph-image   镜像盘名称
+rbd create rbd/B-ceph-image --image-feature layering --size 10G
+#rbd    资源池
+#--image-feature layering 开启layering功能，COW功能
+#qcow2 镜像类型，支持镜像快照功能，增量快照
+
+rbd list
+rbd info A-ceph-image
+
+#扩容|缩容
+rbd resize --size 15G A-ceph-image
+rbd resize --size 5G A-ceph-image --allow-shrink
+#缩容要提醒
+##########################################################################——》以上所有都是服务器端操作
+
+#######################################################################——》客户端安装ceph-common
+#挂载的是块
+#登录到client客户端
+yum -y install ceph-common
+#mv /etc/ceph/ceph.conf /etc/ceph/ceph.conf.$mydate.bak
+scp node1:/etc/ceph/ceph.conf /etc/ceph/ceph.conf
+#配置文件拷贝到client
+scp node1:/etc/ceph/ceph.client.admin.keyring /etc/ceph/
+
+rbd map image
+lsblk
+#多了一个rbd0
+rbd showmapped
+
+#######################################################################——》客户端挂载硬盘
+mkfs.xfs /dev/rbd0
+#格式
+mount /dev/rbd0 /mnt/ceph
+#挂载
+echo "test" /mnt/ceph/test.txt
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
