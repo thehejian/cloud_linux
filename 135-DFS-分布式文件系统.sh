@@ -342,17 +342,6 @@ mount /dev/rbd0 /mnt
 #挂载
 echo "test" /mnt/test.txt
 
-########################################################################——》常见错误
-#重新配置秘钥
-#ceph-deploy gatherkeys node1 node2 node3
-#cat /usr/lib/systemd/system/ceph.service
-
-#权限错误问题
-#ceph-deploy osd create node2
-#systemctl status ceph-osd@2.service
-#running _> up
-#30分钟内最多起3次
-#启动后把盘共享出去
 
 ########################################################################——》创建快照
 #ceph的3副本是防止某台机器坏了，做的高可用；
@@ -423,9 +412,6 @@ rbd showmapped
 rbd unmap /dev/rbd0
 #rbd unmap A-ceph-image
 #A-ceph-image 就是 /dev/rbd0
-
-#一个盘就是一个osd
-
 
 
 
