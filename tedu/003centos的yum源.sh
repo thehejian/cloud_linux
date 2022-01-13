@@ -21,6 +21,9 @@ yum repolist
 
 yum update -y && yum upgrade -y
 
+yum -y install epel-release
+#安装额外插件包
+
 #################################################——》其他常用配置
 echo "yum无法安装的可以去这个网址下载RPM包 https://pkgs.org/"
 alias mydate='date +%Y-%m-%d" "%H:%M:%S'
