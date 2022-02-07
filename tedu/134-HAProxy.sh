@@ -70,11 +70,12 @@ listen haproxy_hejian *:80
         balance roundrobin
         server web1 1.116.26.230:80 check inter 2000 rise 2 fall 5
         server web2 10.243.232.63:80 check inter 2000 rise 2 fall 5
+        server web3 10.40.148.251:80 check inter 2000 rise 2 fall 5
         #健康检查 2成功启动；5次失败换其他
 eof
 #eof后面千万不能有空格
 ##################################################################################################################
-systemctl start haproxy
+#systemctl start haproxy
 systemctl restart haproxy
 systemctl status haproxy
 #关掉其他的80端口
