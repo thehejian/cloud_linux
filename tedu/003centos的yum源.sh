@@ -21,8 +21,12 @@ yum repolist
 
 yum update -y && yum upgrade -y
 
+#################################################——》安装额外插件包
 yum -y install epel-release
 #安装额外插件包
+#贼重要
+
+
 
 #################################################——》其他常用配置
 echo "yum无法安装的可以去这个网址下载RPM包 https://pkgs.org/"
