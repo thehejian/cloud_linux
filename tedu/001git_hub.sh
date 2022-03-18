@@ -28,8 +28,8 @@ git config --global user.email "745544752@qq.com"
 #配置 名称 和 邮箱
 
 #########################################################################################——》场景一：本地克隆
-mkdir -p ~/cloud_linux
-cd ~/cloud_linux
+#mkdir -p ~/cloud_linux
+#cd ~/cloud_linux
 #前两步非必须，默认会自带文件夹
 git clone git@github.com:thehejian/cloud_linux.git
 
