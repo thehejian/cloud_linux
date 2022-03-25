@@ -34,6 +34,7 @@ git config --global user.email "745544752@qq.com"
 #cd ~/cloud_linux
 #前两步非必须，默认会自带文件夹
 git clone git@github.com:thehejian/cloud_linux.git
+git clone git@github.com:thehejian/network_security.git
 
 #########################################################################################——》场景二：本地创建文件，并上传到github的origin仓库
 cd ~
