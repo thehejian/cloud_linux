@@ -37,6 +37,7 @@ git clone git@github.com:thehejian/cloud_linux.git
 git clone git@github.com:thehejian/network_security.git
 git clone git@github.com:Python3WebSpider/ProxyPool.git
 #爬虫
+#参考https://github.com/Python3WebSpider/ProxyPool
 
 #########################################################################################——》场景二：本地创建文件，并上传到github的origin仓库
 cd ~
