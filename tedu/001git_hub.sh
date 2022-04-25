@@ -39,6 +39,7 @@ git clone git@github.com:Python3WebSpider/ProxyPool.git
 #爬虫
 #参考https://github.com/Python3WebSpider/ProxyPool
 #代理设置https://www.dailiproxy.com/linux-proxy/
+#设置代理和取消代理(http_proxy)https://blog.csdn.net/m0_45406092/article/details/119209708
 
 #########################################################################################——》场景二：本地创建文件，并上传到github的origin仓库
 cd ~
