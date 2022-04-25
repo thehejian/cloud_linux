@@ -15,6 +15,7 @@ curl http://localhost:5555/random
 
 #linshi peizhi
 export http_proxy="43.16.1.2:6515"
+#export proxy="43.16.1.2:6515"
 #linshi guanbi
 unset http_proxy
 #chakan
