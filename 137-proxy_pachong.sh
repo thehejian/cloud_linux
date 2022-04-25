@@ -17,6 +17,8 @@ curl http://localhost:5555/random
 export http_proxy="43.16.1.2:6515"
 #linshi guanbi
 unset http_proxy
+#chakan
+echo $http_proxy
 
 
 #yongjiu peizhi
