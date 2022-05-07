@@ -8,6 +8,8 @@ ssh-keygen -f /root/.ssh/id_rsa -N '' -y
 #-y 默认覆盖指定位置
 ssh-copy-id $IP
 #客户端密码传到服务器
+
+ssh-keygen
 ssh-copy-id 47.112.144.203
 
 
