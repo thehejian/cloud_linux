@@ -6,13 +6,85 @@
 MySQL介绍
   起源与发展
   特点和应用
-  
+MySQL服务器
+        MySQL安装
+                准备环境
+                安装软件
+                启动服务
+                相关参数
+        MySQL初始配置      
+                初始密码登录
+                修改root密码
+                修改密码策略
+
  什么是数据库
   数据库的介绍：存储数据的仓库
   生活中的数据：视频、音频、图片、文本
   常见软件
-  软件名	
+          软件名         开源     跨平台    厂商
+          Oracle        否       是       甲骨文
+          MySQL         是       是       甲骨文
+          SQL Server    否       否       微软
+          DB2           否       是       IBM
+          Redis         是       是       开源
+          Memcached     是       是       开源
+          MongoDB       是       是       开源
   专业术语
+        DB（Database）
+                数据库
+                依照某种数据模型进行组织并存放到存储器的数据集合
+        DBMS（Database Management System）
+                数据库管理系统
+                用来操纵和管理数据库的服务软件
+        DBS（Database System）
+                数据库系统：DB+DBMS
+                带有数据库，并整合了数据库管理软件的计算机系统
 MySQL介绍
   起源与发展
-  特点和应用 
+        MariaDB是MYSQL开源软件
+  特点和应用
+        特点
+                中小规模，关系型数据库
+                支持Linux、Unix、Windows等多种操作系统
+                支持Python、Java、Perl、PHP等编程语言
+        典型的应用环境
+                LAMP Apache HTTP Server组合
+                LNMP 与Nginx组合
+                
+MySQL服务器
+        MySQL安装
+                准备环境
+                        CentOS系统虚拟机一台
+                        配置IP192.168.4.50
+                        关闭Firewall
+                        禁用SELinux
+                        拷贝软件mysql-5.7.17.tar
+                                关闭mariadb           [root@hejian_alicloud ~]# systemctl status mariadb
+                                关闭开机自启动         [root@hejian_alicloud ~]# systemctl disable mariadb
+                                删除mysql类配置文件     [root@hejian_alicloud ~]# rm -rf /etc/my.cnf               删除配置文件
+                                                      [root@hejian_alicloud ~]# rm -rf /var/lib/mysql/*         删除数据
+                                卸载mariadb            [root@hejian_alicloud ~]# rpm -e --nodeps mariadb-server mariadb   强制卸载
+                        配置yum源
+                安装软件
+                启动服务
+                        
+                相关参数
+        MySQL初始配置      
+                初始密码登录
+                修改root密码
+                修改密码策略
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
