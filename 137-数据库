@@ -60,21 +60,67 @@ MySQL服务器
                         禁用SELinux
                         拷贝软件mysql-5.7.17.tar
                                 关闭mariadb           [root@hejian_alicloud ~]# systemctl status mariadb
-                                关闭开机自启动         [root@hejian_alicloud ~]# systemctl disable mariadb
+                                关闭开机自启动          [root@hejian_alicloud ~]# systemctl disable mariadb
                                 删除mysql类配置文件     [root@hejian_alicloud ~]# rm -rf /etc/my.cnf               删除配置文件
                                                       [root@hejian_alicloud ~]# rm -rf /var/lib/mysql/*         删除数据
                                 卸载mariadb            [root@hejian_alicloud ~]# rpm -e --nodeps mariadb-server mariadb   强制卸载
                         配置yum源
                 安装软件
+                      使用安装yum源的方法安装
+                      完整教程
+                      https://cloud.tencent.com/developer/article/1886339
+                      1. 下载 MySQL yum包
+                      wget http://repo.mysql.com/mysql57-community-release-el7-10.noarch.rpm
+                      2.安装MySQL源
+                      rpm -Uvh mysql57-community-release-el7-10.noarch.rpm
+                      复制
+                      3.安装MySQL服务端,需要等待一些时间
+                      yum install -y mysql-community-server
+                      
+                      出现上述提示原因是Mysql的GPG升级了，需要重新获取
+                      执行： rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+                      再次进行服务安装：yum -y install mysql-server mysql    
                 启动服务
-                        
+                        数据库目录           [root@hejian_alicloud ~]# ls /var/lib/mysql
+                        mysql的配置文件      [root@hejian_alicloud ~]# cat /etc/my.cnf       
+                        [root@hejian_alicloud ~]# systemctl start mysqld
+                        [root@hejian_alicloud ~]# systemctl enable mysqld
                 相关参数
-        MySQL初始配置      
+                        首次创建，/var/lib/mysql
+                        查看进程    [root@hejian_alicloud ~]# ps -aux | grep -i mysqld
+                        查看端口    [root@hejian_alicloud ~]# netstat -lnptu | grep -i 3306
+                        传输协议    TCP
+                        进程所属组   mysql
+                        进程所有者   mysql
+                        错误日志文件  /var/log/mysqld.log
+                MySQL初始配置
+                        管理员     root
+                        首次登录密码在安装软件时，随机生成
+                        随机密码在/var/log/mysqld.log里       [root@hejian_alicloud ~]# cat /var/log/mysqld.log | grep -i password
+                        连接命令    mysql -h数据库地址 -u用户名 -p密码
                 初始密码登录
+                        [root@hejian_alicloud ~]# mysql -hlocalhost -uroot -p'Rff%j#P=P2hZ'
+                        必须初始化密码
+                        mysql> alter user root@"localhost" identified by "****";
+                        退出后，重新登录一下
+                        [root@hejian_alicloud ~]# mysql -hlocalhost -uroot -p'****'       
                 修改root密码
+                         策略名称                         验证方式
+                         0 OR LOW                       长度
+                         1 OR MEDIUM（默认）              长度；数字，小写、大写和特殊字符
+                         2 OR STRONG                    长度；数字，小写、大写和特殊字符；字典文件
+                         
                 修改密码策略
-        
-        
+                        查看密码策略：         mysql> show variables like "%password%";
+                                            like包含
+                        临时立即生效
+                                set global validate_password_policy=0;//修改密码策略
+                                set global validate_password_length=6;//修改密码长度
+                        永久生效
+                                vim /etc/my.cnf
+                                [mysql]
+                                validate_password_policy=0
+                                validate_password_length=6
 
 
 
