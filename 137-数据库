@@ -16,7 +16,19 @@ MySQL服务器
                 初始密码登录
                 修改root密码
                 修改密码策略
+数据库基本管理
+        连接MYSQL服务
+                连接方式
+                数据存储流程
+                mysql管理环境
+        MYSQL基本操作
+                库管理命令
+                表管理命令
+                记录管理命令
 
+
+
+################################################################################################################################################
  什么是数据库
   数据库的介绍：存储数据的仓库
   生活中的数据：视频、音频、图片、文本
@@ -121,6 +133,67 @@ MySQL服务器
                                 [mysql]
                                 validate_password_policy=0
                                 validate_password_length=6
+                                
+数据库基本管理
+        连接MYSQL服务
+                连接方式
+                        命令行
+                                显示当前在哪个库下       mysql> select database();
+                                登录时带库名            [root@hejian_alicloud ~]# mysql -uroot -p'***' mysql
+                        web
+                        图形
+                        编写脚本（php、java、python。。）
+                        连接命令    mysql -h服务器IP -u用户名 -p密码 【数据库名】
+                数据存储流程
+                        连接数据库服务器
+                        建库                      //类似于文件夹
+                        建表                      //类似于文件
+                        插入记录                   //类似于文件内容 
+                        断开连接
+                mysql管理环境
+                        SQL命令使用规则
+                                SQL命令不区分字母大小写（密码、变量值除外）
+                                每条SQL命令以;结束
+                                默认命令不支持Tab键补齐
+                                \c 终止sql命令
+                        常用的SQL命令分类
+                                管理数据库使用SQL（结构化查询语言）
+                                DDL     数据定义语言  如：create、alter、drop
+                                DML     数据操作语言  如：insert、update、delete
+                                DCL     数据控制语言  如：grant、revoke
+                                DTL     数据事务语言  如：commit、rollback、savepoint  
+        MYSQL基本操作
+                库管理命令
+                        库       类似于文件夹，用来存储表
+                        可以创建多个库，通过库名区分
+                        mysql> show databases;                                          //显示已有库
+                        mysql> select user();                                           //显示连接用户
+                        mysql> use mysql;                                               //切换库
+                        mysql> select database();                                       //显示当前所在库
+                        mysql> create database laohe_mysql;                             //创建库
+                                库名 命名规则
+                                        仅可以使用数字、字母、下划线；不能使用纯数字；
+                                        区分字母大小写，具有唯一性
+                                        不可使用指令关键字、特殊字符
+                                创建完数据库，/var/lib/mysql 下会有一个文件夹
+                                        [root@hejian_alicloud mysql]# cd laohe_mysql/
+                                        [root@hejian_alicloud laohe_mysql]# ls
+                        mysql> show tables;                                             //显示当前库的表
+                        mysql> drop database laohe_mysql;                               //删除库
+                表管理命令
+                        建表
+                                表示存储数据的文件；
+                                mysql> use laohe_mysql;
+                                mysql> select database();
+                                mysql> create table laohe_mysql.stuinfo(
+                                    -> name char(15),
+                                    -> homeaddr char(20)
+                                    -> ) DEFAULT CHARSET=utf8;                          //指定中文字符集，可以给字段赋值中文
+                记录管理命令
+                        记录                                   
+                                mysql> desc laohe_mysql.stuinfo;                        //查看表中列类型
+                                mysql> select * from laohe_mysql.stuinfo;               //查看表中的具体内容
+                                
 
 
 
