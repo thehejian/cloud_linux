@@ -193,6 +193,19 @@ MySQL服务器
                         记录                                   
                                 mysql> desc laohe_mysql.stuinfo;                        //查看表中列类型
                                 mysql> select * from laohe_mysql.stuinfo;               //查看表中的具体内容
+                                mysql> insert into laohe_mysql.stuinfo values("laohe","xian"),("laozhang","beijing");
+                                mysql> select * from laohe_mysql.stuinfo;
+                                mysql> update laohe_mysql.stuinfo set homeaddr="meiguo";  //update set 修改表内容；
+                                mysql> delete from laohe_mysql.stuinfo;                   //删除表中内容，不删除表；删除表用drop
+                                mysql> drop table laohe_mysql.stuinfo;                    //直接删除表
+                                案例：
+                                mysql> create table laohe_mysql.stuinfo( 学号 char(15), 姓名 char(15), 性别 char(15), 手机号 char(15), 通信地址 char(15) ) DEFAULT CHARSET=utf8;
+                                DEFAULT CHARSET //不能小写
+                                学号 char(15) 汉字不能带双引号
+                                mysql> desc laohe_mysql.stuinfo;
+                                mysql> show create table stuinfo;               //查看建表时的命令，能看到字符集
+                                
+                                
                                 
 
 
