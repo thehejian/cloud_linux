@@ -33,6 +33,10 @@ MYSQl 数据类型
                 字符型：姓名、工作单位、通信地
                 枚举类：兴趣爱好、性别、专业
                 日期时间型：出生日期、注册时间
+约束条件
+修改表结构
+        
+
 
 ################################################################################################################################################
  什么是数据库
@@ -246,19 +250,52 @@ MYSQl 数据类型
                         大文本类型 text、blob
                                 字符数大于65535存储时，使用                 
                 枚举类：兴趣爱好、性别、专业
+                        字段值，只能在列举的范围内选择
+                                单选 enum
+                                        格式 字段名 enum（值1， 值2， 值N)
+                                        仅能选择一个值
+                                        字段值必选在列表里选择
+                                多选 set
+                                        格式 字段名 set（值1， 值2， 值N)
+                                        仅能选择一个值
+                                        字段值必选在列表里选择
+                        mysql> create table t9 (姓名 char(10), 性别 enum("男", "女" ,"其他"), 爱好 set("吃","喝","嫖","赌")) DEFAULT CHARSET=utf8;
+                        mysql> desc t9;
+                        mysql> insert into t9 values("老李","其他","嫖,赌");
+                        mysql> select * from t9;
                 日期时间型：出生日期、注册时间
                         日期时间 datetime
                                 范围：1000-01-01 00：00：00~9999-12-31 23：59：59
                                 格式：yyyymmddhhmmss
+                                必须赋值，不赋值为空
+                                mysql> desc t8;
+                                                +----------+-----------+------+-----+-------------------+-----------------------------+
+                                                | Field    | Type      | Null | Key | Default           | Extra                       |
+                                                +----------+-----------+------+-----+-------------------+-----------------------------+
+                                                | meetting | datetime  | YES  |     | NULL              |                             |
+                                                | party    | timestamp | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
+                                                +----------+-----------+------+-----+-------------------+-----------------------------+
                         日期时间 timestamp
                                 范围：1970-01-01 00：00：00~2038-12-31 23：59：59
                                 格式：yyyymmddhhmmss
+                                可以不赋值，不赋值时位系统时间
+                                        mysql> create table t8 (meetting datetime, party timestamp) DEFAULT CHARSET=utf8;
+                                        mysql> insert into t8(meetting) values(20220714171020);
+                                        mysql> select * from t8;        //timestap 可以不赋值，默认为系统时间
+                                                +---------------------+---------------------+
+                                                | meetting            | party               |
+                                                +---------------------+---------------------+
+                                                | 2022-07-14 17:10:20 | 2022-07-14 17:12:12 |
+                                                +---------------------+---------------------+
                         日期 date
                                 范围：0001-01-01~9999-12-31
                                 格式：yyyymmdd
                         年 year
                                 范围：1901~2155
                                 格式：yyyy
+                                一般使用4位赋值，也可以两位
+                                        01~69 2001~2069
+                                        70~99 1970~1999
                         时间 time
                                 格式：HH:MM:SS
                         时间函数
@@ -291,7 +328,40 @@ MYSQl 数据类型
                         |        2022 |
                         +-------------+
                         
-
+约束条件
+        作用是限制如何给字段赋值
+        是否允许为空          null OR not null        默认是允许
+                enum ("对","错") not null default “对”        
+        键值     
+                普通索引           index
+                唯一索引           unique
+                主键              primary key
+                外键              foreign key
+                全文索引           fulltext 
+                DEFAULT         默认值：不给字段赋值时，使用默认值
+                                默认不定义时，是null
+                                定义default值 要与字段类型匹配
+                Extra           额外设置 默认都没有额外设置
+修改表结构
+        命令 alter table 库名.表名 执行动作
+                执行动作
+                        添加新字段
+                                add 字段名 类型 【约束条件】；                  //默认添加在末尾
+                                add 字段名 类型 【约束条件】 after 字段名；      //指定到某字段后面
+                                add 字段名 类型 【约束条件】 first；            //添加到最前面
+                                mysql> alter table t9 add (新增1 int(10), 新增2 char(10) not null default "呵呵");    //不涉及挪位置，可以多个,可以括号
+                                mysql> alter table t9 add 新增5 char(10) after name;
+                                mysql> alter table t9 add  新 4  char(10) first;         //涉及挪位置时，不能用括号
+                        修改字段类型
+                                modify
+                        修改字段名
+                                change
+                        删除字段
+                                drop
+                        修改表名
+                                rename
+                        
+        
 
 
 
