@@ -229,7 +229,11 @@ MYSQl 数据类型
                                         bigint          极大整数           -2^63~2^63-1             0~2^64-1 
                                         unsigned        使用无符号存储范围
                         浮点型
-                        
+                                格式1：字段1 类型；
+                                格式2：字段名 类型（总宽度，小数位数）    float(7,2)总7位，小数点2位 XXXXX.XX
+                                        类型                     名称              有符号/无符号范围
+                                        float                   单精度             0~2^32-1
+                                        double                  双精度             0~2^64-1
                 字符型：姓名、工作单位、通信地
                         定长 char
                                 最大字符个数255，不指定，默认为1
@@ -242,9 +246,51 @@ MYSQl 数据类型
                         大文本类型 text、blob
                                 字符数大于65535存储时，使用                 
                 枚举类：兴趣爱好、性别、专业
-                日期时间型：出生日期、注册时间                                
-
-
+                日期时间型：出生日期、注册时间
+                        日期时间 datetime
+                                范围：1000-01-01 00：00：00~9999-12-31 23：59：59
+                                格式：yyyymmddhhmmss
+                        日期时间 timestamp
+                                范围：1970-01-01 00：00：00~2038-12-31 23：59：59
+                                格式：yyyymmddhhmmss
+                        日期 date
+                                范围：0001-01-01~9999-12-31
+                                格式：yyyymmdd
+                        年 year
+                                范围：1901~2155
+                                格式：yyyy
+                        时间 time
+                                格式：HH:MM:SS
+                        时间函数
+                                now()   year()  month() day()   date()  time()
+                                curtime()       curdate()
+                        mysql> create table laohe_mysql.t4(name char(10),yourstart year(4),up_time time,birthday date,party datetime) DEFAULT CHARSET=utf8;
+                        yourstart year(4) 不能写成 yourstart year(4),可以用your_start代替
+                        DEFAULT 别忘了字母
+                        （XX,XX,XX）所有列都在一个括号下，插入数据时才是多个括号
+                        create table laohe_mysql.t5 (名字 char(10),哪一年 year(4),上传时间 time,生日 date,聚会 datetime) DEFAULT CHARSET=utf8;
+                        创建时，切记不能有双引号
+                        mysql> desc laohe_mysql.t5;
+                        查看表结构
+                        mysql> insert into t5 values("老张",1990,162730,19891219,20220714162730);
+                        这是正确格式，会自动转义
+                        mysql> insert into laohe_mysql.t5 values("老张","1988","16:16:10","1990-01-26","2022-07-14 16:14:56");
+                        有特殊符号，空格的记者加上双引号，这样不对，全部变成了字符串
+                        
+                        使用时间函数赋值
+                        时间函数
+                                now()系统当前的日期和时间    year()获取年      month()获取月     day()获取日       date()获取日期        time()获取时间
+                                curtime()获取系统当前的时间       curdate()获取系统当前日期
+                        mysql> select now();            2022-07-14 16:35:07     //输出系统当前日期加时间    
+                        mysql> select curtime();        16:36:17
+                        mysql> insert into t5 values("laoli", 2000, curtime(), curdate(), now());
+                        mysql> select year(now());              //组合使用
+                        +-------------+
+                        | year(now()) |
+                        +-------------+
+                        |        2022 |
+                        +-------------+
+                        
 
 
 
