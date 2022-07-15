@@ -33,9 +33,30 @@ MYSQl 数据类型
                 字符型：姓名、工作单位、通信地
                 枚举类：兴趣爱好、性别、专业
                 日期时间型：出生日期、注册时间
+表结构
 约束条件
+        作用是限制如何给字段赋值
+        NULL
+        KEY     键值     
+        DEFAULT 默认值
+        Extra
 修改表结构
-        
+        命令 alter table 库名.表名 执行动作
+                执行动作
+                        添加新字段
+                        修改字段类型
+                        修改字段名
+                        删除字段
+                        修改表名
+MYSQL键值
+        MYSQL键值概述
+                键值类型
+                索引介绍
+                索引优缺点
+        MYSQL键值使用
+                INdex普通索引
+                primary key主键
+                foreign key外键
 
 
 ################################################################################################################################################
@@ -334,7 +355,7 @@ MYSQl 数据类型
         NULL
                 是否允许为空          null OR not null        默认是允许
                 enum ("对","错") not null default “对”
-                mysql> insert into laohe_mysql.t4(name, yourstart) values("老李",2022);           //
+                mysql> insert into laohe_mysql.t4(name, yourstart) values("老李",2022);           //对指定列进行赋值
         KEY     键值     
                 普通索引           index
                 唯一索引           unique
@@ -356,15 +377,60 @@ MYSQl 数据类型
                                 add 字段名 类型 【约束条件】 first；            //添加到最前面
                                 mysql> alter table t9 add (新增1 int(10), 新增2 char(10) not null default "呵呵");    //不涉及挪位置，可以多个,可以括号
                                 mysql> alter table t9 add 新增5 char(10) after name;
-                                mysql> alter table t9 add  新 4  char(10) first;         //涉及挪位置时，不能用括号
+                                mysql> alter table t9 add  新增4  char(10) first;         //涉及挪位置时，不能用括号
                         修改字段类型
                                 modify
+                                修改的字段类型不能与已存储的数据冲突
+                                alter table 库名.表名 modify 字段名 类型（宽度） 约束条件 【after 字段名 | first】
+                                mysql> alter table laohe_mysql.t4 modify yourstart int(5) not null default 2 after birthday;
                         修改字段名
-                                change
+                                change 既能改名，又能改类型
+                                alter table 库名.表名 change 源字段名 新字段名 类型（宽度） 约束条件
+                                mysql> alter table laohe_mysql.t4 change yourstart 年 year;
                         删除字段
                                 drop
+                                alter table 库名.表名 drop 字段名；
+                                mysql> alter table t4 drop 新字段2；
                         修改表名
                                 rename
+                                alter table 库名.表名 rename 新表名；
+                                mysql> alter table 学生表2 rename stu2;            //修改表名，不是修改字段名；修改字段名用change
+                                不要改库名，改完库名，找不到数据
+MYSQL键值
+        MYSQL键值概述
+                键值类型
+                        普通索引 index
+                                索引是什么
+                                        类似于书的目录
+                                        对表中的字段进行排序
+                                        索引类型包括
+                                                Btree           二叉树，一个主节点下有且只有两个子节点
+                                                B+tree
+                                                hash
+                                        索引的优缺点
+                                                优点
+                                                        通过创建唯一性索引，可以保证数据库表中每一行数据的唯一性
+                                                        加快数据的查询范围
+                                                        数据的查询诉求远大于写的诉求！！
+                                                缺点
+                                                        对表进行数据的增删改，索引也要动态调整，降低了数据的维护速度
+                                                        索引要占物理空间
+                                  使用规则
+                                        一个表可以有多个index字段
+                                        字段的值允许重复，且可以赋NULL值
+                                        通常吧作为查询条件的字段设置为index字段
+                                        index字段标识是MUL
+                                  
+                        唯一索引 unique
+                        主键 primary key
+                        外键 oreign key
+                        全文索引 fulltext 
+                索引介绍
+                索引优缺点
+        MYSQL键值使用
+                INdex普通索引
+                primary key主键
+                foreign key外键                                
                         
         
 
