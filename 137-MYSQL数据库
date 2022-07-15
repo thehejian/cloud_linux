@@ -420,19 +420,74 @@ MYSQL键值
                                         字段的值允许重复，且可以赋NULL值
                                         通常吧作为查询条件的字段设置为index字段
                                         index字段标识是MUL
-                                  
+                                  创建索引
+                                        建表时，创建索引
+                                                create table 库.表（字段列表 ,index(字段名1)， index（字段名2））;
+                                        在已有表中创建索引
+                                                create index 索引名 on 表名（字段）；
+                                        查看索引字段
+                                                基本查看    desc 表名；中的key列
+                                                详细查看    show index from 表名 \G；          //\G竖着显示，默认横着
+                                        删除索引
+                                                drop index 索引名 on 表名；
+                                        mysql> create table t2 ( 
+                                            -> name char(10),
+                                            -> age int,
+                                            -> class char(10),
+                                            -> email char(32),
+                                            -> index(name), index(age)
+                                            -> ) DEFAULT CHARSET=utf8;
+                                        mysql> create table t2 ( name char(10), age int, class char(10), email char(32), index(name), index(age) ) DEFAULT CHARSET=utf8;                \\索引名可以和表名不一致,这样创建的index默认是列名，不支持多列一个index名，最好别这样
+                                        index这种key_name是自定义的，primart key 的key_name固定是PRIMARY
+                                        mysql> desc t2;
+                                                +-------+----------+------+-----+---------+-------+
+                                                | Field | Type     | Null | Key | Default | Extra |
+                                                +-------+----------+------+-----+---------+-------+
+                                                | name  | char(10) | YES  | MUL | NULL    |       |
+                                                | age   | int(11)  | YES  | MUL | NULL    |       |
+                                                | class | char(10) | YES  |     | NULL    |       |
+                                                | email | char(32) | YES  |     | NULL    |       |
+                                                +-------+----------+------+-----+---------+-------+
+                                       mysql> show index from t2 \G;
+                                       mysql> create index class on t2(class);          //已有表，新增index
+                                       mysql> create index laohe on t2(class, email);   //多列数据，一张表
+                                       mysql> drop index age on t2;
+                                       mysql> show index from t2 \G;
+                                       mysql> insert into t2 values("老何", 20, "一班", "7455@.com"),("老李",520, "二班", "hejian@.com");
+                                       
                         唯一索引 unique
                         主键 primary key
+                                使用规则
+                                        字段不允许重复，且不允许赋null值                               //证件：身份证等
+                                        一个表中只能有一个primary key字段
+                                        多个字段都可作为主键，成为符合主键，必须一起创建
+                                        主键字段的标志是PRI
+                                        主键通常与auto_increment连用                                //自增长 i++
+                                        通常把表中唯一标识记录的字段设置为主键；记录编号字段              //序号
+                                        为了，不空且不重复
+                                创建主键
+                                        建表时，创建主键字段
+                                                mysql> create table t10(
+                                                    -> name char(10),
+                                                    -> id int primary key)
+                                                    -> DEFAULT CHARSET=utf8;
+                                                mysql> create table t11( name char(10), id int, primary key(name)) DEFAULT CHARSET=utf8;        //两种写法都可以
+                                                mysql> insert into t11 values("老李",10);
+                                                mysql> insert into t11 values("老李",10);         //name是主键，不能同名重复
+                                                mysql> insert into t11 values(null,10);          //不能赋空值
+                                        在已有表里，创建主键字段
+                                                alter table 表名 add primary key（字段）
+                                                mysql> alter table t11 drop primary key;        //删除主键
+                                                mysql> alter table t11 add primary key(name);
+                                                mysql> create index XXX on t11(name, id);
+                                                index 支持定义key_name名称，可以把多列放一个index
+                                                mysql> select name from t11 where name is null;
+                                                查找name是否有为空
+                                                
+                                
                         外键 oreign key
                         全文索引 fulltext 
-                索引介绍
-                索引优缺点
-        MYSQL键值使用
-                INdex普通索引
-                primary key主键
-                foreign key外键                                
-                        
-        
+
 
 
 
