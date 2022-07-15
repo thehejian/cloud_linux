@@ -328,20 +328,25 @@ MYSQl 数据类型
                         |        2022 |
                         +-------------+
                         
+表结构
 约束条件
         作用是限制如何给字段赋值
-        是否允许为空          null OR not null        默认是允许
-                enum ("对","错") not null default “对”        
-        键值     
+        NULL
+                是否允许为空          null OR not null        默认是允许
+                enum ("对","错") not null default “对”
+                mysql> insert into laohe_mysql.t4(name, yourstart) values("老李",2022);           //
+        KEY     键值     
                 普通索引           index
                 唯一索引           unique
                 主键              primary key
                 外键              foreign key
                 全文索引           fulltext 
-                DEFAULT         默认值：不给字段赋值时，使用默认值
-                                默认不定义时，是null
-                                定义default值 要与字段类型匹配
-                Extra           额外设置 默认都没有额外设置
+        DEFAULT 默认值
+                默认值：不给字段赋值时，使用默认值
+                默认不定义时，是null
+                定义default值 要与字段类型匹配
+        Extra
+                额外设置 默认都没有额外设置
 修改表结构
         命令 alter table 库名.表名 执行动作
                 执行动作
