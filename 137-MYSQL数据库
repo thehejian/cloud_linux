@@ -450,7 +450,7 @@ MYSQL键值
                                                 +-------+----------+------+-----+---------+-------+
                                        mysql> show index from t2 \G;
                                        mysql> create index class on t2(class);          //已有表，新增index
-                                       mysql> create index laohe on t2(class, email);   //多列数据，一张表
+                                       mysql> create index laohe on t2(class, email);   //多列数据，一张表；感觉应该新建表，再建index
                                        mysql> drop index age on t2;
                                        mysql> show index from t2 \G;
                                        mysql> insert into t2 values("老何", 20, "一班", "7455@.com"),("老李",520, "二班", "hejian@.com");
@@ -514,8 +514,35 @@ MYSQL键值
                                         已有表设置主键+auto_increment
                                         mysql> alter table t11 drop primary key;                //先把之前的主键删除
                                         mysql> alter table t11 add 序号 int(7) primary key auto_increment first;          //新增列，first放最前面会报错
-                                        
                         外键 oreign key
+                                外键功能
+                                        插入记录时，字段值在另一个字段值的范围内
+                                        字段的值在另一张表
+                                        员工表
+                                                姓名              编号              XXX
+                                                老张              01
+                                                老李              02
+                                        工资表
+                                                name             工资
+                                                老张              1毛
+                                                老李              2毛
+                                        工资表的name做成外键，参考员工表表的姓名
+                                        
+                                        
+                                使用规则
+                                        表存储引擎必须是innodb
+                                                create table (XXX, XXX) DEFAULT CHARSET=utf8 engine=innodb;
+                                        字段类型要一致
+                                        被参照字段必须要是索引类型的一种（primary key）
+                                                被参照字段不能为空，也不能重复，所以建议搞成primary key
+                                创建外键
+                                        create table 表名 (字段名列表, 
+                                                foreign key（字段名）                //外键名
+                                                references 表名（字段名）              //指定外表表格字段
+                                                on update cascade                       //同步更新
+                                                on delete cascade                       //删除同步
+                                                ) DEFAULT CHARSET=utf8                  //编码，是否需要逗号
+                                                engine=innodb;                          //指定引擎
                         全文索引 fulltext 
 
 
