@@ -513,7 +513,7 @@ MYSQL键值
                                         下面这种方法不推荐
                                         已有表设置主键+auto_increment
                                         mysql> alter table t11 drop primary key;                //先把之前的主键删除
-                                        mysql> alter table t11 add 序号 int(7) primary key auto_increment first;          //新增
+                                        mysql> alter table t11 add 序号 int(7) primary key auto_increment first;          //新增列，first放最前面会报错
                                         
                         外键 oreign key
                         全文索引 fulltext 
