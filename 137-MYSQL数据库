@@ -608,11 +608,30 @@ MYSQL键值
                 命令格式
                         load data infile “目录名/文件名”
                         into table 库名.表名
-                        filed terminated by “分隔符”               //区分文件列
+                        fields terminated by “分隔符”               //区分文件列
                         lines terminated by “\n";                       //区分文件行
-                例子
+                例子     //把系统用户信息导入（/etc/passwd） db3.user表里
                         建库
+                        mysql> create dababase db3;
+                        mysql> use db3;
+                        建表（表结构根据文件内容创建）
+                        mysql> create table db3.user (用户名 char(10), 口令 char(5), 用户标识 int(5), 组标识 int(5), 描述 char(7), 主路径 char(7), 登录路径 char(5)) DEFAULT CHARSET=utf8 engine=innodb;
+                        把文件拷贝到/load(secure_file)
+                        mysql> system cp /etc/passwd /myload;
+                        mysql> system cat /myload/passwd;
+                        root:x:0:0:root:/root:/bin/bash
+                        用户名 口令 用户标识 组标识 描述 登录路径
                         
+                        如果表的类型不符合（字段太短），就导不进去
+                        mysql> alter table user modify 描述 varchar(100);         //修改字段类型，太短了放不下
+                        mysql> alter table user modify 用户名 char(100);
+                        mysql> alter table user change 主目录 主路径 char(100);       //change技能改列明，也能改类型，语法和modify有些区别
+                        mysql> alter table user change 登录路径 登录路径 char(100);
+                        
+                        导入数据
+                        load data infile "/myload/passwd" into table db3.user fields terminated by ":" lines terminated by "\n";
+                        mysql> load data infile "/myload/passwd" into table db3.user fields terminated by ":" lines terminated by "\n";
+                        mysql> select * from user;
                         
         数据的导出
                 什么事数据导出
