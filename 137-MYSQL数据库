@@ -556,8 +556,20 @@ MYSQL键值
                                         工资表1是被参照，工资表2是参照；
                                         工资表1中被参照的必须是primary key
                                         mysql> create table 工资表2 (工资姓名 char(10), 薪资 float(7,2), foreign key(工资姓名) references 工资表1(姓名) on update cascade on delete cascade) DEFAULT CHARSET=utf8 engine=innodb;
+                                        mysql> alter table 工资表2 add primary key(工资姓名);          //也可以创建时搞
+                                        工资表2的工资姓名设置为主键
+                                        同一列表，既可以时主键也可以是外键
                                         
+                                        mysql> update 工资表1 set 姓名=老何 where 姓名="老何";
+                                        修改工资表1，工资表2对应的值也会变化
+                                        mysql> select * from 工资表1;
+                                        mysql> select * from 工资表2;
                                         
+                                        删除工资表2的外键
+                                        先查外键名称
+                                        mysql> show create table 工资表2;
+                                                //CONSTRAINT `工资表2_ibfk_1`
+                                        mysql> alter table 工资表2 drop foreign key 工资表2_ibfk_1;
                         全文索引 fulltext 
 
 
