@@ -57,6 +57,19 @@ MYSQL键值
                 INdex普通索引
                 primary key主键
                 foreign key外键
+数据的导入和导出
+        数据导入默认检索的路径
+                查看
+                修改
+        什么事数据导入
+                什么是数据导入
+                命令格式
+                例子
+        数据的导出
+                什么事数据导出
+                命令格式
+                例子
+
 
 
 ################################################################################################################################################
@@ -572,7 +585,43 @@ MYSQL键值
                                         mysql> alter table 工资表2 drop foreign key 工资表2_ibfk_1;
                         全文索引 fulltext 
 
-
+数据的导入和导出
+        数据导入默认检索的路径
+                查看
+                        mysql> show variables like "%file%";
+                        mysql> show variables like "secure_file_priv";
+                        mysql> system ls -ld /var/lib/mysql-files/;         //系统命令执行
+                        /var/lib/mysql-files
+                        默认的导出导入命令
+                修改
+                        mysql> system mkdir -p /myload;
+                        mysql> system chown mysql /myload             //文件夹设置权限,换所有者
+                        mysql> system vim /etc/my.cnf;
+                        secure_file_priv="/myload"
+                        
+                        systemctl restart mysqld                        //重启服务
+                        mysql> show variables like "%secure_file%";
+                        
+        什么事数据导入
+                什么是数据导入
+                        把系统文件的内容，存到数据库服务器的表中
+                命令格式
+                        load data infile “目录名/文件名”
+                        into table 库名.表名
+                        filed terminated by “分隔符”               //区分文件列
+                        lines terminated by “\n";                       //区分文件行
+                例子
+                        建库
+                        
+                        
+        数据的导出
+                什么事数据导出
+                命令格式
+                例子
+        
+管理表记录
+匹配条件
+MYSQL管理工具
 
 
 
