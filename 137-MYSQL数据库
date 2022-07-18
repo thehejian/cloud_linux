@@ -483,8 +483,38 @@ MYSQL键值
                                                 index 支持定义key_name名称，可以把多列放一个index
                                                 mysql> select name from t11 where name is null;
                                                 查找name是否有为空
-                                                
-                                
+                                  创建符合主键        多个符合主键的赋值不全部一样即可
+                                        alter table 表名 add primary key（字段名列表）
+                                        与auto_increment连用
+                                        PRI              PRI
+                                        班级              姓名              是否缴费
+                                        一班              老张              是
+                                        一班              老张                              不准存在
+                                        一班              老李              是               可以存在
+                                        新表中创建主键；
+                                        mysql> create table t3 (class char(10), name char(10), money enum("yes", "no"), primary key(class, name)) DEFAULT CHARSET=utf8;
+                                        设置主键前面必须加逗号
+                                        PRI              PRI               PRI     
+                                        班级              姓名              是否缴费
+                                        一班              老张              是
+                                        一班              老张              是               不准存在
+                                        一班              老李              是               
+                                        一班              老李              否               可以存在
+                                        已有表，创建主键
+                                        修改主键？不能修改，只能先删除，再新建
+                                        mysql> alter table t3 drop primary key;
+                                        mysql> delete from t3；                  //删除t3下所有内容；如果不影响（无空值，无全部重复）可以不删
+                                        mysql> alter table t3 add primary key(class, name, money);
+                                        与auto_increment（自增长）连用，不用赋值，自动增长.在desc中的extra中显示
+                                        mysql> create table t1 (stu_name int(7) primary key autoincrement, name char(7), age int(7)) DEFAULT CHARSET=utf8;
+                                        primary key 和 auto_increment 中primary key 可前可后，auto_increment只能前面
+                                        mysql> insert into t1(name, age) values("老赵", 12);
+                                        mysql> insert into t1 values(null, "老张", 16);
+                                        下面这种方法不推荐
+                                        已有表设置主键+auto_increment
+                                        mysql> alter table t11 drop primary key;                //先把之前的主键删除
+                                        mysql> alter table t11 add 序号 int(7) primary key auto_increment first;          //新增
+                                        
                         外键 oreign key
                         全文索引 fulltext 
 
