@@ -541,8 +541,23 @@ MYSQL键值
                                                 references 表名（字段名）              //指定外表表格字段
                                                 on update cascade                       //同步更新
                                                 on delete cascade                       //删除同步
-                                                ) DEFAULT CHARSET=utf8                  //编码，是否需要逗号
+                                                ) DEFAULT CHARSET=utf8                  //编码，是否需要逗号?不需要逗号
                                                 engine=innodb;                          //指定引擎
+                                        案例1：以序号为参照外键
+                                        mysql> create table 员工表 (序号 int(7) primary key auto_increment, 姓名 char(10), 性别 enum("男", "女") ) DEFAULT CHARSET=utf8 engine=innodb;
+                                        mysql> insert into 员工表(姓名, 性别) values("老张", "男"), ("老李", "女");
+                                        mysql> create table 工资表 (工资id int(7), 薪资 float(7,2), foreign key(工资id) references 员工表(序号) on update cascade on delete cascade) DEFAULT CHARSET=utf8 engine=innodb;
+                                        名字会重复，序号是唯一固定的；用工资表的工资id对于用户表的序号；
+                                        foreign key（表值） 这个份和 references 表.（表值）是对应的；
+                                        被参照字段必须是主键！；
+                                        
+                                        案例2：以姓名为参照外键
+                                        mysql> create table 工资表1 (姓名 char(10) primary key, 性别 enum("男", "nv")) DEFAULT CHARSET=utf8 engine=innodb;
+                                        工资表1是被参照，工资表2是参照；
+                                        工资表1中被参照的必须是primary key
+                                        mysql> create table 工资表2 (工资姓名 char(10), 薪资 float(7,2), foreign key(工资姓名) references 工资表1(姓名) on update cascade on delete cascade) DEFAULT CHARSET=utf8 engine=innodb;
+                                        
+                                        
                         全文索引 fulltext 
 
 
