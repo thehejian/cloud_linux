@@ -791,12 +791,34 @@ MYSQL键值
                                 mysql> select min(用户标识) 用户标识最小值 from user;
                         max（字段名）
                                 mysql> select max(用户标识) 用户标识最大值 from user;
-                        count（字段名）
+                        count（字段名） 可以不是数值
                                 mysql> select count(用户标识) 用户标识计数值 from user;
+                                mysql> select count(*) from user;
+                                mysql> select count(*) from user where 登录路径 = "/sbin/nologin";
                 查询结果排序
+                        SQL查询 order by 字段名 【asc|desc】
+                        asc ascent 上升
+                        desc descent 下降
+                        mysql> select id, 用户名 from user order by id desc;
+                        mysql> select id, 用户名 from user order by 用户名;
+                                字符类型顺序：大写字母，数字，小写字母，汉字
                 查询结果分组
+                        SQL查询 group by 字段名
+                        mysql> select 登录路径 from user group by 登录路径;             //跟去重显示一样？运算过程不一样
+                        mysql> select 登录路径 from user where id < 10 group by 登录路径;
+                        mysql> select distinct  登录路径 from user;                         //去重
                 查询结果过滤
-                限制查询结果显示行数
+                        SQL查询 having 条件
+                        mysql> select 登录路径,id from user having id < 10;
+                        mysql> select 登录路径,id from user where 登录路径 in ("/bin/bash") having id < 10;     //having只能放最后
+                        mysql> select 登录路径,id from user where 登录路径 in ("/bin/bash") and id < 10;        //结果一样，上面的查询效率更高
+                限制查询结果显示行数 limit
+                        只显示显示结果前几行
+                                mysql> select * from user limit 5;
+                                mysql> select * from user order by 用户标识 desc limit 5;           /null是最小的；limit得放到最后
+                                按用户标识排序，倒叙top5
+                        指定显示行数
+                                mysql> select * from user limit 2,5;
 MYSQL管理工具
 
 
