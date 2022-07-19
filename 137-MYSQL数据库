@@ -772,8 +772,27 @@ MYSQL键值
                                 mysql> select 用户名 from user where 用户名 regexp '^[a|t]';          //以a或者t开头
                                 mysql> select 用户名 from user where 用户名 regexp '[0-9]';           //包含数字的
                 四则运算 + — * % /
+                        对象：数字
+                        mysql> alter table user add 年龄 int(5) default 18 after 用户名;
+                        mysql> select 用户名, 2022 - 年龄 出生年份 from user;                            //运算在前面，可赋值
+                        mysql> insert into user(用户名,  年龄) vales("老李",30);
+                        mysql> select 用户名, 2022 - 年龄 出生年份 from user where 2022 - 年龄 < 2004;     //出生年份属于无中生有，但是又不保存到表中
+                        mysql> update user set 用户标识=用户标识+1  where id < 5;                       //前5个id，用户标识+1
+                        mysql> select id, 用户名, 用户标识, 组标识, (用户标识 + 组标识)/2 用户和组标识的平均 from user where id < 5;
+                        mysql> select id, 用户名, 用户标识 from user where 用户标识%2 = 0;                 //用户标识为偶数
         操作查询结果 //真的查询后的结果做处理
                 聚集函数
+                        mysql内置的对数据做统计的命令
+                        avg（字段名）
+                                mysql> select avg(用户标识) 用户标识平均值 from user;
+                        sum（字段名）
+                                mysql> select sum(用户标识) 用户标识求和值 from user;
+                        min（字段名）
+                                mysql> select min(用户标识) 用户标识最小值 from user;
+                        max（字段名）
+                                mysql> select max(用户标识) 用户标识最大值 from user;
+                        count（字段名）
+                                mysql> select count(用户标识) 用户标识计数值 from user;
                 查询结果排序
                 查询结果分组
                 查询结果过滤
