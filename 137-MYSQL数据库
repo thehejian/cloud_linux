@@ -820,6 +820,52 @@ MYSQL键值
                         指定显示行数
                                 mysql> select * from user limit 2,5;
 MYSQL管理工具
+        命令行
+        图形工具
+                安装软件安装数据库
+                        MYSQL-Workbench         跨平台             MYSQl官方提供
+                        MYSQL-Front             Windows           开源，轻量级客户端软件
+                        Navicat                 Windows           专业，功能强大，商业版
+                        phpMyAdmin              浏览器             开源，需要LAMP平台
+                PHPMyAdmin
+                        部署环境 LAMP
+                                [root@hejian_alicloud ~]# yum -y install httpd php php-mysql
+                        启动httpd服务
+                                [root@hejian_alicloud ~]# systemctl start httpd
+                                [root@hejian_alicloud ~]# systemctl enable httpd                        
+                        解压PHPMyAdmin包，并移动到网站目录
+                                [root@hejian_alicloud ~]# wget https://files.phpmyadmin.net/phpMyAdmin/2.11.11/phpMyAdmin-2.11.11-all-languages.tar.gz
+                                [root@hejian_alicloud ~]# tar -zxvf phpMyAdmin-2.11.11-all-languages.tar.gz 
+                                [root@hejian_alicloud ~]# mv phpMyAdmin-2.11.11-all-languages /var/www/html/phpmyadmin
+                        配置config.inc.php，指定MySQL服务器地址
+                                [root@hejian_alicloud ~]# cd /var/www/html/phpmyadmin/phpMyAdmin-2.11.11-all-languages/
+                                [root@hejian_alicloud phpMyAdmin-2.11.11-all-languages]# cp config.sample.inc.php config.inc.php
+                                
+                                [root@hejian_alicloud phpMyAdmin-2.11.11-all-languages]# vim +17 config.inc.php
+                                17 $cfg['blowfish_secret'] = 'plj123'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */ //cookie参数,
+                                31 $cfg['Servers'][$i]['host'] = 'localhost';   //数据库服务器ip地址
+                        浏览器访问、使用数据库管理员root登录
+        连接脚本（python，php）
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
