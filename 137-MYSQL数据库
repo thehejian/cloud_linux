@@ -69,7 +69,28 @@ MYSQL键值
                 什么事数据导出
                 命令格式
                 例子
+管理表记录
+        增加表记录 insert into
+        查询表记录 select       
+        更新表记录 update 修改字段的值    
+        删除表记录 delete 以行为单位，删除列用的是 alter table 表 drop 字段名；      
 
+匹配条件          
+        基本匹配条件
+                数值比较
+                字符比较、匹配空、非空
+                逻辑匹配
+                范围匹配、去重显示
+        高级匹配条件
+                模糊搜索
+                正则表达式
+                四则运算
+        操作查询结果
+                聚集函数
+                查询结果排序
+                查询结果分组
+                查询结果过滤
+                限制查询结果显示行数
 
 
 ################################################################################################################################################
@@ -671,15 +692,92 @@ MYSQL键值
                         没有赋值的字段使用默认值或自增长赋值。
         查询表记录 select
                 语法格式
+                        select 字段名列表 from 库名.表名 where条件         //字段列表控制列，where控制行
+                        select * from 库名.表名
+                                mysql> use db3;
+                                mysql> select * from user;
+                                mysql> select 用户名, id, 口令 from user where id <=5;
+                                不能加括号，（用户名, id, 口令）这样会显示不出来；
                 注意事项        
-        更新表记录 update
+        更新表记录 update 修改字段的值
                 语法格式
+                        批量更新
+                                update 库名.表名 set 字段名=值， 字段名=值， 字段名=值；
+                                不加条件的话，所有行的内容都会被改掉；
+                        条件匹配更新
+                                update 库名.表名 set 字段名=值， 字段名=值， 字段名=值 where条件；
+                        mysql> select * from user where id = 1;
+                        mysql> update user set id=111 where id = 1;             //id是列名，id=111是把这一列所有内容修改
+                        mysql> select * from user where 用户名 = "root";
+                        mysql> update user set id=1, 口令=“xxx”, 描述="这是root" where 用户名="root";      //字符类型一定要加“”
                 注意事项        
-        删除表记录 delete
+        删除表记录        //delete 以行为单位，删除列用的是 alter table 表 drop 字段名；
                 语法格式
+                        delete from 表 where条件           //一定要加条件
+                        mysql> delete from user where id = 30;
+                        mysql> select * from user;
                 注意事项        
         
-匹配条件
+匹配条件          
+        基本匹配条件 //查询、更新、删除；新增不需要
+                数值比较
+                        = > >= < <= !=
+                        mysql> select * from user where id <= 5;
+                        mysql> select * from user where id >= 组标识;      //可以对比列表项
+                        mysql> select id, 用户名, 组标识 from user where id >= 组标识;           //列表项不加括号
+                        比较的前后都是数值类型
+                字符比较、匹配空、匹配非空
+                        =相等 !=不相等 is null为空 is not null不为空
+                        前后都必选用引号
+                        mysql> select id, 用户名, 口令 from user where 用户名 = "root";
+                        mysql> update user set 主路径 = "这是root" where 用户名 = "bin";
+                        mysql> select id, 描述, 主路径 from user where 描述 = 主路径;             //对比的是同一行的内容，不同行内容一致的不行
+                        mysql> select * from user where 描述 is null;             //”“ ”null“这两种赋值都不是空
+                        mysql> select * from user where 描述 is not null;
+                范围匹配、去重显示
+                        in（值列表）      not in（值列表）        between 数字 and 数字       distinct去重显示
+                        mysql> select 用户名,口令 from user where 用户名 in ("root", "bin");    //可以是数值也可以是字符
+                        mysql> select 用户名,口令 from user where 口令 not in ("x");           //括号不能省略
+                        mysql> select id, 用户名, 口令 from user where id between 10 and 20;         //前面不能加括号
+                        mysql> select distinct 口令 from user;            //去重显示
+                        mysql> select distinct 口令, 用户名 from user;       //无法实现去重显示
+                逻辑匹配 多个匹配条件
+                        or 逻辑或
+                                mysql> select id, 用户名, 口令 from user where 用户名 = "root" or 口令 = "x";
+                        and 逻辑与
+                        ！ 或 not 逻辑非
+                                mysql> select id, 用户名, 口令 from user where 用户名 != "adm" and 口令 in ("x") and id between 1 and 10;
+        高级匹配条件 //查询、更新、删除；新增不需要
+                模糊搜索 like
+                        where 字段 like ’通配符‘             
+                                _ 表示一个字符
+                                        mysql> select id, 用户名 from user where 用户名 like "r__t";  //取得是首尾全部，不能中间
+                                        mysql> select 用户名 from user where 用户名 regexp 'r..t';    //正则是任意取，不关注开头结尾
+                                        mysql> select 用户名 from user where 用户名 like "____";      //正好四个字符的
+                                        mysql> select 用户名 from user where 用户名 like "%____%";    //四个字符及以上 ____% %____ _%___ 都可以
+                                % 表示0到n个字符
+                                        mysql> select 用户名 from user where 用户名 like "%a%";       //包含a字母的全部（a前，a后都包含）
+                                        mysql> select 用户名 from user where 用户名 like "a%";        //以a开头的全部
+                                        mysql> select 用户名 from user where 用户名 like "r%t";       //
+                正则表达式 regexp
+                        where 字段 regexp ’正则表达式‘
+                                ^ $尾 . []包含 * |
+                                mysql> select 用户名 from user where 用户名 regexp '^r';
+                                mysql> select 用户名 from user where 用户名 regexp 't$';
+                                mysql> select 用户名 from user where 用户名 regexp 'r..t';            //任意位置匹配都可
+                                mysql> select 用户名 from user where 用户名 regexp 'ro*ot';
+                                mysql> select 用户名 from user where 用户名 regexp 'r[ao]t';
+                                mysql> select 用户名 from user where 用户名 regexp 'ro*';
+                                mysql> select 用户名 from user where 用户名 regexp '^a|k$';
+                                mysql> select 用户名 from user where 用户名 regexp '^[a|t]';          //以a或者t开头
+                                mysql> select 用户名 from user where 用户名 regexp '[0-9]';           //包含数字的
+                四则运算 + — * % /
+        操作查询结果 //真的查询后的结果做处理
+                聚集函数
+                查询结果排序
+                查询结果分组
+                查询结果过滤
+                限制查询结果显示行数
 MYSQL管理工具
 
 
