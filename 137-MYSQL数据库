@@ -635,10 +635,50 @@ MYSQL键值
                         
         数据的导出
                 什么事数据导出
+                        把表记录导出到系统文件中
                 命令格式
+                        select命令 into outfile “目录/文件名”；      //直接导出不指定格式
+                        select命令 into outfile “目录/文件名” fields terminated by “分隔符”；
+                        select命令 into outfile “目录/文件名” fields terminated by “分隔符” lines terminated by "\n";
                 例子
+                        mysql> select * from 员工表 into outfile "/myload/员工表";
+                        mysql> select * from 员工表 into outfile "/myload/员工表2" fields terminated by "------";
+                        mysql> select * from 员工表 into outfile "/myload/员工表3" fields terminated by "---" lines terminated by "\n\n";
+                        mysql> select * from 员工表 where 序号 <=2 into outfile "/myload/员工表";       //可以加条件
+                        mysql> system cat /myload/员工表3;
         
 管理表记录
+        增加表记录 insert into
+                语法格式 //新添加的的记录，追加在末尾
+                        添加一条记录，给所有列赋值
+                                insert into 库名.表名 values(XXX,XXX...);
+                        添加多条记录，给所有列赋值
+                                insert into 库名.表名 values(XXX,XXX...), (XXX,XXX...);
+                        添加一条记录，给指定的列赋值
+                                insert into 库名.表名(列1) values(XXX,XXX...);
+                                mysql> alter table user add id int(10) primary key auto_increment first;                //缺ID加一列
+                                mysql> insert into db3.user(用户名, 口令, 用户标识, 组标识, 描述, 主路径, 登录路径) values("老何", "x", 10000, 100001, "呵呵", "/root", "/bin/bash");
+                                insert into不需要加table
+                                mysql> insert into db3.user values(null, "老何", "x", 10000, 100001, "呵呵", "/root", "/bin/bash");         //这样夜宵
+                                mysql> select * from db3.user where id >= 20;
+                        添加多条记录，给指定的列赋值
+                                insert into 库名.表名(列1, 列2, XXX) values(XXX,XXX...);
+                注意事项
+                        字段值要与字段类型相匹配；
+                        字符类型的，要用“”引号引起来，其他类型都不要引；
+                        依次给所有字段赋值时，字段名可以省略；
+                        只给部分字段赋值时，必须明确的写出对应字段的名称；
+                        没有赋值的字段使用默认值或自增长赋值。
+        查询表记录 select
+                语法格式
+                注意事项        
+        更新表记录 update
+                语法格式
+                注意事项        
+        删除表记录 delete
+                语法格式
+                注意事项        
+        
 匹配条件
 MYSQL管理工具
 
