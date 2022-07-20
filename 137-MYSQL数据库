@@ -828,6 +828,12 @@ MYSQL管理工具
                         Navicat                 Windows           专业，功能强大，商业版
                         phpMyAdmin              浏览器             开源，需要LAMP平台
                 PHPMyAdmin
+                        https://cloud.tencent.com/developer/article/1726775
+                        参考文档
+                        php版本低的解决方案
+                        Centos7下Yum更新安装PHP5.5,5.6,7.0
+                        https://cloud.tencent.com/developer/article/1497003
+                        
                         部署环境 LAMP
                                 [root@hejian_alicloud ~]# yum -y install httpd php php-mysql
                         启动httpd服务
@@ -842,7 +848,7 @@ MYSQL管理工具
                                 [root@hejian_alicloud phpMyAdmin-2.11.11-all-languages]# cp config.sample.inc.php config.inc.php
                                 
                                 [root@hejian_alicloud phpMyAdmin-2.11.11-all-languages]# vim +17 config.inc.php
-                                17 $cfg['blowfish_secret'] = 'plj123'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */ //cookie参数,
+                                17 $cfg['blowfish_secret'] = 'plj123'; /* YOU MUST FILL IN THIS FOR COOKIE AUTH! */ //cookie参数,随意写点内容
                                 31 $cfg['Servers'][$i]['host'] = 'localhost';   //数据库服务器ip地址
                         浏览器访问、使用数据库管理员root登录
         连接脚本（python，php）
