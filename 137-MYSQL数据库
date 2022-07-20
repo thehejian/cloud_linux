@@ -895,7 +895,32 @@ MYSQL管理工具
                         mysql> grant select, insert, update(id, 用户名, 年龄) on db3.user to hejian01@"localhost" identified by "H***2";
         授权例子
         相关命令
+                select user(); 显示用户名及登录服务器
+                        mysql> select user();
+                        mysql> select User, Host from mysql.user; //查看用户名
+                show grants; 显示当前用户的授权信息
+                        mysql> show grants;
+                show grants for 用户名@”客户端地址“;
+                        mysql> show grants for root@"localhost";
+                        mysql> show grants for hejian@"%";
+                set password= password("密码");
+                        mysql> set password = password("H***2");
+                set password for 用户名@ "客户端地址" = password("密码");
+                        mysql> set password for hejian@"%" = password("H***2");
+                drop user 用户名@”客户端地址“；
+                        mysql> drop user hejian@"%"
+                        mysql> drop user hejian01@"localhost";
         授权库mysql（记录授权信息mysql库管理）
+                user表
+                        记录已有的授权用户及权限
+                        mysql> select * from user \G;   //内容太多，可以竖着看
+                        mysql> update mysql.user set Delete_priv="N" where User = "hejian";  //删除hejian的删除权限
+                db表
+                        已授权的用户对数据库的访问
+                tables_priv表
+                        已授权用户对表的访问权限
+                columns_priv边
+                        已授权用户对字段的访问权限  
         撤销授权
         删除授权用户
         管理root密码
