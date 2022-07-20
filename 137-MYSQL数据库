@@ -91,7 +91,17 @@ MYSQL键值
                 查询结果分组
                 查询结果过滤
                 限制查询结果显示行数
-
+用户授权
+        什么是用户授权
+        授权命令格式
+        授权例子
+        相关命令
+        授权库mysql（记录授权信息mysql库管理）
+        撤销授权
+        删除授权用户
+        管理root密码
+                恢复密码
+                修改密码（重置密码）
 
 ################################################################################################################################################
  什么是数据库
@@ -833,6 +843,7 @@ MYSQL管理工具
                         php版本低的解决方案
                         Centos7下Yum更新安装PHP5.5,5.6,7.0
                         https://cloud.tencent.com/developer/article/1497003
+                        还是没搞定，算球了
                         
                         部署环境 LAMP
                                 [root@hejian_alicloud ~]# yum -y install httpd php php-mysql
@@ -853,7 +864,43 @@ MYSQL管理工具
                         浏览器访问、使用数据库管理员root登录
         连接脚本（python，php）
 
-
+用户授权
+        什么是用户授权
+                在数据库服务器上添加新的连接用户，在添加用户时可以设置访问权限及连接密码
+                默认数据库管理员root用户本机登录有授权权限
+        授权命令格式
+                grant 权限列表 on 库名 to 用户名@”客户端地址“
+                indentified by ”密码“     //授权密码
+                with grant option；      //有授权权限，可选
+                        权限列表
+                                all 全部权限
+                                usage 无权限
+                                select， update， insert 个别权限
+                                select， update（字段1， 字段2）指定字段
+                        库名
+                                *.* 所有库所有表
+                                库名.* 一个库
+                                库名.表名 一张表
+                        用户名
+                                授权时自定义，要有标识性
+                                存储在mysql库中的user表里
+                        客户端地址
+                                % 所有主机
+                                192.168.1.% 网段内所有主机
+                                192.168.1.1 1台主机
+                                localhost 数据库服务器本机
+                        mysql> grant all on *.* to hejian@"%" identified by "H****2" with grant option;
+                        [root@hejian_alicloud ~]# mysql -h47.112.144.203 -uhejian -p'H***2'
+                        [root@hejian_alicloud ~]# mysql -h172.26.164.142 -uhejian -p'H***2'   //内网访问
+                        mysql> grant select, insert, update(id, 用户名, 年龄) on db3.user to hejian01@"localhost" identified by "H***2";
+        授权例子
+        相关命令
+        授权库mysql（记录授权信息mysql库管理）
+        撤销授权
+        删除授权用户
+        管理root密码
+                恢复密码
+                修改密码（重置密码）
 
 
 
