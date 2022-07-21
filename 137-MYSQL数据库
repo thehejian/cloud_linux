@@ -915,12 +915,21 @@ MYSQL管理工具
                         记录已有的授权用户及权限
                         mysql> select * from user \G;   //内容太多，可以竖着看
                         mysql> update mysql.user set Delete_priv="N" where User = "hejian";  //删除hejian的删除权限
+                        mysql> flush privileges;                //这样才能生效；
+                        mysql> show grants for hejian@"%";      //查看生效的权限       
                 db表
                         已授权的用户对数据库的访问
                 tables_priv表
                         已授权用户对表的访问权限
+                        mysql> select * from tables_priv where Host = "localhost" and Db = "mysql";
                 columns_priv边
                         已授权用户对字段的访问权限  
+                        mysql> grant 用户名, 描述(Select, Update) on db3.user to hejian@"%";  将Select， Update授权给某用户
+                        mysql> grant Insert(描述), Select, Update(用户名, 描述) on db3.user to hejian@"%";             //某个写啥有啥权限，其他权限没有了；不显示的字段是全部权限
+                        mysql> update mysql.columns_priv set Column_priv="Select" where Column_name="用户名";
+                        mysql> show grants for hejian@"%";              //表已修改，但未生效
+                        mysql> flush privileges;                //启用一下
+                        mysql> show grants for hejian@"%";              //已生效
         撤销授权
         删除授权用户
         管理root密码
