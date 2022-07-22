@@ -5,7 +5,7 @@ date=$(date +%Y%m%d)
 
 cp /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.$date.bak
 
-#wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo
+#wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-7.repo --no-check-certificate
 #阿里
 #wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.163.com/.help/CentOS7-Base-163.repo
 #网易
@@ -32,8 +32,11 @@ yum -y install epel-release
 echo "yum无法安装的可以去这个网址下载RPM包 https://pkgs.org/"
 alias mydate='date +%Y-%m-%d" "%H:%M:%S'
 
-vim /etc/crontab
-15 2 * * * root /usr/bin/yum -y update
+#vim /etc/crontab
+vim 修改后不生效
+
+crontab -e
+15 2 * * * root /usr/bin/yum -y update && /usr/bin/yum -y upgrade
 crontab -l
 #(crontab -l;echo "03 03 * * 5 ~/cloud_linux/003centos的yum源.sh > /dev/null 2>&1 ") | crontab
 #非交互式任务
